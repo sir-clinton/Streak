@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%= meta?.title || 'Raha.com – Find Your Vibe' %></title>
+    <meta name="description" content="<%= meta?.description || 'Discover local companions for chill days and hype nights.' %>">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="<%= meta?.title || 'Raha.com – Find Your Vibe' %>" />
+    <meta property="og:description" content="<%= meta?.description || 'Discover local companions for chill days and hype nights.' %>" />
+    <meta property="og:image" content="<%= meta?.image %>" />
+    <meta property="og:url" content="<%= meta?.url %>" />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:title" content="<%= meta?.title %>" />
+    <meta name="twitter:description" content="<%= meta?.description %>" />
+    <meta name="twitter:image" content="<%= meta?.image %>" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.cdnfonts.com/css/satoshi" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/styles.css">  
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/footer.css">
+    <style>
+       .escort-name {
+            margin: 0;
+            padding: 4px 0;
+            font-size: 1rem;
+            }html,body{
+                display: flex;
+                flex-direction: column;
+                min-height:100vh;
+            }main .listings .call:hover i {
+                color: #fff;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <%- include('partials/header')  %>
+        <!-- hero section -->
+         <section id="hero-section">
+            <h1>Find Your Vibe</h1>
+            <p>Escorts companions for your chill days, hype nights, and everything in </p><p>between.</p>
+            <div class="filter">
+                <label for="gender">Filter By</label><br><br>
+                <form id="filter-form" onsubmit="submitForm(event)" method="GET">
+                    <select id="gender" name="gender">
+                        <option value="Select Gender" disabled selected hidden>Select Gender</option>
+                        <option value="Female">Female</option>
+                        <option value="Male">Male</option>
+                        <option value="Transexual">Transexual</option>
+                    </select>
+                    <select id="city" name="city">
+                      <option value="Select City" disabled selected hidden>Select City</option>
+                      <option value="Nairobi">Nairobi</option>
+                      <option value="Mombasa">Mombasa</option>
+                      <option value="Nakuru">Nakuru</option>
+                      <option value="Kisumu">Kisumu</option>
+                      <option value="Eldoret">Eldoret</option>
+                      <option value="Kiambu">Kiambu</option>
+                      <option value="Machakos">Machakos</option>
+                      <option value="Laikipia">Laikipia</option>
+                      <option value="Kajiado">Kajiado</option>
+                      <option value="Kilifi">Kilifi</option>
+                      <option value="Uasin Gishu">Uasin Gishu</option>
+                      <option value="Kisii">Kisii</option>
+                      <option value="Kakamega">Kakamega</option>
+                    </select>
+                    <button id='submit' type="submit">Filter</button>
+                </form>
+            </div>
+         </section>
+
+         <section id="main" class="main">
+            <div class="listings" id="listings" style="position: relative">
+                <% if(escorts.length ===  0){ %>
+                    <p style="position: absolute; top:50%; left: 50%; transform: translate(-50%,-50%);">No profiles available at the moment. Please check back soon!
+                    </p>
+                    <% } %>
+                 <% escorts.forEach(escort => {  %>
+                    <a href='/author/<%= escort.name%>' class="card" style="display: flex;" data-id="<%= escort._id %>">
+                <div class="image-wrapper">
+                    <img loading="lazy" src="<%= escort.userImg%>" alt="<%= escort.name%>">
+                </div>
+                <div class="info">
+                    <p class="escort-name"><%= escort.name.split(' ')[0]%></p>
+                    <p><i class="fa-solid fa-location-dot" style="color: #6c757d;"></i> Kware.</p>
+                </div><hr>
+                <p style="padding: 4px;color: #6c757d;">Meet <%= escort.name.split(' ')[0]%> a <%= escort.age %> years old <%= escort.gender%> Escort from <%= escort.city%> <%= escort.location %> area.</p>
+                <div class="call">
+                    CALL <%= escort.name.split(' ')[0].toUpperCase() %>
+                    &nbsp;<i class="fa fa-phone"></i>
+                </div>
+            </a>
+                <% });%>
+        </div>     
+        </section>
+    </div>
+     <%- include('partials/footer')  %>
+    <script>
+     // JavaScript
+     let prefferedOption = localStorage.getItem('prefferedOption')
+    ? JSON.parse(localStorage.getItem('prefferedOption'))
+    : {city: 'Nairobi', gender: 'Female'};
+  
+     document.getElementById('gender').value = prefferedOption.gender
+     document.getElementById('city').value = prefferedOption.city;
+   
+
+        // const form = document.getElementById('filter-form');
+        // const gender = document.getElementById('gender');
+        // const city   = document.getElementById('city');
+        // const listings = document.querySelector('.listings');
+        
+  function submitForm(e) {  
+    e.preventDefault();
+    const gender = document.getElementById('gender').value;
+    const city = document.getElementById('city').value;
+    if (!gender || !city || gender === 'Select Gender' || city === 'Select City') return;
+        localStorage.setItem('prefferedOption', JSON.stringify({city, gender}));
+
+    window.location.href = `/city/${encodeURIComponent(city)}?gender=${encodeURIComponent(gender)}`;
+  // const submenu = document.getElementById('browse-escorts-submenu');
+  // const listings = document.getElementById('listings'); // assuming you have this container
+  // const filter = { gender: gender.value.trim(), city: city.value.trim() };
+
+  // if (
+  //   !filter.gender || !filter.city ||
+  //   filter.gender === 'Select Gender' ||
+  //   filter.city === 'Select City'
+  // ) return;
+
+  // // Save preferred city
+
+  // // Clear current area submenu
+  // submenu.innerHTML = '';
+
+  // try {
+  //   // Fetch filtered escort listings
+  //   const res = await fetch('/filter', {
+  //     method: 'POST',
+  //     headers: { 'Content-Type': 'application/json' },
+  //     body: JSON.stringify(filter)
+  //   });
+
+  //   const data = await res.json();
+
+  //   if (!data.success || !Array.isArray(data.results) || data.results.length === 0) {
+  //     listings.innerHTML = '<p>No matches found.</p>';
+  //     return;
+  //   }
+
+  //   // Display escort cards
+  //   listings.innerHTML = '';
+  //   data.results.forEach(escort => {
+  //     const card = document.createElement('a');
+  //     card.className = 'card';
+  //     card.href = `/author/${encodeURIComponent(escort.name)}`;
+  //     card.innerHTML = `
+  //       <div class="image-wrapper">
+  //         <img src="${escort.userImg}" alt="${escort.name}">
+  //       </div>
+  //       <div class="info">
+  //         <p class="escort-name">${escort.name}</p>
+  //         <p class="escort-phone"><span>Phone:</span> ${escort.phone}</p>
+  //       </div>
+  //       <div class="call">CALL ${escort.name.split(' ')[0].toUpperCase()}</div>
+  //     `;
+  //     listings.appendChild(card);
+  //   });
+
+  //   // Area counts section
+  //   submenu.innerHTML = '<p>Loading areas...</p>';
+
+  //   // Load cached area data if available
+  //   let cached = JSON.parse(localStorage.getItem('cachedAreaCounts'));
+  //   const cacheExpiry = 25 * 60 * 1000;
+  //   let areaData;
+
+  //   if (cached && (Date.now() - cached.timestamp < cacheExpiry)) {
+  //     areaData = cached.data;
+  //   } else {
+  //     const resArea = await fetch('/areas-with-counts');
+  //     const fresh = await resArea.json();
+  //     areaData = fresh;
+  //     localStorage.setItem('cachedAreaCounts', JSON.stringify({
+  //       data: fresh,
+  //       timestamp: Date.now()
+  //     }));
+  //   }
+
+  //   submenu.innerHTML = '';
+
+  //   const preferredCity = JSON.parse(localStorage.getItem('prefferredCity')) || 'Nairobi';
+  //   const areas = areaData[preferredCity];
+
+  //   if (!Array.isArray(areas)) {
+  //     submenu.innerHTML = '<p>No area data available for this city.</p>';
+  //     return;
+  //   }
+
+  //   areas.forEach(el => {
+  //     const a = document.createElement('a');
+  //     a.className = 'area-item';
+
+  //     if (el.count === 0) {
+  //       a.classList.add('disabled');
+  //       a.href = 'javascript:void(0)';
+  //       a.style.pointerEvents = 'none';
+  //     } else {
+  //       a.href = `/escorts-from-${el.name}`;
+  //     }
+
+  //     a.innerText = `${el.name} (${el.count})`;
+  //     submenu.appendChild(a);
+  //   });
+
+  // } catch (err) {
+  //   console.error('Fetch error:', err);
+  //   listings.innerHTML = '<p>Something went wrong while loading results.</p>';
+  //   submenu.innerHTML = '<p>Unable to load areas.</p>';
+  // }
+}
+ </script>
+ <script type="application/ld+json">
+  <%= JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": meta?.title,
+  "description": meta?.description,
+  "image": meta?.image,
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": city,
+    "addressCountry": "KE"
+  },
+  "url": meta?.url
+}) %>
+ </script>
+    <script type='module' src="/js/script.js"></script>
+</body>
+</html>

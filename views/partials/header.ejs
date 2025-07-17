@@ -1,0 +1,40 @@
+<div class="overlay" id="overlay"></div>
+<header class="header">
+            <nav class="nav">
+                <ul id="nav">
+                    <div class="left">
+                        <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
+                        <li class="nav-item" style="position: relative"><a href="#" class="nav-link" style="position: relative" id="browse-escorts-trigger">Browse Escorts</a>
+                          <div class="submenu" id="browse-escorts-submenu">
+                           
+                        </div>
+                        </li>
+                        <% if(!loggedInEscort){ %>
+                            <li class="nav-item"><a href="/register" class="nav-link">Become an Escort</a></li>
+                        <% } %>
+
+                        <li class="nav-item"><a href="#contact" class="nav-link">Contact Us</a></li>
+                                                        
+                    </div>
+                        
+                    <div class="right">
+                        <% if(loggedInEscort) { %>
+                            <li class="nav-item" style="display: flex; justify-content: center; align-items: center;">
+                                <a href="/profile" title="<%= loggedInEscort.name%>"  class="escort-profile-link nav-link" style="display: flex; justify-content: center; align-items: center; padding: 0;margin-left: 8px; ">
+                                <img src="<%= loggedInEscort.userImg || 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png'%>" alt="Profile" style="border-radius: 50%; width: 30px; height: 30px">
+                                <%const nameParts = loggedInEscort.name.trim().split(' '); %>
+                                <span class='name' style="margin-left: 8px;">Hi, <%= nameParts.length > 1 ? nameParts[0] : loggedInEscort.name %></span>
+                                </a>
+                            </li>
+                        <%} else {%>
+                            <li class="nav-item"><a href="/login" class="nav-link">Login</a></li>
+                            <li class="nav-item"><a href="/register" class="nav-link">Sign Up</a></li>
+                        <% } %>
+                </div>
+                </ul>
+            </nav>
+        </header>
+         <div class='bar'>
+            <a href="/"><i class="fas fa-home"></i></a>            
+            <i id="menu-icon" class="fas fa-bars"></i>
+        </div>
