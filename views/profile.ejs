@@ -269,8 +269,9 @@
                 </div>
                 <div class="info">
                     <p class="escort-name"><%= escort.name%></p>
-                    <p class="escort-phone"><span>Phone</span> 0751142915</p>
-                </div>
+                    <!-- <p class="escort-phone"><span>Phone</span> 0751142915</p> -->
+                </div><hr>
+                    <p style="padding: 4px;color: #6c757d;">Meet <%= escort.name.split(' ')[0]%> a <%= escort.age %> years old <%= escort.gender%> Escort from <%= escort.city%> <%= escort.location %> area.</p>
                 <div class="call">
                     CALL <%= escort.name.split(' ')[0].toUpperCase() %>
                 </div>
