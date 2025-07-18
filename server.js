@@ -60,122 +60,121 @@ const PORT = 3000;
 
     // Now it's safe to use your model
 
-// const  = [
-// {
-// "name": "Gracia",
-// "weight": "90",
-//   "gender": "Female",
-//   "allowedtopost": "true",
-//   "publishedAt": "2025-04-09",
-//   "email": "wanjiku@escort.com",
-//   "location": "Nairobi CBD",
-//   "city": "Nairobi",
-//   "password": "clinton123@()",
-//   "userImg": "https://www.nairobiraha.co.ke/wp-content/uploads/2025/06/image-477097-200x200.jpg",
-//   "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
-//   "phone": "0756982493",
-//   "dob": "1989-03-01",
-//   "gallery": [],
-//   "orientation": "straight",
-//   "weight": "91",
-//   "socialLinka": "",
-//   "services": []
-// },
-// {
-// "name": "Fifi",
-//   "gender": "Female",
-//   "allowedtopost": "true",
-//   "publishedAt": "2025-04-09",
-//   "weight": "80",
-//   "email": "Fifi@escort.com",
-//   "location": "Kilimani",
-//   "city": "Nairobi",
-//   "password": "clinton123@()",
-//   "userImg": "https://www.nairobiraha.co.ke/wp-content/uploads/2025/07/image-478055-420x420-200x200.jpg",
-//   "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
-//   "phone": "0756982493",
-//   "dob": "2001-03-01",
-//   "gallery": [],
-//   "orientation": "straight",
-//   "socialLinka": "",
-//   "services": []
-// },
-// {
-// "name": "Leilah",
-// "gender": "Female",
-// "allowedtopost": "true",
-//   "publishedAt": "2025-04-09",
-//   "weight": "78",
-//   "email": "leilah@escort.com",
-//   "location": "Yaya Center",
-//   "city": "Nairobi",
-//   "password": "clinton123@()",
-//   "userImg": "https://www.nairobiraha.co.ke/wp-content/uploads/2025/07/image-478006-420x420-200x200.jpg",
-//   "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
-//   "phone": "0756982493",
-//   "dob": "1999-03-01",
-//   "gallery": [],
-//   "orientation": "straight",
-//   "socialLinka": "",
-//   "services": []
-// },
-// {
-// "name": "Kelly Wahu",
-// "gender": "Female",
-// "allowedtopost": "true",
-//   "publishedAt": "2025-04-09",
-//   "email": "wahukelly@escort.com",
-//   "location": "Rongai",
-//   "city": "Kajiado",
-//   "password": "clinton123@()",
-//   "userImg": "https://www.nairobiraha.co.ke/wp-content/uploads/2025/07/image-478098-200x200.jpg",
-//   "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
-//   "phone": "0756982493",
-//   "dob": "1987-03-01",
-//   "gallery": [],
-//   "orientation": "straight",
-//   "weight": "93",
-//   "socialLinka": "",
-//   "services": []
-// },
-// {
-// "name": "jessica wanjiru",
-// "gender": "Female",
-// "allowedtopost": "true",
-//   "publishedAt": "2025-04-09",
-//   "weight": "75",
-//   "email": "jessica@escort.com",
-//   "location": "Yaya Center",
-//   "city": "Nairobi",
-//   "password": "clinton123@()",
-//   "userImg": "https://www.nairobiraha.co.ke/wp-content/uploads/2025/07/image-478010-420x420-200x200.jpeg",
-//   "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
-//   "phone": "0756982493",
-//   "dob": "2000-03-01",
-//   "gallery": [],
-//   "orientation": "straight",
-//   "socialLinka": "",
-//   "services": []
-// },
-// {
-// "name": "jojo",
-// "gender": "Female",
-// "allowedtopost": "true",
-//   "publishedAt": "2025-04-09",
-//   "weight": "83",
-//   "email": "joo@escort.com",
-//   "location": "Thika",
-//   "city": "Kiambu",
-//   "password": "clinton123@()",
-//   "userImg": "https://www.nairobiraha.co.ke/wp-content/uploads/2025/06/image-477508-420x420-200x200.jpg",
-//   "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
-//   "phone": "0756982493",
-//   "dob": "1990-03-01",
-//   "gallery": [],
-//   "orientation": "straight",
-//   "socialLinka": "",
-//   "services": []
-// },
+const escorts = [
+{
+"name": "Sally",
+"weight": "76",
+  "gender": "Female",
+  "allowedtopost": "true",
+  "publishedAt": "2025-04-09",
+  "email": "wanjiku@escort.com",
+  "location": "Nairobi CBD",
+  "city": "Nairobi",
+  "password": "clinton123@()",
+  "userImg": "https://www.nairobiraha.co.ke/wp-content/uploads/2025/06/image-477474-420x420-200x200.jpeg",
+  "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
+  "phone": "0742389828",
+  "dob": "1998-03-01",
+  "gallery": [],
+  "orientation": "straight",
+  "socialLinka": "",
+  "services": []
+},
+{
+"name": "Samira",
+  "gender": "Female",
+  "allowedtopost": "true",
+  "publishedAt": "2025-04-09",
+  "weight": "80",
+  "email": "Fifi@escort.com",
+  "location": "Nairobi West",
+  "city": "Nairobi",
+  "password": "clinton123@()",
+  "userImg": "https://www.nairobiraha.co.ke/wp-content/uploads/2025/07/image-478330-420x420-200x200.jpeg",
+  "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
+  "phone": "0719396761",
+  "dob": "2001-03-01",
+  "gallery": [],
+  "orientation": "straight",
+  "socialLinka": "",
+  "services": []
+},
+{
+"name": "Zuri",
+"gender": "Female",
+"allowedtopost": "true",
+  "publishedAt": "2025-04-09",
+  "weight": "86",
+  "email": "leilah@escort.com",
+  "location": "Nairobi West",
+  "city": "Nairobi",
+  "password": "clinton123@()",
+  "userImg": "https://www.nairobiraha.co.ke/wp-content/uploads/2025/04/image-476182-420x420-200x200.jpeg",
+  "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
+  "phone": "0713172293",
+  "dob": "2004-03-01",
+  "gallery": [],
+  "orientation": "straight",
+  "socialLinka": "",
+  "services": []
+},
+{
+"name": "Belly",
+"gender": "Female",
+"allowedtopost": "true",
+  "publishedAt": "2025-04-09",
+  "email": "wahukelly@escort.com",
+  "location": "CBD",
+  "city": "Nairobi",
+  "password": "clinton123@()",
+  "userImg": "https://www.nairobiraha.co.ke/wp-content/uploads/2025/07/image-478413-420x420-200x200.jpg",
+  "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
+  "phone": "0729677559",
+  "dob": "1985-03-01",
+  "gallery": [],
+  "orientation": "straight",
+  "weight": "93",
+  "socialLinka": "",
+  "services": []
+},
+{
+"name": "RINA",
+"gender": "Female",
+"allowedtopost": "true",
+  "publishedAt": "2025-04-09",
+  "weight": "99",
+  "email": "jessica@escort.com",
+  "location": "CBD",
+  "city": "Nairobi",
+  "password": "clinton123@()",
+  "userImg": "https://www.nairobiraha.co.ke/wp-content/uploads/2025/07/image-478491-200x200.jpg",
+  "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
+  "phone": "0720493795",
+  "dob": "1982-03-01",
+  "gallery": [],
+  "orientation": "straight",
+  "socialLinka": "",
+  "services": []
+},
+{
+"name": "Natasha",
+"gender": "Female",
+"allowedtopost": "true",
+  "publishedAt": "2025-04-09",
+  "weight": "83",
+  "email": "joo@escort.com",
+  "location": "CBD",
+  "city": "Nairobi",
+  "password": "clinton123@()",
+  "userImg": "https://www.nairobiraha.co.ke/wp-content/uploads/2024/12/image-474054-200x200.jpg",
+  "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
+  "phone": "0756982493",
+  "dob": "1990-03-01",
+  "gallery": [],
+  "orientation": "straight",
+  "socialLinka": "",
+  "services": []
+}]
 // {
 // "name": "amryn",
 // "gender": "Female",
@@ -242,12 +241,35 @@ async function startServer() {
     await mongoose.connect(process.env.MONGO_URI);
     console.log('✅ Connected to MongoDB');
     mongoConnected = true;
+
   } catch (err) {
     console.error('❌ MongoDB connection error:', err.message);
     mongoConnected = false;
     setTimeout(startServer, 10000); // backoff retry
   }
 }
+
+// const collectionsToClear = ['profiles', 'profileviews', 'escorts', 'boostrequests']; // Add your collection names
+
+// mongoose.connection.once('open', async () => {
+//   console.log('Connected to MongoDB');
+
+//   try {
+//     for (const name of collectionsToClear) {
+//       const collection = mongoose.connection.collections[name];
+//       if (collection) {
+//         await collection.deleteMany({});
+//         console.log(`Cleared collection: ${name}`);
+//       } else {
+//         console.log(`Collection not found: ${name}`);
+//       }
+//     }
+//   } catch (err) {
+//     console.error('Error clearing collections:', err);
+//   } finally {
+//     mongoose.connection.close();
+//   }
+// });
 
 // Start server outside the Mongo connection
 app.listen(PORT, () => {
@@ -375,59 +397,57 @@ app.get('/escorts-from-:area', async (req, res) => {
 
 app.get('/areas-with-counts', async (req, res) => {
   const location = {
-  Nairobi: [
-    "Kilimani", "Westlands", "Karen", "CBD", "Roysambu", "Ngara", "Donholm",
-    "Ruaka", "Syokimau", "Kitengela", "Embakasi", "South B", "South C", "Lavington", "Parklands"
-  ],
-  Kiambu: [
-    "Juja", "Kikuyu", "Ruiru", "Githurai",
-    "Thika", "Limuru", "Kabete", "Tigoni"
-  ],
-  Mombasa: [
-    "Diani", "Nyali", "Likoni",
-    "Mtwapa", "Bamburi", "Shanzu", "Kisauni"
-  ],
-  Nakuru: [
-    "Naivasha", "Nakuru Town", "Gilgil",
-    "Lanet", "Njoro", "Pipeline", "Kabarak"
-  ],
-  Kisumu: [
-    "Kisumu Town",
-    "Milimani", "Riat Hills", "Mamboleo", "Manyatta"
-  ],
-  Eldoret: [
-    "Eldoret Town", "Langas",
-    "Kapsoya", "Elgon View", "Annex", "Pioneer"
-  ],
-  Machakos: [
-    "Athi River", "Kangundo", "Joska", "Mwala", "Syokimau"
-  ],
-  Laikipia: [
-    "Nanyuki", "Rumuruti", "Timau"
-  ],
-  Kajiado: [
-    "Ongata Rongai", "Kitengela", "Ngong", "Kiserian"
-  ],
-  Kilifi: [
-    "Kilifi Town", "Malindi", "Watamu", "Mtwapa"
-  ],
-  UasinGishu: [
-    "Eldoret", "Turbo", "Moiben"
-  ],
-  Kisii: [
-    "Kisii Town", "Nyanchwa", "Suneka"
-  ],
-  Kakamega: [
-    "Kakamega Town", "Shinyalu", "Lurambi"
-  ]
-};
+    Nairobi: [
+      "Kilimani", "Westlands", "Karen", "CBD", "Roysambu", "Ngara", "Donholm", "Nairobi West",
+      "Ruaka", "Syokimau", "Kitengela", "Embakasi", "South B", "South C", "Lavington", "Parklands"
+    ],
+    Kiambu: [
+      "Juja", "Kikuyu", "Ruiru", "Githurai",
+      "Thika", "Limuru", "Kabete", "Tigoni"
+    ],
+    Mombasa: [
+      "Diani", "Nyali", "Likoni",
+      "Mtwapa", "Bamburi", "Shanzu", "Kisauni"]}
+  //   ]}
+  //   Nakuru: [
+  //     "Naivasha", "Nakuru Town", "Gilgil",
+  //     "Lanet", "Njoro", "Pipeline", "Kabarak"
+  //   ],
+  //   Kisumu: [
+  //     "Kisumu Town", "Milimani", "Riat Hills", "Mamboleo", "Manyatta"
+  //   ],
+  //   Eldoret: [
+  //     "Eldoret Town", "Langas", "Kapsoya", "Elgon View", "Annex", "Pioneer"
+  //   ],
+  //   Machakos: [
+  //     "Athi River", "Kangundo", "Joska", "Mwala", "Syokimau"
+  //   ],
+  //   Laikipia: [
+  //     "Nanyuki", "Rumuruti", "Timau"
+  //   ],
+  //   Kajiado: [
+  //     "Ongata Rongai", "Kitengela", "Ngong", "Kiserian"
+  //   ],
+  //   Kilifi: [
+  //     "Kilifi Town", "Malindi", "Watamu", "Mtwapa"
+  //   ],
+  //   UasinGishu: [
+  //     "Eldoret", "Turbo", "Moiben"
+  //   ],
+  //   Kisii: [
+  //     "Kisii Town", "Nyanchwa", "Suneka"
+  //   ],
+  //   Kakamega: [
+  //     "Kakamega Town", "Shinyalu", "Lurambi"
+  //   ]
+  // };
 
   const result = {};
 
   for (const city in location) {
-    result[city] = [];// Initialize city's entry as an empty array
+    result[city] = [];
 
-    for (const area of location[city]) {//This goes over areas like "Kilimani", "Karen" inside Nairobi, or "Diani" in Mombasa.
+    for (const area of location[city]) {
       const count = await Escort.countDocuments({
         location: { $regex: new RegExp(area, 'i') },
         allowedtopost: true
@@ -435,10 +455,9 @@ app.get('/areas-with-counts', async (req, res) => {
       result[city].push({ name: area, count });
     }
   }
-
+  console.log(JSON.stringify(result, null, 2));
   res.json(result);
 });
-
 
 const DEFAULT_IMAGE = 'https://storge.pic2.me/c/1360x800/717/55661ae60b86a.jpg';
 
@@ -856,21 +875,33 @@ app.post('/profile/edit', async (req, res) => {
 
 //  GET 
 //  Renders homepage with boosted escorts first, then random others.
-
 app.get('/', async (req, res) => {
-  let escort
+  let escort;
+
   try {
-    if(req.session.escort){
-      escort = await Escort.findOne({email: req.session.escort.email})
-    }else{
+    if (req.session.escort) {
+      escort = await Escort.findOne({ email: req.session.escort.email });
+      // Calculate age for logged-in escort
+      if (escort && escort.dob) {
+        const birthDate = new Date(escort.dob);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+          age--;
+        }
+        escort.age = age;
+      }
+    } else {
       escort = null;
     }
+
     // 1️⃣ Check cache first
     let verified = homeCache.get('home_escorts');
     if (!verified) {
       // 2️⃣ No cache hit → fetch and compute
       const escorts = await Escort.find({ allowedtopost: true })
-        .select('name location userImg about phone city gender')
+        .select('name location userImg phone city gender dob about')
         .lean();
 
       const activeBoosts = await BoostRequest.find({
@@ -886,14 +917,29 @@ app.get('/', async (req, res) => {
         return m;
       }, {});
 
-      // filter+annotate
+      // filter+annotate + age calculation
       verified = escorts
         .filter(e => e.name && e.about && e.userImg && e.location)
-        .map(e => ({
-          ...e,
-          isBoosted: Boolean(boostMap[e._id.toString()]),
-          boostType: boostMap[e._id.toString()] || null
-        }));
+        .map(e => {
+          // Calculate age
+          let age = null;
+          if (e.dob) {
+            const birthDate = new Date(e.dob);
+            const today = new Date();
+            age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+              age--;
+            }
+          }
+
+          return {
+            ...e,
+            age,
+            isBoosted: Boolean(boostMap[e._id.toString()]),
+            boostType: boostMap[e._id.toString()] || null
+          };
+        });
 
       // sort boosted first, shuffle rest
       const orderRank = { gold: 3, silver: 2, bronze: 1, null: 0 };
@@ -912,15 +958,14 @@ app.get('/', async (req, res) => {
     }
 
     // 4️⃣ Render (uses cached or freshly computed)
-   res.render('index', {
-    loggedInEscort: escort || null,
-    escorts: verified,
-    city: 'Nairobi', // or a generic default
-    meta: metData(req)
-  });
+    res.render('index', {
+      loggedInEscort: escort || null,
+      escorts: verified,
+      city: 'Nairobi',
+      meta: metData(req)
+    });
 
-  }
-  catch (err) {
+  } catch (err) {
     console.error('Error in home route:', err);
     res.status(500).json({ error: 'Internal server error' });
   }
