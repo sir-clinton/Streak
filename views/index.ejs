@@ -59,17 +59,17 @@
                       <option value="Select City" disabled selected hidden>Select City</option>
                       <option value="Nairobi">Nairobi</option>
                       <option value="Mombasa">Mombasa</option>
-                      <option value="Nakuru">Nakuru</option>
+                      <option value="Kiambu">Kiambu</option>
+                      <!-- <option value="Nakuru">Nakuru</option>
                       <option value="Kisumu">Kisumu</option>
                       <option value="Eldoret">Eldoret</option>
-                      <option value="Kiambu">Kiambu</option>
                       <option value="Machakos">Machakos</option>
                       <option value="Laikipia">Laikipia</option>
                       <option value="Kajiado">Kajiado</option>
                       <option value="Kilifi">Kilifi</option>
                       <option value="Uasin Gishu">Uasin Gishu</option>
                       <option value="Kisii">Kisii</option>
-                      <option value="Kakamega">Kakamega</option>
+                      <option value="Kakamega">Kakamega</option> -->
                     </select>
                     <button id='submit' type="submit">Filter</button>
                 </form>
@@ -79,7 +79,7 @@
          <section id="main" class="main">
             <div class="listings" id="listings" style="position: relative">
                 <% if(escorts.length ===  0){ %>
-                    <p style="position: absolute; top:50%; left: 50%; transform: translate(-50%,-50%);">No profiles available at the moment. Please check back soon!
+                    <p style="position: absolute; top:50%; left: 50%; transform: translateX(-50%)">No profiles available at the moment. Please check back soon!
                     </p>
                     <% } %>
                  <% escorts.forEach(escort => {  %>
@@ -89,13 +89,14 @@
                 </div>
                 <div class="info">
                     <p class="escort-name"><%= escort.name.split(' ')[0]%></p>
-                    <p><i class="fa-solid fa-location-dot" style="color: #6c757d;"></i> Kware.</p>
+                    <!-- <p><i class="fa-solid fa-location-dot" style="color: #6c757d;"></i> Kware.</p> -->
                 </div><hr>
                 <p style="padding: 4px;color: #6c757d;">Meet <%= escort.name.split(' ')[0]%> a <%= escort.age %> years old <%= escort.gender%> Escort from <%= escort.city%> <%= escort.location %> area.</p>
                 <div class="call">
-                    CALL <%= escort.name.split(' ')[0].toUpperCase() %>
-                    &nbsp;<i class="fa fa-phone"></i>
+                CALL <%= escort.name.split(' ')[0].toUpperCase() %>
+                &nbsp;<i class="fa fa-phone"></i>
                 </div>
+
             </a>
                 <% });%>
         </div>     
