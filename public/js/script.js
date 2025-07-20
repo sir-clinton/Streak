@@ -114,7 +114,7 @@ let prefferedOption = localStorage.getItem('prefferedOption')
     : {city: 'Nairobi', gender: 'Female'};
     // Load cached area count data
   let cached = localStorage.getItem('cachedAreaCounts') ? JSON.parse(localStorage.getItem('cachedAreaCounts')) : []
-  const cacheExpiry = 25 * 60 * 1000; // 25 mins
+  const cacheExpiry = 10 * 60 * 1000; // 25 mins
 
   let areaData;
 
