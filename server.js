@@ -445,16 +445,16 @@ app.get('/escorts-from-:area', async (req, res) => {
 app.get('/areas-with-counts', async (req, res) => {
   const location = {
     Nairobi: [
-      "Kilimani", "Westlands", "Karen", "CBD", "Roysambu", "Ngara", "Donholm", "Nairobi West",
+      "Kilimani", "Westlands", "Karen", "CBD", "Roysambu", "Ngara", "Donholm", "Nairobi West","Donholm", "Dandora", "Ojijo", "Yaya", "Sarit",
       "Ruaka", "Syokimau", "Kitengela", "Embakasi", "South B", "South C", "Lavington", "Parklands"
     ],
     Kiambu: [
       "Juja", "Kikuyu", "Ruiru", "Githurai",
       "Thika", "Limuru", "Kabete", "Tigoni"
-    ],
-    Mombasa: [
-      "Diani", "Nyali", "Likoni",
-      "Mtwapa", "Bamburi", "Shanzu", "Kisauni"]}
+    ]}
+    // : [
+    //   "Diani", "Nyali", "Likoni",
+    //   "Mtwapa", "Bamburi", "Shanzu", "Kisauni"]}
   //   ]}
   //   Nakuru: [
   //     "Naivasha", "Nakuru Town", "Gilgil",
