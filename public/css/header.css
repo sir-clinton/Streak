@@ -40,7 +40,8 @@
         left: 0;
         z-index: 199999;
         width: 130px;
-        height: 100vh;;
+        height: 100vh;
+        scrollbar-width:none;
         overflow-y: auto;
         background-color: #fff;
         /* display: none; */
