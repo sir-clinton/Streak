@@ -364,6 +364,26 @@ app.get('/admin', isAdmin, (req, res) => {
   res.sendFile(path.join(__dirname, 'adminDashboard.html'));
 });
 
+app.get('/admin/users', async (req, res) => {
+  try {
+  const users = await Escort.find({}).select('name email role isVerified');
+  res.status(200).json(users)
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: 'Failed to load users' });
+  }
+  
+})
+
+app.get('/admin/boosts', async (req, res)=>{
+  try{
+    const boostedUsers = await BoostRequest.find({ status: 'confirmed' }).select('escort timestamp mpesaRef status');
+    res.status(200).json(boostedUsers)
+  } catch (err) {
+    console.log(err);
+    res.json([])
+  }
+})
 app.post('/admin/approve-boost/:id', isAdmin, async (req, res) => {
   const boost = await BoostRequest.findById(req.params.id);
   if (!boost) return res.status(404).send("Not found.");
