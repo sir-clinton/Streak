@@ -112,8 +112,8 @@
       const pendingTableBody = document.querySelector('#pending-boosts-table tbody');
       pendingTableBody.innerHTML = pendingBoosts.map(b => `
         <tr>
-          <td>${b.userName || 'N/A'}</td>
-          <td>${new Date(b.createdAt).toLocaleDateString()}</td>
+          <td>${b.name || 'N/A'}</td>
+          <td>${new Date(b.timestamp).toLocaleDateString()}, ${new Date(b.timestamp).toLocaleTimeString()}</td>
           <td>${b.mpesaRef || '—'}</td>
           <td>${b.status}</td>
           <td><button onclick="approveBoost('${b._id}')">Approve</button></td>
