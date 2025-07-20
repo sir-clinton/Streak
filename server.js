@@ -367,11 +367,11 @@ app.post('/admin/approve-boost/:id', isAdmin, async (req, res) => {
   const boost = await BoostRequest.findById(req.params.id);
   if (!boost) return res.status(404).send("Not found.");
 
-  boost.status    = 'approved';
+  boost.status    = 'confirmed';
   boost.expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // +7 days
   await boost.save();
 
-res.json({ success: true, message: "Boost approved and expires in one week." });
+res.json({ success: true, message: "Boost confirmed and expires in one week." });
 });
  
 app.get('/escorts-from-:area', async (req, res) => {
@@ -520,7 +520,7 @@ app.get('/author/:name', async (req, res) => {
       // 🔥 Get boost levels (gold/silver/bronze)
       const candidateIds = candidates.map(c => c._id);
       const boosts = await BoostRequest.find({
-        status: 'approved',
+        status: 'confirmed',
         expiresAt: { $gt: new Date() },
         escort: { $in: candidateIds }
       }).select('escort boostType').lean();
@@ -925,7 +925,7 @@ app.get('/', async (req, res) => {
         .lean();
 
       const activeBoosts = await BoostRequest.find({
-        status: 'approved',
+        status: 'confirmed',
         expiresAt: { $gt: new Date() }
       })
         .select('escort boostType')
