@@ -360,7 +360,7 @@ function isAdmin(req, res, next) {
   }
 }
 app.get('/admin', isAdmin, (req, res) => {
-  res.sendFile(path.join(__dirname, 'adminDashboard'));
+  res.sendFile(path.join(__dirname, 'adminDashboard.html'));
 });
 
 app.post('/admin/approve-boost/:id', isAdmin, async (req, res) => {

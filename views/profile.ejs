@@ -264,6 +264,11 @@
             <div class="listings" style="justify-content: flex-start">
                <% similarEscorts.forEach(escort => { %>
                 <a href='/author/<%= escort.name%>' class="card" style="display: flex">
+                    <% if (escort.isBoosted) { %>
+                    <div class="badge <%= escort.boostType %>">
+                        <%= escort.boostType %>
+                    </div>
+                    <% } %>
                 <div class="image-wrapper">
                     <img loading="lazy" src="<%= escort.userImg%>" alt="<%= escort.name%>">
                 </div>
