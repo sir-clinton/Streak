@@ -472,35 +472,40 @@ app.get('/author/:name', async (req, res) => {
     let cached = profileCache.get(cacheKey);
     let escort, similarEscorts;
 
+    // 🌐 Use cached version if available
     if (cached) {
       escort = cached.escort;
       similarEscorts = cached.similarEscorts;
     } else {
+      // 🔍 Find the requested escort by name
       const doc = await Escort.findOne({ name: username, allowedtopost: true }).lean();
       if (!doc) {
         return res.status(404).json({ error: 'Profile not found' });
       }
 
-      // Normalize profile fields
+      // 🎂 Calculate age
       if (doc.dob) {
-        const today = new Date(), bd = new Date(doc.dob);
+        const today = new Date();
+        const bd = new Date(doc.dob);
         let age = today.getFullYear() - bd.getFullYear();
         const m = today.getMonth() - bd.getMonth();
         if (m < 0 || (m === 0 && today.getDate() < bd.getDate())) age--;
         doc.age = age;
       }
+
+      // ⚖️ Normalize weight
       if (typeof doc.weight === 'string') {
         doc.weight = Number(doc.weight);
       }
 
-      // Fallbacks
-      doc.userImg       = doc.userImg?.trim()       ? doc.userImg       : DEFAULT_IMAGE;
-      doc.backgroundImg = doc.backgroundImg?.trim() ? doc.backgroundImg : DEFAULT_IMAGE;
-      doc.about         = doc.about?.trim()         ? doc.about         : 'No bio available.';
+      // 🖼️ Fallbacks for missing media
+      doc.userImg       = doc.userImg?.trim()       || DEFAULT_IMAGE;
+      doc.backgroundImg = doc.backgroundImg?.trim() || DEFAULT_IMAGE;
+      doc.about         = doc.about?.trim()         || 'No bio available.';
       escort = doc;
 
-      // Find similar escorts in same city + location
-      const cityRegex     = new RegExp(escort.city, 'i');
+      // 🤝 Find similar escorts in same city/location
+      const cityRegex = new RegExp(escort.city, 'i');
       const locationRegex = new RegExp(escort.location, 'i');
 
       const candidates = await Escort.find({
@@ -512,7 +517,7 @@ app.get('/author/:name', async (req, res) => {
       .select('name userImg city location gender dob weight backgroundImg services')
       .lean();
 
-      // Get boost info
+      // 🔥 Get boost levels (gold/silver/bronze)
       const candidateIds = candidates.map(c => c._id);
       const boosts = await BoostRequest.find({
         status: 'approved',
@@ -525,10 +530,12 @@ app.get('/author/:name', async (req, res) => {
         return map;
       }, {});
 
+      // 🎲 Sort boosted and non-boosted candidates
       const boostedArr = [], normalArr = [];
       const orderRank = { gold: 3, silver: 2, bronze: 1, null: 0 };
 
       candidates.forEach(c => {
+        // age & weight normalization
         if (c.dob) {
           const today = new Date(), bd = new Date(c.dob);
           let age = today.getFullYear() - bd.getFullYear();
@@ -541,42 +548,55 @@ app.get('/author/:name', async (req, res) => {
         }
 
         // Fallbacks
-        c.userImg       = c.userImg?.trim()       ? c.userImg       : DEFAULT_IMAGE;
-        c.backgroundImg = c.backgroundImg?.trim() ? c.backgroundImg : DEFAULT_IMAGE;
-        c.about         = c.about?.trim()         ? c.about         : 'No bio available.';
+        c.userImg       = c.userImg?.trim()       || DEFAULT_IMAGE;
+        c.backgroundImg = c.backgroundImg?.trim() || DEFAULT_IMAGE;
+        c.about         = c.about?.trim()         || 'No bio available.';
 
-        // Boost tags
+        // Boost info
         c.isBoosted = Boolean(boostMap[c._id.toString()]);
         c.boostType = boostMap[c._id.toString()] || null;
 
-        if (c.isBoosted) boostedArr.push(c);
-        else normalArr.push(c);
+        // Sort
+        (c.isBoosted ? boostedArr : normalArr).push(c);
       });
 
+      // 🏅 Sort boosted escorts by boost level
       boostedArr.sort((a, b) => orderRank[b.boostType] - orderRank[a.boostType]);
+
+      // 🎰 Shuffle normal candidates
       for (let i = normalArr.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [normalArr[i], normalArr[j]] = [normalArr[j], normalArr[i]];
       }
 
+      // 🧮 Pick top 4 similar profiles
       similarEscorts = [...boostedArr, ...normalArr].slice(0, 4);
+
+      // 💾 Cache profile and recommendations
       profileCache.set(cacheKey, { escort, similarEscorts });
     }
 
-    const viewerId = req.user?._id || null;
-    const [ , totalViews ] = await Promise.all([
-      ProfileView.create({ profile: escort._id, viewer: viewerId }),
-      ProfileView.countDocuments({ profile: escort._id })
-    ]);
+    // 🕵️ Log the view using IP address for uniqueness
+    const viewerIp = req.headers['x-forwarded-for']?.split(',')[0] || req.socket.remoteAddress;
+
+    await ProfileView.findOneAndUpdate(
+      { profile: escort._id, ipAddress: viewerIp },
+      { $setOnInsert: { viewedAt: new Date() } },
+      { upsert: true, new: true }
+    );
+
+    // 📊 Count total views
+    const totalViews = await ProfileView.countDocuments({ profile: escort._id });
     escort.totalViews = totalViews;
 
+    // 🖼️ Render profile with similar escorts
     res.render('profile', { escort, similarEscorts });
+
   } catch (err) {
     console.error('Error in /author/:name route:', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
 
 app.get('/city/:name', async (req, res) => {
   const gender = req.query.gender;
