@@ -121,9 +121,9 @@
     const submitbtn = document.querySelector('#submit');
 
     function validateEmail(emailInput) {
-      const regex = /^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$/;
-      return regex.test(emailInput.trim());
-    }
+  const regex = /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,6}$/;
+  return regex.test(emailInput.trim());
+}
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
