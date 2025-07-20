@@ -331,10 +331,11 @@ app.post('/boost-request', async (req, res) => {
   try {
     const { boostType, location, mpesaRef } = req.body;
     const pricePaid = PRICING[boostType] || 0;
-    const escortId  = req.session?.escort?._id || "anonymous";
+    const escortId  = req.session?.escort?.id || "anonymous";
 
     const request = new BoostRequest({
       escort:     escortId,
+      name: req.session?.escort?.name || null,
       boostType,
       pricePaid,         // ← record the actual cost
       location,
@@ -379,21 +380,67 @@ app.get('/escorts-from-:area', async (req, res) => {
 
   try {
     const escorts = await Escort.find({
-      location: { $regex: new RegExp(area, 'i') }, // case-insensitive match
+      location: { $regex: new RegExp(area, 'i') },
       allowedtopost: true
+    }).lean();
+
+    const boosts = await BoostRequest.find({
+      status: 'confirmed',
+      expiresAt: { $gt: new Date() }
+    }).select('escort boostType').lean();
+
+    const boostMap = boosts.reduce((map, b) => {
+      map[b.escort.toString()] = b.boostType;
+      return map;
+    }, {});
+
+    const ranked = escorts.map(e => {
+      let age = null;
+      if (e.dob) {
+        const bd = new Date(e.dob), today = new Date();
+        age = today.getFullYear() - bd.getFullYear();
+        const m = today.getMonth() - bd.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < bd.getDate())) age--;
+      }
+      return {
+        ...e,
+        age,
+        isBoosted: Boolean(boostMap[e._id.toString()]),
+        boostType: boostMap[e._id.toString()] || null
+      };
     });
 
-    if (!escorts.length) {
-      return res.render('index', { escorts: [], message: `No escorts in ${area} yet.`, meta: metData(req), city: 'Nairobi'});
+    const orderRank = { gold: 3, silver: 2, bronze: 1, null: 0 };
+    const boosted = ranked.filter(e => e.isBoosted).sort((a, b) => orderRank[b.boostType] - orderRank[a.boostType]);
+    const normal = ranked.filter(e => !e.isBoosted);
+    for (let i = normal.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [normal[i], normal[j]] = [normal[j], normal[i]];
     }
 
-    res.render('index', { escorts, message: null, meta: metData(req),city: 'Nairobi', });
+    const finalList = [...boosted, ...normal];
+
+    if (!finalList.length) {
+      return res.render('index', {
+        escorts: [],
+        message: `No profiles in ${area} yet.`,
+        meta: metData(req),
+        city: 'Nairobi'
+      });
+    }
+
+    res.render('index', {
+      escorts: finalList,
+      message: null,
+      meta: metData(req),
+      city: 'Nairobi'
+    });
+
   } catch (err) {
-    console.error(`Error fetching escorts from ${area}:`, err);
+    console.error(`Error fetching from ${area}:`, err);
     res.status(500).send('Internal Server Error');
   }
 });
-
 
 app.get('/areas-with-counts', async (req, res) => {
   const location = {
@@ -600,12 +647,12 @@ app.get('/author/:name', async (req, res) => {
 
 app.get('/city/:name', async (req, res) => {
   const gender = req.query.gender;
-  const city   = req.params.name;
+  const city = req.params.name;
 
   if (!mongoConnected) {
     return res.status(503).render('index', {
       escorts: [],
-      message: 'Service temporarily unavailable. Database connection failed.',
+      message: 'Service temporarily unavailable.',
       city,
       meta: metData(req)
     });
@@ -614,9 +661,9 @@ app.get('/city/:name', async (req, res) => {
   if (!city || !gender) {
     return res.status(400).render('index', {
       escorts: [],
-      message: 'Missing gender or city filter',
-      meta: metData(req),
-      city
+      message: 'Missing filter.',
+      city,
+      meta: metData(req)
     });
   }
 
@@ -627,46 +674,74 @@ app.get('/city/:name', async (req, res) => {
       gender: { $regex: new RegExp(`^${gender}$`, 'i') }
     }).lean();
 
-    escorts = escorts.filter(e => e.about && e.userImg && e.name && e.location);
+    const boosts = await BoostRequest.find({
+      status: 'confirmed',
+      expiresAt: { $gt: new Date() }
+    }).select('escort boostType').lean();
 
-    if (escorts.length === 0) {
+    const boostMap = boosts.reduce((map, b) => {
+      map[b.escort.toString()] = b.boostType;
+      return map;
+    }, {});
+
+    escorts = escorts
+      .filter(e => e.about && e.userImg && e.name && e.location)
+      .map(e => {
+        let age = null;
+        if (e.dob) {
+          const bd = new Date(e.dob), today = new Date();
+          age = today.getFullYear() - bd.getFullYear();
+          const m = today.getMonth() - bd.getMonth();
+          if (m < 0 || (m === 0 && today.getDate() < bd.getDate())) age--;
+        }
+        return {
+          ...e,
+          age,
+          isBoosted: Boolean(boostMap[e._id.toString()]),
+          boostType: boostMap[e._id.toString()] || null
+        };
+      });
+
+    const orderRank = { gold: 3, silver: 2, bronze: 1, null: 0 };
+    const boosted = escorts.filter(e => e.isBoosted).sort((a, b) => orderRank[b.boostType] - orderRank[a.boostType]);
+    const normal = escorts.filter(e => !e.isBoosted);
+    for (let i = normal.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [normal[i], normal[j]] = [normal[j], normal[i]];
+    }
+
+    const finalList = [...boosted, ...normal];
+
+    if (!finalList.length) {
       return res.render('index', {
         escorts: [],
-        message: 'No verified escorts match that filter',
+        message: 'No verified profiles match that filter.',
         city,
         meta: metData(req)
       });
     }
 
-    // Shuffle results
-    for (let i = escorts.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [escorts[i], escorts[j]] = [escorts[j], escorts[i]];
-    }
-
     res.render('index', {
-  escorts,
-  city,
-  gender,
-  message: null,
-  meta: {
-    title: `Escorts in ${city} for ${gender} | Raha.com`,
-    description: `Explore verified ${gender.toLowerCase()} escorts available in ${city}. Companions for your chill days and hype nights.`,
-    image: escorts[0]?.userImg || 'https://raha.com/default-preview.jpg',
-    url: req.protocol + '://' + req.get('host') + req.originalUrl
-  }
-});
-
+      escorts: finalList,
+      city,
+      gender,
+      message: null,
+      meta: {
+        title: `Profiles in ${city} for ${gender} | YourSite.com`,
+        description: `Explore verified ${gender.toLowerCase()} profiles available in ${city}.`,
+        image: finalList[0]?.userImg || '/default-preview.jpg',
+        url: req.protocol + '://' + req.get('host') + req.originalUrl
+      }
+    });
 
   } catch (err) {
-    console.error('Filter error:', err);
+    console.error('Error in filter route:', err);
     res.status(500).render('index', {
       escorts: [],
-      message: 'Server error while filtering'
+      message: 'Server error while filtering.'
     });
   }
 });
-
 app.get('/register', (req, res)=> {
     res.sendFile(path.join(__dirname, 'register.html'));
 })
@@ -699,11 +774,11 @@ app.post('/register', async (req, res) => {
     });
 
     const mailOptions = {
-      from: 'muneneclinton159@gmail.com',
+      from: 'shale.online@gmail.com',
       to: escort.email,
       subject: 'Email Verification',
       html: `<p>Hi ${escort.name}, please verify your email by clicking:</p>
-            <a href="http://192.168.0.107:3000/verify/${verificationToken}">Verify Email</a>`
+            <a href="https://streak-1.onrender.com/verify/${verificationToken}">Verify Email</a>`
     };
 
     await transporter.sendMail(mailOptions);
@@ -737,7 +812,7 @@ app.get('/verify/:token', async (req, res) => {
 });
 
 
-app.get('/login', loginLimiter, (req, res)=> {
+app.get('/login', (req, res)=> {
     if(req.session.isLoggedIn) {
         return res.redirect('/');
     }
