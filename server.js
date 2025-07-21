@@ -968,7 +968,7 @@ app.get('/profile', async (req, res) => {
   escort.totalViews = viewCount;
 
   const missingFields = getMissingFields(escort);
-
+  console.log(escort);
   res.render('escort', {
     loggedInEscort: escort,
     missingFields: missingFields
@@ -984,7 +984,7 @@ app.post('/profile/edit', async (req, res) => {
   console.log(updatedData);
 
   try {
-    const escort = await Escort.findOne({ email: req.session.escort.email });
+    let escort = await Escort.findOne({ email: req.session.escort.email }).lean();
 
     if (!escort) {
       return res.status(404).json({ error: 'Escort not found' });
@@ -996,7 +996,7 @@ app.post('/profile/edit', async (req, res) => {
       delete updatedData.gallery;
     }
 
-    Object.assign(escort, updatedData);
+    escort = {...escort, ...updatedData};
 
     escort.age = Number(updatedData.age || escort.age);
     escort.weight = Number(updatedData.weight || escort.weight);
@@ -1014,7 +1014,7 @@ app.post('/profile/edit', async (req, res) => {
     // Optional: calculate missing fields
     const missingFields = getMissingFields(escort); // your custom function
 
-    console.log(`Escort profile updated: ${escort.name}`);
+    console.log(`Escort profile updated: ${escort}`);
     return res.json({ loggedInEscort: escort, missingFields, success: true });
 
   } catch (err) {

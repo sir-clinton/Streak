@@ -8,6 +8,7 @@
     scrollbar-width: thin;
 }html,body{
     min-height: 100vh !important;
+    color: #444;
 }
 
 .container {

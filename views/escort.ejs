@@ -84,9 +84,20 @@
         visibility: visible;
         }
     
-        .gallery img {
-            margin-right: 10px;
+        .gallery {
+            display: flex;
+            background: #f0f0f0;
+            width: fit-content;
+            padding: 10px;
             margin-bottom: 10px;
+            border-radius: 5px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }.gallery img {
+            width: 100px;
+            height: 100px;
+            flex: 50%;
+            object-fit: cover;
             border-radius: 5px;
         }
         .similar-escorts {
@@ -455,7 +466,7 @@
 </head>
 <body>
 <!-- include('partials/header') -->
-<div id="galleryOpacity">
+<div id="galleryOpacity" style="background-color: rgba(0, 0, 0);">
     <span style="cursor: pointer; position: absolute; top: 20px; right: 25px; color: white; font-size: 2.1rem" id="closeImgOpacity">&times;</span>
     <div class="carousel" style="position: relative;">
         <button class="slide-arrow" id="slide-arrow-prev">
@@ -523,36 +534,32 @@
                      <h3>Social Links</h3>
                 <ul>
                     <span class="mockupText">Social Media Links</span>
-                
+                                
+                <%
+                const platforms = [
+                    { key: 'instagram', prefix: 'https://instagram.com/', icon: 'instagram' },
+                    { key: 'facebook', prefix: 'https://facebook.com/', icon: 'facebook-f' },
+                    { key: 'twitter', prefix: 'https://twitter.com/', icon: 'twitter' },
+                    { key: 'tiktok', prefix: 'https://www.tiktok.com/@', icon: 'tiktok' },
+                    { key: 'snapchat', prefix: 'https://www.snapchat.com/add/', icon: 'snapchat' }
+                ];
+                %>
+
                 <div class="mockupArea2" style="display: flex; gap: 10px; flex-wrap: wrap;">
-                    <% if (loggedInEscort.instagram) { %>
-                        <li id="instagram"><a href="<%= loggedInEscort.instagram %>" target="_blank">                        
-                            <i class="fab fa-instagram"></i></a>
-                        </li>
-                    <% } %>
-                    <% if (loggedInEscort.facebook) { %>
-                        <li id="facebook"><a href="<%= loggedInEscort.facebook %>" target="_blank">
-                            <i class="fab fa-facebook-f"></i>
-                        </a></li>
-                    <% } %>
-                    <% if (loggedInEscort.twitter) { %>
-                        <li id="twitter"><a href="<%= loggedInEscort.twitter %>" target="_blank">
-                            <i class="fab fa-twitter"></i>
-                        </a></li>
-                    <% } %>
-                    <% if (loggedInEscort.tiktok) { %>
-                        <li id="tiktok"><a href="<%= loggedInEscort.tiktok %>" target="_blank">
-                            <i class="fab fa-tiktok"></i>
-                        </a></li>
-                    <% } %>
-                    <% if (loggedInEscort.snapchat) { %>
-                        <li id="snapchat"><a href="<%= loggedInEscort.snapchat %>" target="_blank">
-                            <i class="fab fa-snapchat"></i>
-                        </a></li>
-                    <% } %>
-                </div>   
-                    
-                </ul>
+                <% platforms.forEach(function({ key, prefix, icon }) {
+                    var username = (loggedInEscort.socialLinks && loggedInEscort.socialLinks[key])
+                    ? loggedInEscort.socialLinks[key].trim()
+                    : '';
+                    if (username) { %>
+                    <li id="<%= key %>">
+                        <a href="<%= prefix + username %>" target="_blank">
+                        <i class="fab fa-<%= icon %>"></i>
+                        </a>
+                    </li>
+                <% } }); %>
+                </div>
+
+              </ul>
 <br>
                     <h3>Contact Information</h3>
                 <p><strong>Phone:</strong><span id="phone-display"> <%= loggedInEscort.phone || 'Not provided'%> </span></p>
@@ -597,26 +604,24 @@
             </div>
 
             <div class="right">
-                <label class="field-label">About Me</label>
-                <textarea id="about-input" name="about"><%= loggedInEscort.about || '' %></textarea>
-
+                
                 <label class="field-label">Phone</label>
                 <input type="text" name="phone" id="phone-input" value="<%= loggedInEscort.phone || '' %>">
 
                 <label class="field-label">Instagram</label>
-                <input type="url" name="instagram" id="instagram-input" placeholder="Paste your instagram link here..." value="<%= loggedInEscort.instagram || '' %>">
+                <input type="url" name="instagram" id="instagram-input" placeholder="Paste your instagram name here..." value="<%= loggedInEscort.socialLinks.instagram || '' %>">
 
                 <label class="field-label">Facebook</label>
-                <input type="url" name="facebook" id="facebook-input" placeholder="Paste your facebook link here..." value="<%= loggedInEscort.facebook || '' %>">
+                <input type="url" name="facebook" id="facebook-input" placeholder="Paste your facebook name here..." value="<%= loggedInEscort.socialLinks.facebook || '' %>">
 
                 <label class="field-label">Twitter</label>
-                <input type="url" name="twitter" id="twitter-input" placeholder="Paste your twitter link here..." value="<%= loggedInEscort.twitter || '' %>">
+                <input type="url" name="twitter" id="twitter-input" placeholder="Paste your twitter name here..." value="<%= loggedInEscort.socialLinks.twitter || '' %>">
 
                 <label class="field-label">TikTok</label>
-                <input type="url" name="tiktok" id="tiktok-input" placeholder="Paste your tiktok link here..." value="<%= loggedInEscort.tiktok || '' %>">
+                <input type="url" name="tiktok" id="tiktok-input" placeholder="Paste your tiktok name here..." value="<%= loggedInEscort.socialLinks.tiktok || '' %>">
 
                 <label class="field-label">Snapchat</label>
-                <input type="url" name="snapchat" id="snapchat-input" placeholder="Paste your snapchat link here..." value="<%= loggedInEscort.snapchat || '' %>">
+                <input type="url" name="snapchat" id="snapchat-input" placeholder="Paste your snapchat name here..." value="<%= loggedInEscort.socialLinks.snapchat || '' %>">
             </div>
             <div id="edit-buttons" class="edit-buttons" style="display: none;">
                 <button class="save-btn" type="button">Save</button>
@@ -630,7 +635,7 @@
             <!-- Buttons -->
 </div></div>
 <script defer src="/js/gallery.js"></script>
-<script defer src="/js/debugsaving.js"></script>
+<!-- <script defer src="/js/debugsaving.js"></script> -->
 <!-- <script defer src="/js/script.js"></script>  no need after removing header wish it wil reduce loading/lagging-->
 <script>
   const editBtn = document.querySelector('.edit-bt');
@@ -640,6 +645,8 @@
     const editImg = document.querySelector('#edit-img'),
         editImage = document.querySelector('#edit-image'),
       galleryContainer = document.querySelector('#gallery'),
+      displayMode = document.querySelector('#display-mode'),
+      editMode = document.querySelector('#edit-mode'),
       backgroundCont = document.querySelector('.img-container');
     const editImageBg = document.querySelector('#editImageBg');
 function toggleMenu() {
@@ -849,31 +856,79 @@ document.querySelector('.cancel-btn').addEventListener('click', () => {
   document.querySelector('.display-mode').style.display = 'flex';
 });
 
-//   saveBtn.addEventListener('click', () => {
-//     const data = {
-//       name: document.getElementById('name-input').value,
-//       email: document.getElementById('email-input').value,
-//       city: document.getElementById('city-input').value
-//     };
 
-//     fetch('/profile/edit', {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json'
-//       },
-//       body: JSON.stringify(data)
-//     }).then(res => res.json())
-//       .then(result => {
-//         if (result.success) {
-//           location.reload();
-//         } else {
-//           alert('Update failed');
-//         }
-//       });
-//     document.querySelector('.edit-btn').style.display = 'none';
-//   });
+// 🧠 Mapping display fields to input data keys
+function updateDisplayFields(data) {
+  const fieldMap = {
+    name: 'name-display',
+    city: 'city-display',
+    location: 'location-display',
+    phone: 'phone-display'
+  };
 
-  function showToast(message) {
+  const socialMap = {
+    instagram: {
+      id: 'instagram-display',
+      baseUrl: 'https://instagram.com/'
+    },
+    facebook: {
+      id: 'facebook-display',
+      baseUrl: 'https://facebook.com/'
+    },
+    twitter: {
+      id: 'twitter-display',
+      baseUrl: 'https://twitter.com/'
+    },
+    tiktok: {
+      id: 'tiktok-display',
+      baseUrl: 'https://www.tiktok.com/@'
+    },
+    snapchat: {
+      id: 'snapchat-display',
+      baseUrl: 'https://www.snapchat.com/add/'
+    }
+  };
+
+  // ✅ Update standard fields like name, city, etc.
+  for (let key in fieldMap) {
+    if (data[key]) {
+      const el = document.getElementById(fieldMap[key]);
+      if (el) {
+        el.textContent = key === 'name'
+          ? `Hi ${data[key].split(' ')[0]}`
+          : data[key];
+      }
+    }
+  }
+
+  // 🔗 Update social media links from data.socialLinks
+  for (let key in socialMap) {
+    if (data.socialLinks && data.socialLinks[key]) {
+      const social = socialMap[key];
+      const el = document.getElementById(social.id);
+      if (el) {
+        const username = data.socialLinks[key].trim();
+        el.innerHTML = `<a href="${social.baseUrl}${username}" target="_blank"><i class="fab fa-${key}"></i></a>`;
+      }
+    }
+  }
+}
+// 🏷 Update profile badge state
+function updateBadge(missingFields) {
+  const badgeContainer = document.getElementById('profile-status');
+  badgeContainer.innerHTML = missingFields.length === 0
+    ? `<span class="badge success-badge tooltip">
+         <i class="fas fa-check-circle"></i>
+         <span class="tooltiptext">Profile is complete</span>
+       </span>`
+    : `<span class="badge alert-badge tooltip">
+         <i class="fas fa-exclamation-circle"></i>
+         <span class="tooltiptext">Incomplete Profile (${missingFields.length})</span>
+       </span>`;
+}
+
+// 🚨 Toast messaging
+function showToast(message) {
   const toast = document.getElementById('toast');
   toast.textContent = message;
   toast.classList.add('show');
@@ -882,6 +937,57 @@ document.querySelector('.cancel-btn').addEventListener('click', () => {
     toast.classList.remove('show');
   }, 3000);
 }
+
+// 📝 Save logic on button click
+const saveBtn = document.querySelector('.save-btn');
+saveBtn.addEventListener('click', async () => {
+  const data = {
+    name: document.getElementById('name-input').value,
+    location: document.getElementById('location-input').value,
+    city: document.getElementById('city-input').value,
+    socialLinks: {
+    instagram: document.getElementById('instagram-input').value || '',
+    facebook: document.getElementById('facebook-input').value || '',
+    twitter: document.getElementById('twitter-input').value || '',
+    tiktok: document.getElementById('tiktok-input').value || '',
+    snapchat: document.getElementById('snapchat-input').value || '',
+    phone: document.getElementById('phone-input').value || ''}
+  };
+
+  saveBtn.disabled = true;
+  saveBtn.textContent = "Saving…";
+
+  try {
+    const res = await fetch('/profile/edit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    const result = await res.json();
+
+    if (result.success) {
+      updateDisplayFields(data);
+      updateBadge(result.missingFields || []);
+      showToast("Profile updated successfully ✅");
+
+      // 💡 Switch back to display mode
+      editMode.classList.add('hide');
+      displayMode.classList.remove('hide');
+      document.querySelector('.edit-mode').style.display = 'none';
+      document.querySelector('.edit-buttons').style.display = 'none';
+      document.querySelector('.display-mode').style.display = 'flex';
+    } else {
+      showToast("Update failed ❌");
+    }
+  } catch (err) {
+    console.error("Save error:", err);
+    showToast("Something went wrong. Try again.");
+  } finally {
+    saveBtn.disabled = false;
+    saveBtn.textContent = "Save";
+  }
+});
 
 </script>
 <div id="toast" class="toast-message"></div>

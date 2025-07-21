@@ -18,11 +18,13 @@
     <meta name="twitter:card" content="summary_large_image" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.cdnfonts.com/css/satoshi" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/satoshi?display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-    <link rel="stylesheet" href="/css/styles.css">  
+    <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous"> -->
+    <!-- ✅ Preload critical CSS -->
+    <link rel="preload" href="/css/styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/css/styles.css"></noscript>
     <link rel="stylesheet" href="/css/header.css">
     <link rel="stylesheet" href="/css/footer.css">
     <style>
@@ -71,7 +73,7 @@
                       <option value="Kisii">Kisii</option>
                       <option value="Kakamega">Kakamega</option> -->
                     </select>
-                    <button id='submit' type="submit">Filter</button>
+                    <button aria-label="filter button" id='submit' type="submit">Filter</button>
                 </form>
             </div>
          </section>
@@ -90,11 +92,11 @@
                     </div>
                     <% } %>
                 <div class="image-wrapper">
-                    <img loading="lazy" src="<%= escort.userImg%>" alt="<%= escort.name%>">
+                    <img loading="lazy" width="200" height="200" src="<%= escort.userImg%>" alt="<%= escort.name%>">
                 </div>
                 <div class="info">
                     <p class="escort-name"><%= escort.name.split(' ')[0]%></p>
-                    <span><i style="color:  #ccc" class="fa-solid fa-bookmark"></i></span>
+                    <span aria-label="Bookmark profile"><i style="color: #444" class="fa-solid fa-bookmark" aria-hidden="true"></i></span>
                     <!-- <p><i class="fa-solid fa-location-dot" style="color: #6c757d;"></i> Kware.</p> -->
                 </div><hr>
                 <p style="padding: 4px;color: #6c757d;">Meet <%= escort.name.split(' ')[0]%> a <%= escort.age %> years old <%= escort.gender%> Escort from <%= escort.city%> <%= escort.location %> area.</p>
@@ -109,132 +111,43 @@
         </section>
     </div>
      <%- include('partials/footer')  %>
-    <script>
-     // JavaScript
+    <script defer>
+    document.addEventListener('DOMContentLoaded', () => {
+  // Code to set up your UI goes here
+   // JavaScript
      let prefferedOption = localStorage.getItem('prefferedOption')
     ? JSON.parse(localStorage.getItem('prefferedOption'))
     : {city: 'Nairobi', gender: 'Female'};
   
      document.getElementById('gender').value = prefferedOption.gender
      document.getElementById('city').value = prefferedOption.city;
+     const form = document.querySelector('#filter-form');
    
 
         // const form = document.getElementById('filter-form');
         // const gender = document.getElementById('gender');
         // const city   = document.getElementById('city');
         // const listings = document.querySelector('.listings');
+        form.addEventListener('submit', submitForm);
         
-  function submitForm(e) {  
-    e.preventDefault();
-    const gender = document.getElementById('gender').value;
-    const city = document.getElementById('city').value;
-    if (!gender || !city || gender === 'Select Gender' || city === 'Select City') return;
-        localStorage.setItem('prefferedOption', JSON.stringify({city, gender}));
+        function submitForm(e) {  
+            // if (typeof window === 'undefined') return;
+            e.preventDefault();
+            const gender = document.getElementById('gender').value;
+            const city = document.getElementById('city').value;
 
-    window.location.href = `/city/${encodeURIComponent(city)}?gender=${encodeURIComponent(gender)}`;
-  // const submenu = document.getElementById('browse-escorts-submenu');
-  // const listings = document.getElementById('listings'); // assuming you have this container
-  // const filter = { gender: gender.value.trim(), city: city.value.trim() };
+            if (!gender || !city || gender === 'Select Gender' || city === 'Select City') return;
+                localStorage.setItem('prefferedOption', JSON.stringify({city, gender}));
 
-  // if (
-  //   !filter.gender || !filter.city ||
-  //   filter.gender === 'Select Gender' ||
-  //   filter.city === 'Select City'
-  // ) return;
+            window.location.href = `/city/${encodeURIComponent(city)}?gender=${encodeURIComponent(gender)}`;
+        
+        }
+  
+});
 
-  // // Save preferred city
-
-  // // Clear current area submenu
-  // submenu.innerHTML = '';
-
-  // try {
-  //   // Fetch filtered escort listings
-  //   const res = await fetch('/filter', {
-  //     method: 'POST',
-  //     headers: { 'Content-Type': 'application/json' },
-  //     body: JSON.stringify(filter)
-  //   });
-
-  //   const data = await res.json();
-
-  //   if (!data.success || !Array.isArray(data.results) || data.results.length === 0) {
-  //     listings.innerHTML = '<p>No matches found.</p>';
-  //     return;
-  //   }
-
-  //   // Display escort cards
-  //   listings.innerHTML = '';
-  //   data.results.forEach(escort => {
-  //     const card = document.createElement('a');
-  //     card.className = 'card';
-  //     card.href = `/author/${encodeURIComponent(escort.name)}`;
-  //     card.innerHTML = `
-  //       <div class="image-wrapper">
-  //         <img src="${escort.userImg}" alt="${escort.name}">
-  //       </div>
-  //       <div class="info">
-  //         <p class="escort-name">${escort.name}</p>
-  //         <p class="escort-phone"><span>Phone:</span> ${escort.phone}</p>
-  //       </div>
-  //       <div class="call">CALL ${escort.name.split(' ')[0].toUpperCase()}</div>
-  //     `;
-  //     listings.appendChild(card);
-  //   });
-
-  //   // Area counts section
-  //   submenu.innerHTML = '<p>Loading areas...</p>';
-
-  //   // Load cached area data if available
-  //   let cached = JSON.parse(localStorage.getItem('cachedAreaCounts'));
-  //   const cacheExpiry = 25 * 60 * 1000;
-  //   let areaData;
-
-  //   if (cached && (Date.now() - cached.timestamp < cacheExpiry)) {
-  //     areaData = cached.data;
-  //   } else {
-  //     const resArea = await fetch('/areas-with-counts');
-  //     const fresh = await resArea.json();
-  //     areaData = fresh;
-  //     localStorage.setItem('cachedAreaCounts', JSON.stringify({
-  //       data: fresh,
-  //       timestamp: Date.now()
-  //     }));
-  //   }
-
-  //   submenu.innerHTML = '';
-
-  //   const preferredCity = JSON.parse(localStorage.getItem('prefferredCity')) || 'Nairobi';
-  //   const areas = areaData[preferredCity];
-
-  //   if (!Array.isArray(areas)) {
-  //     submenu.innerHTML = '<p>No area data available for this city.</p>';
-  //     return;
-  //   }
-
-  //   areas.forEach(el => {
-  //     const a = document.createElement('a');
-  //     a.className = 'area-item';
-
-  //     if (el.count === 0) {
-  //       a.classList.add('disabled');
-  //       a.href = 'javascript:void(0)';
-  //       a.style.pointerEvents = 'none';
-  //     } else {
-  //       a.href = `/escorts-from-${el.name}`;
-  //     }
-
-  //     a.innerText = `${el.name} (${el.count})`;
-  //     submenu.appendChild(a);
-  //   });
-
-  // } catch (err) {
-  //   console.error('Fetch error:', err);
-  //   listings.innerHTML = '<p>Something went wrong while loading results.</p>';
-  //   submenu.innerHTML = '<p>Unable to load areas.</p>';
-  // }
-}
+    
  </script>
- <script type="application/ld+json">
+ <script defer type="application/ld+json">
   <%= JSON.stringify({
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
@@ -249,6 +162,6 @@
   "url": meta?.url
 }) %>
  </script>
-    <script type='module' src="/js/script.js"></script>
+    <script defer type='module' src="/js/script.js"></script>
 </body>
 </html>
