@@ -59,14 +59,17 @@
 
   <table id="pending-boosts-table">
     <thead>
-      <tr>
-        <th>User</th>
-        <th>Request Date</th>
-        <th>M-Pesa Ref</th>
-        <th>Status</th>
-        <th>Action</th>
-      </tr>
-    </thead>
+  <tr>
+    <th>User</th>
+    <th>Request Date</th>
+    <th>M-Pesa Ref</th>
+    <th>Status</th>
+    <th>Tier</th>
+    <th>Duration</th>
+    <th>Expires In</th>
+    <th>Action</th>
+  </tr>
+</thead>
     <tbody></tbody>
   </table>
 
@@ -84,60 +87,62 @@
   </table>
 
   <script>
-    let boostsData = [];
+  let boostsData = [];
 
-    async function loadDashboard() {
-      // Load boosts
-      const boostsRes = await fetch('/admin/boosts');
-      boostsData = await boostsRes.json();
-      renderBoosts();
+  async function loadDashboard() {
+    const boostsRes = await fetch('/admin/boosts');
+    boostsData = await boostsRes.json();
+    renderBoosts();
 
-      // Load users
-      const usersRes = await fetch('/admin/users');
-      const users = await usersRes.json();
+    const usersRes = await fetch('/admin/users');
+    const users = await usersRes.json();
 
-      const usersTableBody = document.querySelector('#users-table tbody');
-      usersTableBody.innerHTML = users.map(user => `
-        <tr>
-          <td>${user.name}</td>
-          <td>${user.email}</td>
-          <td>${user.role}</td>
-          <td>${user.isVerified ? '✅' : '❌'}</td>
-        </tr>
-      `).join('');
+    const usersTableBody = document.querySelector('#users-table tbody');
+    usersTableBody.innerHTML = users.map(user => {`
+      <tr>
+        <td>${user.name}</td>
+        <td>${user.email}</td>
+        <td>${user.role}</td>
+        <td>${user.isVerified ? '✅' : '❌'}</td>
+      </tr>
+    `}).join('');
+  }
+
+  function renderBoosts(filtered = boostsData) {
+  const pendingBoosts = filtered.filter(b => b.status === 'pending');
+  const pendingTableBody = document.querySelector('#pending-boosts-table tbody');
+  pendingTableBody.innerHTML = pendingBoosts.map(b => `
+    <tr>
+      <td>${b.name || 'N/A'}</td>
+      <td>${new Date(b.timestamp).toLocaleDateString()}<br>${new Date(b.timestamp).toLocaleTimeString()}</td>
+      <td>${b.mpesaRef || '—'}</td>
+      <td>${b.status}</td>
+      <td>${b.tier || '—'}</td>
+      <td>${b.duration || '—'}</td>
+      <td>${b.daysRemaining} days</td>
+      <td><button onclick="approveBoost('${b._id}')">Approve</button></td>
+    </tr>
+  `).join('');
+}
+
+
+  function filterBoosts() {
+    const query = document.getElementById('mpesa-search').value.trim().toLowerCase();
+    const filtered = boostsData.filter(b => b.mpesaRef?.toLowerCase().includes(query));
+    renderBoosts(filtered);
+  }
+
+  async function approveBoost(id) {
+    const res = await fetch(`/admin/approve-boost/${id}`, { method: 'POST' });
+    if (res.ok) {
+      alert('Boost approved!');
+      loadDashboard();
+    } else {
+      alert('Failed to approve boost.');
     }
+  }
 
-    function renderBoosts(filtered = boostsData) {
-      const pendingBoosts = filtered.filter(b => b.status === 'pending');
-      const pendingTableBody = document.querySelector('#pending-boosts-table tbody');
-      pendingTableBody.innerHTML = pendingBoosts.map(b => `
-        <tr>
-          <td>${b.name || 'N/A'}</td>
-          <td>${new Date(b.timestamp).toLocaleDateString()}, ${new Date(b.timestamp).toLocaleTimeString()}</td>
-          <td>${b.mpesaRef || '—'}</td>
-          <td>${b.status}</td>
-          <td><button onclick="approveBoost('${b._id}')">Approve</button></td>
-        </tr>
-      `).join('');
-    }
-
-    function filterBoosts() {
-      const query = document.getElementById('mpesa-search').value.trim().toLowerCase();
-      const filtered = boostsData.filter(b => b.mpesaRef?.toLowerCase().includes(query));
-      renderBoosts(filtered);
-    }
-
-    async function approveBoost(id) {
-      const res = await fetch(`/admin/approve-boost/${id}`, { method: 'POST' });
-      if (res.ok) {
-        alert('Boost approved!');
-        loadDashboard();
-      } else {
-        alert('Failed to approve boost.');
-      }
-    }
-
-    loadDashboard();
-  </script>
+  loadDashboard();
+</script>
 </body>
 </html>

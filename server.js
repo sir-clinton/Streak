@@ -319,10 +319,21 @@ app.listen(PORT, () => {
 // ProfileView.createIndexes({ profile: 1 });
 // server.js (or wherever you configure your app)
 const PRICING = {
-  bronze: 100,
-  silver: 200,
-  gold:   300
+  'bronze-weekly': 100,
+  'silver-weekly': 200,
+  'gold-weekly': 300,
+  'bronze-monthly': 400,
+  'silver-monthly': 800,
+  'gold-monthly': 1200
 };
+
+const orderRank = { gold: 3, silver: 2, bronze: 1, null: 0 };
+
+const getPureTier = (boostType = '') => {
+  const parts = boostType.split('-');
+  return parts[0]; // 'gold', 'silver', or 'bronze'
+};
+
 
 app.get('/boost-request', (req, res) => {
   res.status(200).sendFile(path.join(__dirname, 'boostform.html'));
@@ -375,24 +386,60 @@ app.get('/admin/users', async (req, res) => {
   
 })
 
-app.get('/admin/boosts', async (req, res)=>{
-  try{
-    const boostedUsers = await BoostRequest.find({ status: 'confirmed' }).select('escort timestamp mpesaRef status');
-    res.status(200).json(boostedUsers)
-  } catch (err) {
-    console.log(err);
-    res.json([])
-  }
-})
 app.post('/admin/approve-boost/:id', isAdmin, async (req, res) => {
-  const boost = await BoostRequest.findById(req.params.id);
-  if (!boost) return res.status(404).send("Not found.");
+  try {
+    const boost = await BoostRequest.findById(req.params.id);
+    if (!boost) return res.status(404).send("Boost request not found.");
 
-  boost.status    = 'confirmed';
-  boost.expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // +7 days
-  await boost.save();
+    // 🧠 Parse duration from boostType (e.g. 'gold-weekly' or 'silver-monthly')
+    const [tier, duration] = boost.boostType?.split('-') || [];
 
-res.json({ success: true, message: "Boost confirmed and expires in one week." });
+    // ⏳ Determine expiration period
+    let durationDays = 7; // default
+    if (duration === 'monthly') durationDays = 30;
+    else if (duration === 'weekly') durationDays = 7;
+
+    // 🗓️ Approve and set expiry
+    boost.status = 'confirmed';
+    boost.expiresAt = new Date(Date.now() + durationDays * 24 * 60 * 60 * 1000);
+    await boost.save();
+
+    res.json({
+      success: true,
+      message: `Boost confirmed (${tier}, ${duration}) and expires in ${durationDays} days.`
+    });
+
+  } catch (err) {
+    console.error('Error approving boost:', err);
+    res.status(500).json({ success: false, error: 'Server error during boost approval.' });
+  }
+});
+
+
+app.get('/admin/boosts', async (req, res) => {
+  try {
+    const boostedUsers = await BoostRequest.find({ status: 'pending' })
+      .select('escort name timestamp mpesaRef status expiresAt boostType')
+      .lean();
+
+    const now = new Date();
+    const formatted = boostedUsers.map(b => {
+      const [tier, duration] = b.boostType?.split('-') || ['N/A', 'N/A'];
+      return {
+        ...b,
+        tier,
+        duration,
+        daysRemaining: b.expiresAt
+          ? Math.max(0, Math.ceil((new Date(b.expiresAt) - now) / (1000 * 60 * 60 * 24)))
+          : '—'
+      };
+    });
+
+    res.status(200).json(formatted);
+  } catch (err) {
+    console.error(err);
+    res.json([]);
+  }
 });
  
 app.get('/escorts-from-:area', async (req, res) => {
@@ -430,8 +477,10 @@ app.get('/escorts-from-:area', async (req, res) => {
       };
     });
 
-    const orderRank = { gold: 3, silver: 2, bronze: 1, null: 0 };
-    const boosted = ranked.filter(e => e.isBoosted).sort((a, b) => orderRank[b.boostType] - orderRank[a.boostType]);
+    const boosted = ranked.filter(e => e.isBoosted).sort(
+      (a, b) => orderRank[getPureTier(b.boostType)] - orderRank[getPureTier(a.boostType)]
+    );
+
     const normal = ranked.filter(e => !e.isBoosted);
     for (let i = normal.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -539,18 +588,15 @@ app.get('/author/:name', async (req, res) => {
     let cached = profileCache.get(cacheKey);
     let escort, similarEscorts;
 
-    // 🌐 Use cached version if available
     if (cached) {
       escort = cached.escort;
       similarEscorts = cached.similarEscorts;
     } else {
-      // 🔍 Find the requested escort by name
       const doc = await Escort.findOne({ name: username, allowedtopost: true }).lean();
       if (!doc) {
         return res.status(404).json({ error: 'Profile not found' });
       }
 
-      // 🎂 Calculate age
       if (doc.dob) {
         const today = new Date();
         const bd = new Date(doc.dob);
@@ -560,18 +606,15 @@ app.get('/author/:name', async (req, res) => {
         doc.age = age;
       }
 
-      // ⚖️ Normalize weight
       if (typeof doc.weight === 'string') {
         doc.weight = Number(doc.weight);
       }
 
-      // 🖼️ Fallbacks for missing media
-      doc.userImg       = doc.userImg?.trim()       || DEFAULT_IMAGE;
+      doc.userImg = doc.userImg?.trim() || DEFAULT_IMAGE;
       doc.backgroundImg = doc.backgroundImg?.trim() || DEFAULT_IMAGE;
-      doc.about         = doc.about?.trim()         || 'No bio available.';
+      doc.about = doc.about?.trim() || 'No bio available.';
       escort = doc;
 
-      // 🤝 Find similar escorts in same city/location
       const cityRegex = new RegExp(escort.city, 'i');
       const locationRegex = new RegExp(escort.location, 'i');
 
@@ -580,11 +623,8 @@ app.get('/author/:name', async (req, res) => {
         _id: { $ne: escort._id },
         city: cityRegex,
         location: locationRegex
-      })
-      .select('name userImg city location gender dob weight backgroundImg services')
-      .lean();
+      }).select('name userImg city location gender dob weight backgroundImg services').lean();
 
-      // 🔥 Get boost levels (gold/silver/bronze)
       const candidateIds = candidates.map(c => c._id);
       const boosts = await BoostRequest.find({
         status: 'confirmed',
@@ -597,53 +637,46 @@ app.get('/author/:name', async (req, res) => {
         return map;
       }, {});
 
-      // 🎲 Sort boosted and non-boosted candidates
       const boostedArr = [], normalArr = [];
-      const orderRank = { gold: 3, silver: 2, bronze: 1, null: 0 };
 
       candidates.forEach(c => {
-        // age & weight normalization
         if (c.dob) {
-          const today = new Date(), bd = new Date(c.dob);
+          const today = new Date();
+          const bd = new Date(c.dob);
           let age = today.getFullYear() - bd.getFullYear();
           const m = today.getMonth() - bd.getMonth();
           if (m < 0 || (m === 0 && today.getDate() < bd.getDate())) age--;
           c.age = age;
         }
+
         if (typeof c.weight === 'string') {
           c.weight = Number(c.weight);
         }
 
-        // Fallbacks
-        c.userImg       = c.userImg?.trim()       || DEFAULT_IMAGE;
+        c.userImg = c.userImg?.trim() || DEFAULT_IMAGE;
         c.backgroundImg = c.backgroundImg?.trim() || DEFAULT_IMAGE;
-        c.about         = c.about?.trim()         || 'No bio available.';
+        c.about = c.about?.trim() || 'No bio available.';
 
-        // Boost info
         c.isBoosted = Boolean(boostMap[c._id.toString()]);
         c.boostType = boostMap[c._id.toString()] || null;
 
-        // Sort
         (c.isBoosted ? boostedArr : normalArr).push(c);
       });
 
-      // 🏅 Sort boosted escorts by boost level
-      boostedArr.sort((a, b) => orderRank[b.boostType] - orderRank[a.boostType]);
+      boostedArr.sort((a, b) =>
+        orderRank[getPureTier(b.boostType)] - orderRank[getPureTier(a.boostType)]
+      );
 
-      // 🎰 Shuffle normal candidates
       for (let i = normalArr.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [normalArr[i], normalArr[j]] = [normalArr[j], normalArr[i]];
       }
 
-      // 🧮 Pick top 4 similar profiles
       similarEscorts = [...boostedArr, ...normalArr].slice(0, 4);
 
-      // 💾 Cache profile and recommendations
       profileCache.set(cacheKey, { escort, similarEscorts });
     }
 
-    // 🕵️ Log the view using IP address for uniqueness
     const viewerIp = req.headers['x-forwarded-for']?.split(',')[0] || req.socket.remoteAddress;
 
     await ProfileView.findOneAndUpdate(
@@ -652,11 +685,9 @@ app.get('/author/:name', async (req, res) => {
       { upsert: true, new: true }
     );
 
-    // 📊 Count total views
     const totalViews = await ProfileView.countDocuments({ profile: escort._id });
     escort.totalViews = totalViews;
 
-    // 🖼️ Render profile with similar escorts
     res.render('profile', { escort, similarEscorts });
 
   } catch (err) {
@@ -709,7 +740,8 @@ app.get('/city/:name', async (req, res) => {
       .map(e => {
         let age = null;
         if (e.dob) {
-          const bd = new Date(e.dob), today = new Date();
+          const bd = new Date(e.dob);
+          const today = new Date();
           age = today.getFullYear() - bd.getFullYear();
           const m = today.getMonth() - bd.getMonth();
           if (m < 0 || (m === 0 && today.getDate() < bd.getDate())) age--;
@@ -722,8 +754,10 @@ app.get('/city/:name', async (req, res) => {
         };
       });
 
-    const orderRank = { gold: 3, silver: 2, bronze: 1, null: 0 };
-    const boosted = escorts.filter(e => e.isBoosted).sort((a, b) => orderRank[b.boostType] - orderRank[a.boostType]);
+    const boosted = escorts
+      .filter(e => e.isBoosted)
+      .sort((a, b) => orderRank[getPureTier(b.boostType)] - orderRank[getPureTier(a.boostType)]);
+
     const normal = escorts.filter(e => !e.isBoosted);
     for (let i = normal.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -755,13 +789,14 @@ app.get('/city/:name', async (req, res) => {
     });
 
   } catch (err) {
-    console.error('Error in filter route:', err);
+    console.error('Error in /city/:name route:', err);
     res.status(500).render('index', {
       escorts: [],
       message: 'Server error while filtering.'
     });
   }
 });
+
 app.get('/register', (req, res)=> {
     res.sendFile(path.join(__dirname, 'register.html'));
 })
@@ -996,7 +1031,6 @@ app.get('/', async (req, res) => {
   try {
     if (req.session.escort) {
       escort = await Escort.findOne({ email: req.session.escort.email });
-      // Calculate age for logged-in escort
       if (escort && escort.dob) {
         const birthDate = new Date(escort.dob);
         const today = new Date();
@@ -1011,32 +1045,30 @@ app.get('/', async (req, res) => {
       escort = null;
     }
 
-    // 1️⃣ Check cache first
+    // Check cache
     let verified = homeCache.get('home_escorts');
     if (!verified) {
-      // 2️⃣ No cache hit → fetch and compute
+      // Fetch verified escorts
       const escorts = await Escort.find({ allowedtopost: true })
         .select('name location userImg phone city gender dob about')
         .lean();
 
+      // Active boosts
       const activeBoosts = await BoostRequest.find({
         status: 'confirmed',
         expiresAt: { $gt: new Date() }
-      })
-        .select('escort boostType')
-        .lean();
+      }).select('escort boostType').lean();
 
-      // build lookup map
+      // Boost map
       const boostMap = activeBoosts.reduce((m, b) => {
         m[b.escort.toString()] = b.boostType;
         return m;
       }, {});
 
-      // filter+annotate + age calculation
+      // Annotate escorts
       verified = escorts
         .filter(e => e.name && e.about && e.userImg && e.location)
         .map(e => {
-          // Calculate age
           let age = null;
           if (e.dob) {
             const birthDate = new Date(e.dob);
@@ -1047,7 +1079,6 @@ app.get('/', async (req, res) => {
               age--;
             }
           }
-
           return {
             ...e,
             age,
@@ -1056,23 +1087,25 @@ app.get('/', async (req, res) => {
           };
         });
 
-      // sort boosted first, shuffle rest
-      const orderRank = { gold: 3, silver: 2, bronze: 1, null: 0 };
+      // Prioritize boosted by tier only
       const boosted = verified
         .filter(e => e.isBoosted)
-        .sort((a, b) => orderRank[b.boostType] - orderRank[a.boostType]);
+        .sort((a, b) =>
+          orderRank[getPureTier(b.boostType)] - orderRank[getPureTier(a.boostType)]
+        );
+
+      // Shuffle non-boosted
       const normal = verified.filter(e => !e.isBoosted);
       for (let i = normal.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [normal[i], normal[j]] = [normal[j], normal[i]];
       }
 
-      // 3️⃣ Cache the combined result for 40s
       verified = [...boosted, ...normal];
       homeCache.set('home_escorts', verified);
     }
 
-    // 4️⃣ Render (uses cached or freshly computed)
+    // Render homepage
     res.render('index', {
       loggedInEscort: escort || null,
       escorts: verified,
