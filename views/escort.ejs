@@ -42,6 +42,7 @@
         margin-bottom: 16px;
         padding: 6px 12px;
         border-radius: 12px;
+        transition: opacity 0.3s ease;
         display: inline-block;
         font-weight: 600;
         }
@@ -240,7 +241,17 @@
                 scrollbar-width: none;
                 -ms-overflow-style: none; /* IE and Edge */
                 -webkit-overflow-scrolling: touch;
+                /* //added code */
+                scrollbar-width: thin;
+                scrollbar-color:  #ccc transparent;
+            }.edit-mode::-webkit-scrollbar {
+              width: 6px;
             }
+            .edit-mode::-webkit-scrollbar-thumb {
+              background-color: #ccc;
+              border-radius: 6px;
+            }
+
             .display-mode .right h2{
                 margin-bottom: 20px;
             }
@@ -286,6 +297,11 @@
                 background-color: #25D366;
                     color: white;
             }
+            /* remember in future to add this for login page  */
+            .save-btn:active {
+              transform: scale(0.97);
+              box-shadow: inset 0 2px 6px rgba(0,0,0,0.15);
+            }
 
             .profile-content-wrapper .edit-buttons .save-btn:hover {
                 background-color: #1aa85b;
@@ -304,6 +320,9 @@
                 width: 100%;
                 max-width: 970px;
             }
+              .profile-content-wrapper {
+                flex-direction: column;
+              }
             /* .profile-content-wrapper  {
                 flex-direction: row;
                 flex-wrap: nowrap;
@@ -383,13 +402,14 @@
     gap: 16px;
 }.profile-menu li a:hover{
     text-decoration: underline;
-}@media (max-width < 768px){
+}@media (max-width : 768px){
     .profile-menu{
         padding: 20px 0;
     }
 }
 .img-placeholder {
   position: absolute;
+  transition: opacity 0.3s ease, transform 0.3s ease;
   inset: 0;
   background: rgba(0, 0, 0, .6);
   z-index: 9999;
@@ -400,6 +420,7 @@
 
 .img-container:hover .img-placeholder {
   display: flex;
+  transform: scale(1.01);
   opacity: 0.8;
   pointer-events: auto;
 }.menu-container {
@@ -436,10 +457,14 @@
 .menu-dropdown li a {
   display: block;
   padding: 10px 15px;
+  outline: none;
   text-decoration: none;
   color: #333;
 }
-
+.menu-dropdown li a:focus {
+  background-color: #25D366;
+  color: white;
+}
 .menu-dropdown li a:hover {
   background-color: #f0f0f0;
 }
@@ -450,9 +475,12 @@
   font-size: inherit;
 }
 
-.back-home:hover {
-  background-color: #e0e0e0;
-}@media (min-width: 768px){
+.menu-dropdown ul li a:hover {
+  background-color: #25D366;
+  color: white;
+  transition: background 0.3s ease;
+}
+@media (min-width: 768px){
     .profile-info #home{
         display: none;
     }.menu-container{
@@ -483,7 +511,7 @@
     </div>
     <div class="profile-content-wrapper">
         <div class="img-container" style="cursor: pointer; margin-bottom: 28px; position: relative;background-image: url(<%= loggedInEscort.backgroundImg%>);background-size: cover; background-position: center; background-repeat: no-repeat; min-height: 210px">
-            <div class="profile-info" style="display: flex; gap: 8px; padding: 10px; color: white; font-size: .9rem; font-weight: 600; position: absolute; top: 0; left: 0; z-index: 9999999;"><span id="home"><a href="/" class="back-home"><i class="fa-solid fa-arrow-left"></i> Home</a></span><span>.</span></span><span><i class="fas fa-eye"></i>views (<%= loggedInEscort?.totalViews?.toLocaleString?.() || '0' %>)</span><span>.</span><span><i class="fa-solid fa-bookmark"></i> 2k</span></div>
+            <div class="profile-info" style="display: flex; gap: 8px; padding: 10px; color: white; font-size: .9rem; font-weight: 600; position: absolute; top: 0; left: 0; z-index: 9999999;"><span id="home"><a href="/" class="back-home"><i class="fa-solid fa-arrow-left"></i> Home</a></span><span>.</span></span><span><i class="fas fa-eye"></i>views (<%= loggedInEscort?.totalViews?.toLocaleString?.() || '0' %>)</span><span>.</span><span><i class="fa-solid fa-bookmark"></i></span></div>
             <div class="menu-container" style="position: absolute; top: 0; right: 2%; padding: 10px; z-index: 9999999;">
             <button class="menu-trigger" onclick="toggleMenu()">
                 <i style="color: white" class="fa-solid fa-ellipsis-vertical"></i>
@@ -491,8 +519,8 @@
             <div class="menu-dropdown" id="dropdownMenu">
                 <ul>
                 <li><a href="#" id="edit-bt" class="edit-bt">Edit</a></li>
-                <li><a href="#">Settings</a></li>
-                <li><a href="/logout">Logout</a></li>
+                <li><a href="/settings" >Settings</a></li>
+                <li><a href="#" id="tools" role="menuitem">Logout</a></li>
                 </ul>
             </div>
             </div>
@@ -649,6 +677,11 @@
       editMode = document.querySelector('#edit-mode'),
       backgroundCont = document.querySelector('.img-container');
     const editImageBg = document.querySelector('#editImageBg');
+
+    document.querySelector('#tools').addEventListener('click', ()=>{
+    if(!confirm('Are you sure you want to log out?')) return;
+      window.location.href = `/logout`;
+    })
 function toggleMenu() {
   const menu = document.getElementById("dropdownMenu");
   menu.style.display = menu.style.display === "block" ? "none" : "block";

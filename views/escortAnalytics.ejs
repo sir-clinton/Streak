@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link rel="icon" href="/favicon.ico">
+    <script src="https://kit.fontawesome.com/yourkit.js" crossorigin="anonymous"></script>
+    <title>Document</title>
+    <style>
+        .dashboard-box {
+  background: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  padding: 1rem;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin: 0 auto;
+}
+#dateRange {
+  padding: 8px;
+  margin-top: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 100%;
+  max-width: 300px;
+  box-sizing: border-box;
+}
+
+#profileViewsChart {
+  width: 100% !important;
+  max-width: 100%;
+  height: auto !important;
+  display: block;
+}
+
+.total-views-badge,
+.views-tooltip {
+  margin-top: 1rem;
+  font-size: 1rem;
+}
+
+@media (max-width: 600px) {
+  .dashboard-box {
+    padding: 0.75rem;
+  }
+
+  #profileViewsChart {
+    max-height: 250px;
+  }
+
+  .total-views-badge {
+    font-size: 0.9rem;
+  }
+
+  .views-tooltip {
+    font-size: 0.9rem;
+  }
+}
+
+    </style>
+</head>
+<body>
+<div class="dashboard-box">
+  <h2>Profile Insights</h2>
+  <input type="text" id="dateRange" placeholder="Select date range">
+  <div><i class="fas fa-eye"></i> Total Views: <strong id="totalViewsCount"><%= escort.totalViews || 0 %></strong></div>
+      
+  <canvas id="profileViewsChart" style="max-height: 300px;"></canvas>
+  <div id="noDataMessage" style="text-align:center; margin-top:0.5rem; font-size:0.9rem; color:#999;"></div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+  const end = new Date(); // today
+  const start = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000); // 30 days ago
+  fetchAnalytics(start, end);
+});
+
+    flatpickr("#dateRange", {
+        mode: "range",
+        dateFormat: "Y-m-d",
+        onClose: function(selectedDates) {
+            const [start, end] = selectedDates;
+            if (start && end) {
+            fetchAnalytics(start, end);
+            }
+        }
+        });
+
+  async function fetchAnalytics(startDate, endDate) {
+  try {
+    const escortId = '<%= escort.id %>';
+    console.log(escortId);
+    if (!startDate || !endDate || isNaN(startDate) || isNaN(endDate)) return;
+    const res = await fetch(`/analytics/${escortId}?start=${startDate.toISOString()}&end=${endDate.toISOString()}`);
+    const data = await res.json();
+
+    const labels = [];
+    const viewCounts = [];
+    console.log(data);
+    if (!data || !Array.isArray(data.views)) {
+      document.getElementById('noDataMessage').textContent = '❌ Could not load analytics. Please try again.';
+      return;
+    }
+    
+    data.views.forEach(v => {
+      const { day, month, year } = v._id;
+      labels.push(`${day}/${month}`);
+      viewCounts.push(v.count);
+    });
+    if (viewCounts.length === 0) {
+        labels.push('No Data');
+        viewCounts.push(0);
+        }
+
+
+    // Update total views badge
+    const total = viewCounts.reduce((a, b) => a + b, 0);
+    document.getElementById('totalViewsCount').textContent = total;
+
+    // Render chart
+    const ctx = document.getElementById('profileViewsChart').getContext('2d');
+    if (window.profileChart) window.profileChart.destroy(); // Destroy existing chart before replacing
+    const isEmpty = labels.length === 1 && labels[0] === 'No Data';
+    document.getElementById('noDataMessage').textContent = isEmpty
+  ? '📭 No activity recorded during this period.'
+  : '';
+
+    window.profileChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          animation: {
+            duration: 500,
+            easing: 'easeOutQuad'
+        },
+        label: 'Profile Views',
+        data: viewCounts,
+        borderColor: isEmpty ? 'rgba(150,150,150,0.8)' : '#00b894',
+        backgroundColor: isEmpty ? 'rgba(150,150,150,0.1)' : 'rgba(0,184,148,0.1)',
+        borderDash: isEmpty ? [5, 5] : [],
+        fill: true,
+        tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          title: { display: true, text: 'Profile Engagement (Selected Range)' }
+        },
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    });
+  } catch (err) {
+    console.error('Failed to fetch analytics:', err);
+  }
+}
+</script>
+</body>
+</html>

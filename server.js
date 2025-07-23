@@ -241,7 +241,24 @@ async function startServer() {
     await mongoose.connect(process.env.MONGO_URI);
     console.log('✅ Connected to MongoDB');
     mongoConnected = true;
+  //   async function updateEscortServices() {
+  // try {
+  //   const result = await Escort.updateMany(
+  //     { email: { $ne: 'muneneclinton797@gmail.com' } },
+  //     {
+  //       $addToSet: {
+  //         services: { $each: ['massage', 'girlfriend experience', 'travel companion', 'dinner date'] }
+  //       }
+  //     }
+  //   );
 
+  //   console.log(`${result.modifiedCount} escorts updated.`);
+//   } catch (err) {
+//     console.error('Update failed:', err);
+//   }
+// }
+
+// updateEscortServices();
   } catch (err) {
     console.error('❌ MongoDB connection error:', err.message);
     mongoConnected = false;
@@ -446,6 +463,8 @@ app.get('/escorts-from-:area', async (req, res) => {
   const area = req.params.area;
 
   try {
+    const escortEmail = req.session?.escort?.email;
+    const escort = escortEmail ? await Escort.findOne({ email: escortEmail }) : null;
     const escorts = await Escort.find({
       location: { $regex: new RegExp(area, 'i') },
       allowedtopost: true
@@ -492,6 +511,7 @@ app.get('/escorts-from-:area', async (req, res) => {
     if (!finalList.length) {
       return res.render('index', {
         escorts: [],
+        loggedInEscort: escort,
         message: `No profiles in ${area} yet.`,
         meta: metData(req),
         city: 'Nairobi'
@@ -500,6 +520,7 @@ app.get('/escorts-from-:area', async (req, res) => {
 
     res.render('index', {
       escorts: finalList,
+      loggedInEscort: escort,
       message: null,
       meta: metData(req),
       city: 'Nairobi'
@@ -584,6 +605,8 @@ app.get('/author/:name', async (req, res) => {
   }
 
   try {
+    const escortEmail = req.session?.escort?.email;
+    const author = escortEmail ? await Escort.findOne({ email: escortEmail }) : null;
     const cacheKey = `profile_${username}`;
     let cached = profileCache.get(cacheKey);
     let escort, similarEscorts;
@@ -688,13 +711,64 @@ app.get('/author/:name', async (req, res) => {
     const totalViews = await ProfileView.countDocuments({ profile: escort._id });
     escort.totalViews = totalViews;
 
-    res.render('profile', { escort, similarEscorts });
+    res.render('profile', { escort, similarEscorts, loggedInEscort: author });
 
   } catch (err) {
     console.error('Error in /author/:name route:', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+app.get('/settings', (req, res) => {
+    if (!req.session?.escort) {
+    return res.redirect('/login'); // or show error
+  }
+  const escort = req.session.escort;
+  res.render('escortAnalytics', { escort });
+});
+
+app.get('/analytics/:escortId', async (req, res) => {
+  const { escortId } = req.params;
+  const { start, end } = req.query;
+
+  if (req.session.escort.id !== escortId) {
+    return res.status(403).json({ error: 'Unauthorized' });
+  }
+// In your ProfileView schema:
+
+if (!start || !end || isNaN(Date.parse(start)) || isNaN(Date.parse(end))) {
+  return res.status(400).json({ error: 'Valid start and end dates required.' });
+}
+
+  try {
+    const views = await ProfileView.aggregate([
+      {
+        $match: {
+          profile: new mongoose.Types.ObjectId(escortId),
+          viewedAt: { $gte: new Date(start), $lte: new Date(end) }
+        }
+      },
+      {
+        $group: {
+          _id: {
+            day: { $dayOfMonth: "$viewedAt" },
+            month: { $month: "$viewedAt" },
+            year: { $year: "$viewedAt" }
+          },
+          count: { $sum: 1 }
+        }
+      },
+      { $sort: { "_id.year": 1, "_id.month": 1, "_id.day": 1 } }
+    ]);
+    console.log(views);
+
+    res.json({ views });
+  } catch (err) {
+    console.error('Analytics error:', err);
+    res.status(500).json({ error: 'Failed to fetch analytics.' });
+  }
+});
+
 
 app.get('/city/:name', async (req, res) => {
   const gender = req.query.gender;
@@ -719,7 +793,9 @@ app.get('/city/:name', async (req, res) => {
   }
 
   try {
-    let escorts = await Escort.find({
+      const escortEmail = req.session?.escort?.email;
+      const escort = escortEmail ? await Escort.findOne({ email: escortEmail }) : null;
+      let escorts = await Escort.find({
       allowedtopost: true,
       city: { $regex: new RegExp(`^${city}$`, 'i') },
       gender: { $regex: new RegExp(`^${gender}$`, 'i') }
@@ -769,6 +845,7 @@ app.get('/city/:name', async (req, res) => {
     if (!finalList.length) {
       return res.render('index', {
         escorts: [],
+        loggedInEscort: escort || null,
         message: 'No verified profiles match that filter.',
         city,
         meta: metData(req)
@@ -777,6 +854,7 @@ app.get('/city/:name', async (req, res) => {
 
     res.render('index', {
       escorts: finalList,
+      loggedInEscort: escort || null,
       city,
       gender,
       message: null,

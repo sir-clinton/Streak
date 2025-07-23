@@ -38,7 +38,70 @@
                 min-height:100vh;
             }main .listings .call:hover i {
                 color: #fff;
-            }
+            }.modal {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  z-index: 999;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 10% auto;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.close-btn {
+  float: right;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #333;
+}
+#openBookmarkModal {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  background-color: #25D366; /* WhatsApp green */
+  color: #fff;
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  z-index: 999;
+}
+
+#openBookmarkModal:hover {
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
+  transform: scale(1.05);
+}
+@keyframes floatUp {
+  0% { transform: translateY(40px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+#openBookmarkModal {
+  animation: floatUp 0.4s ease-out;
+}@media (min-width: 800px){
+  .fa-bookmark{
+    display: none;
+  }
+}
     </style>
 </head>
 <body>
@@ -51,13 +114,13 @@
             <div class="filter">
                 <label for="gender">Filter By</label><br><br>
                 <form id="filter-form" onsubmit="submitForm(event)" method="GET">
-                    <select id="gender" name="gender">
+                    <select id="gender" name="gender" aria-label="Gender filter">
                         <option value="Select Gender" disabled selected hidden>Select Gender</option>
                         <option value="Female">Female</option>
                         <option value="Male">Male</option>
                         <option value="Transexual">Transexual</option>
                     </select>
-                    <select id="city" name="city">
+                    <select id="city" name="city" aria-label="City filter">
                       <option value="Select City" disabled selected hidden>Select City</option>
                       <option value="Nairobi">Nairobi</option>
                       <!-- <option value="Mombasa">Mombasa</option> -->
@@ -81,7 +144,7 @@
          <section id="main" class="main">
             <div class="listings" id="listings" style="position: relative">
                 <% if(escorts.length ===  0){ %>
-                    <p style="position: absolute; top:50%; left: 50%; transform: translateX(-50%)">No profiles available at the moment. Please check back soon!
+                    <p style="position: absolute; top:50%; left: 50%; transform: translateX(-50%)">Please check back soon!
                     </p>
                     <% } %>
                  <% escorts.forEach(escort => {  %>
@@ -96,10 +159,11 @@
                 </div>
                 <div class="info">
                     <p class="escort-name"><%= escort.name.split(' ')[0]%></p>
-                    <span aria-label="Bookmark profile"><i style="color: #444" class="fa-solid fa-bookmark" aria-hidden="true"></i></span>
+                    <span aria-label="Bookmark profile"><i title="Bookmark this profile" class="fa-solid fa-bookmark bookmark-btn" data-id="<%= escort._id %>" data-name="<%= escort.name %>" data-img="<%= escort.userImg %>" style="color: #444" aria-hidden="true"></i></span>
+
                     <!-- <p><i class="fa-solid fa-location-dot" style="color: #6c757d;"></i> Kware.</p> -->
                 </div><hr>
-                <p style="padding: 4px;color: #6c757d;">Meet <%= escort.name.split(' ')[0]%> a <%= escort.age %> years old <%= escort.gender%> Escort from <%= escort.city%> <%= escort.location %> area.</p>
+                <p style="padding: 4px;color: #6c757d;">Meet <%= escort.name.split(' ')[0]%> a <%= escort.age %> years old <%= escort.gender%> Escort from <%= escort.city%>, <%= escort.location %> area.</p>
                 <div class="call">
                 CALL <%= escort.name.split(' ')[0].toUpperCase() %>
                 &nbsp;<i class="fa fa-phone"></i>
@@ -110,6 +174,17 @@
         </div>     
         </section>
     </div>
+
+    <div id="bookmarkModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn">&times;</span>
+    <h3>Your Bookmarked Escorts</h3>
+    <div id="bookmarkedList"></div>
+  </div>
+</div>
+<i class="fa-solid fa-bookmark" id="openBookmarkModal" title="Saved Profiles"></span></i>
+
+
      <%- include('partials/footer')  %>
     <script defer>
     document.addEventListener('DOMContentLoaded', () => {
@@ -142,6 +217,76 @@
             window.location.href = `/city/${encodeURIComponent(city)}?gender=${encodeURIComponent(gender)}`;
         
         }
+
+
+  document.querySelectorAll('.bookmark-btn').forEach(icon => {
+  icon.addEventListener('click', (e) => {
+    e.preventDefault();
+    const id = icon.dataset.id;
+    const name = icon.dataset.name;
+    const img = icon.dataset.img;
+
+    const bookmarks = JSON.parse(localStorage.getItem('bookmarkedEscorts')) || []; // ✅ Fresh copy per click
+    const isAlreadyBookmarked = bookmarks.some(item => item.id === id);
+
+    if (!isAlreadyBookmarked) {
+      bookmarks.push({ id, name, img });
+      localStorage.setItem('bookmarkedEscorts', JSON.stringify(bookmarks));
+      icon.style.color = '#25D366'; // Green
+    } else {
+      const updated = bookmarks.filter(item => item.id !== id);
+      localStorage.setItem('bookmarkedEscorts', JSON.stringify(updated));
+      icon.style.color = '#444'; // Grey
+    }
+  });
+});
+
+  // Show modal trigger (e.g. icon, button)
+document.getElementById('openBookmarkModal').addEventListener('click', () => {
+  const modal = document.getElementById('bookmarkModal');
+  const list = document.getElementById('bookmarkedList');
+  const bookmarks = JSON.parse(localStorage.getItem('bookmarkedEscorts')) || [];
+
+ list.innerHTML = bookmarks.length === 0 ? 
+  "<p>No bookmarks yet.</p>" : 
+  bookmarks.map(item => `
+    <div style="margin-bottom: 12px; display: flex; align-items: center;">
+      <img src="${item.img}" alt="${item.name}" width="60" style="border-radius:5px;">
+      <span style="margin-left:8px; flex: 1;">${item.name}</span>
+      <button class="remove-bookmark" data-id="${item.id}" style="background: none; border: none; color: #c0392b; cursor: pointer;">✕</button>
+    </div>
+  `).join('');
+  document.querySelectorAll('.remove-bookmark').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const id = btn.dataset.id;
+    const bookmarks = JSON.parse(localStorage.getItem('bookmarkedEscorts')) || []; // ✅ fresh copy
+    const updatedBookmarks = bookmarks.filter(item => item.id !== id);
+    localStorage.setItem('bookmarkedEscorts', JSON.stringify(updatedBookmarks));
+    btn.parentElement.remove();
+
+    if (updatedBookmarks.length === 0) {
+      document.getElementById('bookmarkModal').style.display = 'none';
+    }
+  });
+});
+
+  modal.style.display = "flex";
+});
+
+
+// Close modal
+document.querySelector('.close-btn').onclick = function () {
+  document.getElementById('bookmarkModal').style.display = "none";
+};
+
+// Close on outside click
+window.onclick = function(event) {
+  const modal = document.getElementById('bookmarkModal');
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+
   
 });
 

@@ -154,7 +154,7 @@ form button[type=submit]{
         max-width: 100%;
     }
     .card .info p {
-        font-size: 8.3rem;
+        font-size: .83rem;
         /* margin-bottom: 6px; */
         text-align: left;
     }.card .call{

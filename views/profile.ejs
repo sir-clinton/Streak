@@ -233,7 +233,7 @@
             <div class="box">
                 <div class="left">
                     <h3 style="padding: 10px 0">About <%= escort.name %></h3>
-                    <p id="about-display" style='background: #f0f0f0; border-radius: 5px'>This is <%= escort.name %>., She is a hot <%= escort.age %> years old in <%= escort.location %>. She offers the best <%= escort.services.join(', ') %> in <%= escort.location %> . To communicate with <%= escort.name %>. you can Contact her through her Number <%= escort.phone %> to arrange a meetup <%= escort.name %>. is your ideal escort.</p>
+                    <p id="about-display" style='background: #f0f0f0; border-radius: 5px'>This is <%= escort.name %>., She is a hot <%= escort.age %> years old escort in <%= escort.location %>. She offers the best <%= escort.services.join(', ') %> in <%= escort.location %> . To communicate with <%= escort.name %>. you can Contact her through her Number <%= escort.phone %> to arrange a meetup with <%= escort.name %>.</p>
                     <h3>Gallery</h3>
                 <% if (escort.gallery && escort.gallery.length > 0) { %>
                     <div class="gallery">
@@ -277,7 +277,7 @@
                     <span aria-label="Bookmark profile"><i style="color: #444" class="fa-solid fa-bookmark" aria-hidden="true"></i></span>
                     <!-- <p class="escort-phone"><span>Phone</span> 0751142915</p> -->
                 </div><hr>
-                    <p style="padding: 4px;color: #6c757d;">Meet <%= escort.name.split(' ')[0]%> a <%= escort.age %> years old <%= escort.gender%> Escort from <%= escort.city%> <%= escort.location %> area.</p>
+                    <p style="padding: 4px;color: #6c757d;">Meet <%= escort.name.split(' ')[0]%> a <%= escort.age %> years old <%= escort.gender%> Escort from <%= escort.city%>, <%= escort.location %> area.</p>
                 <div class="call">
                     CALL <%= escort.name.split(' ')[0].toUpperCase() %>
                     &nbsp;<i class="fa fa-phone"></i>
