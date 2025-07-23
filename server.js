@@ -241,24 +241,19 @@ async function startServer() {
     await mongoose.connect(process.env.MONGO_URI);
     console.log('✅ Connected to MongoDB');
     mongoConnected = true;
-  //   async function updateEscortServices() {
-  // try {
-  //   const result = await Escort.updateMany(
-  //     { email: { $ne: 'muneneclinton797@gmail.com' } },
-  //     {
-  //       $addToSet: {
-  //         services: { $each: ['massage', 'girlfriend experience', 'travel companion', 'dinner date'] }
-  //       }
-  //     }
-  //   );
+//     async function verifyEmail(email) {
+//       try {
+//         const result = await Escort.updateOne(
+//           { email: email.trim().toLowerCase() },
+//           { $set: { isVerified: true } }
+//         );
+//         console.log('Update result:', result);
+//       } catch (err) {
+//         console.error('Update failed:', err);
+//       }
+//     }
 
-  //   console.log(`${result.modifiedCount} escorts updated.`);
-//   } catch (err) {
-//     console.error('Update failed:', err);
-//   }
-// }
-
-// updateEscortServices();
+//     verifyEmail('muneneclinton797@gmail.com');
   } catch (err) {
     console.error('❌ MongoDB connection error:', err.message);
     mongoConnected = false;
@@ -881,14 +876,14 @@ app.get('/register', (req, res)=> {
 
 app.post('/register', async (req, res) => {
   let escort = req.body;
-  const escortExists = await Escort.findOne({ email: escort.email });
-
-
-  if (escortExists) {
-    return res.status(400).json({ success: false, message: 'This email already exists' });
-  }
-
+  
   try {
+    const escortExists = await Escort.findOne({ email: escort.email.trim().toLowerCase() });
+
+    if (escortExists) {
+      return res.status(400).json({ success: false, message: 'This email already exists' });
+    }
+
     let hashedPassword = await bcrypt.hash(req.body.password, 10);
     const verificationToken = crypto.randomBytes(32).toString('hex');
     const verificationExpires = Date.now() + 3600000; // 1 hour
@@ -906,13 +901,28 @@ app.post('/register', async (req, res) => {
       }
     });
 
-    const mailOptions = {
-      from: 'shale.online@gmail.com',
-      to: escort.email,
-      subject: 'Email Verification',
-      html: `<p>Hi ${escort.name}, please verify your email by clicking:</p>
-            <a href="https://streak-1.onrender.com/verify/${verificationToken}">Verify Email</a>`
-    };
+    const expiryDate = new Date(verificationExpires).toLocaleString('en-KE', {
+  weekday: 'short',
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+  timeZone: 'Africa/Nairobi'
+});
+
+const mailOptions = {
+  from: 'shale.online@gmail.com',
+  to: escort.email,
+  subject: 'Email Verification',
+  html: `
+    <p>Hi ${escort.name},</p>
+    <p>Please verify your email by clicking the link below:</p>
+    <a href="https://streak-1.onrender.com/verify/${verificationToken}">Verify Email</a>
+    <p>This link will expire on <strong>${expiryDate}</strong>.</p>
+    <p>If it expires, you can request a new one from the login page.</p>
+  `
+};
 
     await transporter.sendMail(mailOptions);
 
@@ -953,10 +963,16 @@ app.get('/login', (req, res)=> {
 });
 
 app.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+  const { input, password } = req.body;
 try {
-  const escort = await Escort.findOne({ email: email.trim().toLowerCase() }).lean();
+  const escort = await Escort.findOne({  $or: [
+    { email: input.trim().toLowerCase() },
+    { name: input.trim().toLowerCase() } // make sure 'username' exists on the Escort model
+  ]}).lean();
   if (!escort) return res.status(404).json({ success: false, message: 'Account not found' });
+  if (!escort.isVerified) {
+  return res.status(403).json({ success: false, message: 'Please verify your email first.' });
+}
 
   const match = await bcrypt.compare(password, escort.password);
   if (!match) return res.status(401).json({ success: false, message: 'Invalid password' });

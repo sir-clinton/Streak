@@ -200,7 +200,7 @@ form button[type=submit]{
     color: #6c757d;;
     font-weight: 300;
 }
-.social-links-nav a i {
+.mockupArea2 li a i {
     display: inline-flex;
     justify-content: center;
     width: 36px;
@@ -211,23 +211,23 @@ form button[type=submit]{
     margin: 0 4px;
     transition: transform 0.3s ease;
 }
-.social-links-nav a:hover i {
+.mockupArea2 li a:hover i {
     transform: scale(1.2);
 }
             
-.social-links-nav a i.fa-facebook-f:hover{
+.mockupArea2 li a i.fa-facebook-f{
     color: #1877F2	
             
 }
-.social-links-nav a i.fa-twitter:hover{
+.mockupArea2 li a i.fa-twitter{
     color: #1DA1F2	
 }
-.social-links-nav a i.fa-instagram:hover{
+.mockupArea2 li a i.fa-instagram{
     color: #E1306C	;	
 }
-.social-links-nav a i.fa-tiktok:hover {
+.mockupArea2 li a i.fa-tiktok {
     color:#128C7E;
-}.social-links-nav a i.fa-snapchat:hover {
+}.mockupArea2 li a i.fa-snapchat {
     color: #FFFC00;
 }.badge {
   position: absolute;

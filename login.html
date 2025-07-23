@@ -105,7 +105,7 @@
     <div class="registration-box">
       <h3>Login</h3>
       <form id="form" action="/login" method="POST">
-        <input type="email" name="email" id="email" placeholder="Email" required />
+        <input type="text" name="input" id="email" placeholder="Username  or  Email" required />
         <input type="password" name="password" placeholder="Password" required />
         <p id="error"></p>
         <input type="submit" id="submit" value="LOGIN" />
@@ -120,19 +120,23 @@
     const email = document.querySelector('#email');
     const submitbtn = document.querySelector('#submit');
 
-    function validateEmail(emailInput) {
-  const regex = /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,6}$/;
-  return regex.test(emailInput.trim());
+    function validateLoginInput(input) {
+      const isEmail = /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,6}$/.test(input.trim());
+      const isUsername = /^[a-zA-Z0-9_.-]{3,}$/.test(input.trim()); // simple rule for usernames
+
+      return isEmail || isUsername;
 }
+
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       error.innerText = '';
 
-      if (!validateEmail(email.value)) {
-        error.innerText = 'Email not valid!';
-        return;
-      }
+      if (!validateLoginInput(email.value)) {
+      error.innerText = 'Please enter a valid email or username!';
+      return;
+    }
+
 
       const formData = new FormData(form);
       const formObj = Object.fromEntries(formData.entries());

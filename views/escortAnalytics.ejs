@@ -64,7 +64,7 @@
 <body>
 <div class="dashboard-box">
   <h2>Profile Insights</h2>
-  <input type="text" id="dateRange" placeholder="Select date range">
+  <input type="text" id="dateRange" placeholder="Select date range"><br><br>
   <div><i class="fas fa-eye"></i> Total Views: <strong id="totalViewsCount"><%= escort.totalViews || 0 %></strong></div>
       
   <canvas id="profileViewsChart" style="max-height: 300px;"></canvas>
@@ -73,70 +73,102 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
   const end = new Date(); // today
   const start = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000); // 30 days ago
   fetchAnalytics(start, end);
 });
 
-    flatpickr("#dateRange", {
-        mode: "range",
-        dateFormat: "Y-m-d",
-        onClose: function(selectedDates) {
-            const [start, end] = selectedDates;
-            if (start && end) {
-            fetchAnalytics(start, end);
-            }
-        }
-        });
+flatpickr("#dateRange", {
+  mode: "range",
+  dateFormat: "Y-m-d",
+  onClose: function(selectedDates) {
+    const [start, end] = selectedDates;
+    if (start && end) {
+      fetchAnalytics(start, end);
+    }
+  }
+});
 
-  async function fetchAnalytics(startDate, endDate) {
+async function fetchAnalytics(startDate, endDate) {
+  const cached = localStorage.getItem('analyticsCache');
+  const now = Date.now();
+  const thirtyMinutes = 30 * 60 * 1000;
+
+  if (cached) {
+    const { timestamp, data } = JSON.parse(cached);
+    if (now - timestamp < thirtyMinutes) {
+      renderChart(data);
+      return;
+    }
+  }
+
   try {
     const escortId = '<%= escort.id %>';
-    console.log(escortId);
     if (!startDate || !endDate || isNaN(startDate) || isNaN(endDate)) return;
+
     const res = await fetch(`/analytics/${escortId}?start=${startDate.toISOString()}&end=${endDate.toISOString()}`);
     const data = await res.json();
 
-    const labels = [];
-    const viewCounts = [];
-    console.log(data);
     if (!data || !Array.isArray(data.views)) {
       document.getElementById('noDataMessage').textContent = '❌ Could not load analytics. Please try again.';
       return;
     }
-    
-    data.views.forEach(v => {
-      const { day, month, year } = v._id;
-      labels.push(`${day}/${month}`);
-      viewCounts.push(v.count);
-    });
-    if (viewCounts.length === 0) {
-        labels.push('No Data');
-        viewCounts.push(0);
-        }
 
+    localStorage.setItem('analyticsCache', JSON.stringify({
+      timestamp: now,
+      data: data.views
+    }));
 
-    // Update total views badge
-    const total = viewCounts.reduce((a, b) => a + b, 0);
-    document.getElementById('totalViewsCount').textContent = total;
+    renderChart(data.views);
+  } catch (err) {
+    console.error('Failed to fetch analytics:', err);
+  }
+}
 
-    // Render chart
-    const ctx = document.getElementById('profileViewsChart').getContext('2d');
-    if (window.profileChart) window.profileChart.destroy(); // Destroy existing chart before replacing
-    const isEmpty = labels.length === 1 && labels[0] === 'No Data';
-    document.getElementById('noDataMessage').textContent = isEmpty
-  ? '📭 No activity recorded during this period.'
-  : '';
+function renderChart(viewData) {
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
 
-    window.profileChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels,
-        datasets: [{
-          animation: {
-            duration: 500,
-            easing: 'easeOutQuad'
+  const sorted = [...viewData].sort((a, b) => b.count - a.count).slice(0, 3);
+  console.log(sorted);
+
+  const labels = [];
+  const viewCounts = [];
+
+  viewData.forEach(v => {
+  const { day, month } = v._id;
+  const monthName = monthNames[month - 1];
+  labels.push(`${monthName} ${day}`);
+  viewCounts.push(v.count);
+});
+
+  if (viewCounts.length === 0) {
+    labels.push('No Data');
+    viewCounts.push(0);
+  }
+
+  const total = viewCounts.reduce((a, b) => a + b, 0);
+  document.getElementById('totalViewsCount').textContent = total;
+
+  const ctx = document.getElementById('profileViewsChart').getContext('2d');
+  if (window.profileChart) window.profileChart.destroy();
+
+  const isEmpty = labels.length === 1 && labels[0] === 'No Data';
+  document.getElementById('noDataMessage').textContent = isEmpty
+    ? '📭 No activity recorded during this period.'
+    : '';
+
+  window.profileChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        animation: {
+          duration: 500,
+          easing: 'easeOutQuad'
         },
         label: 'Profile Views',
         data: viewCounts,
@@ -145,22 +177,19 @@
         borderDash: isEmpty ? [5, 5] : [],
         fill: true,
         tension: 0.3
-        }]
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        title: { display: true, text: 'Profile Engagement (Top 3 Days)' }
       },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { display: false },
-          title: { display: true, text: 'Profile Engagement (Selected Range)' }
-        },
-        scales: {
-          y: { beginAtZero: true }
-        }
+      scales: {
+        y: { beginAtZero: true }
       }
-    });
-  } catch (err) {
-    console.error('Failed to fetch analytics:', err);
-  }
+    }
+  });
 }
 </script>
 </body>
