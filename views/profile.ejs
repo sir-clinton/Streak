@@ -263,7 +263,8 @@
             <h3>Escorts nearby.</h3><br>
             <div class="listings" style="justify-content: flex-start">
                <% similarEscorts.forEach(escort => { %>
-                <a href='/author/<%= escort.name%>' class="card" style="display: flex">
+                <div class="card" style="display: flex">
+                    <a href='/author/<%= escort.name%>' >
                     <% if (escort.isBoosted) { %>
                     <div class="badge <%= escort.boostType %>">
                         <%= escort.boostType %>
@@ -271,7 +272,7 @@
                     <% } %>
                 <div class="image-wrapper">
                     <img loading="lazy" src="<%= escort.userImg%>" alt="<%= escort.name%>">
-                </div>
+                </div></a>
                 <div class="info">
                     <p class="escort-name"><%= escort.name%></p>
                     <span aria-label="Bookmark profile"><i style="color: #444" class="fa-solid fa-bookmark" aria-hidden="true"></i></span>
@@ -279,10 +280,11 @@
                 </div><hr>
                     <p style="padding: 4px;color: #6c757d;">Meet <%= escort.name.split(' ')[0]%> a <%= escort.age %> years old <%= escort.gender%> Escort from <%= escort.city%>, <%= escort.location %> area.</p>
                 <div class="call">
-                    CALL <%= escort.name.split(' ')[0].toUpperCase() %>
-                    &nbsp;<i class="fa fa-phone"></i>
+                    <a href="tel: 0713452235" style="color: #25D366">
+                CALL <%= escort.name.split(' ')[0].toUpperCase() %>
+                &nbsp;<i class="fa fa-phone"></i></a>
                 </div>
-            </a>
+            </div>
                 <%})%>
 
             </div>
