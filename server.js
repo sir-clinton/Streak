@@ -764,6 +764,35 @@ if (!start || !end || isNaN(Date.parse(start)) || isNaN(Date.parse(end))) {
   }
 });
 
+const nearbyCache = new NodeCache({ stdTTL: 1800 }); // 30 mins
+
+app.get('/nearby', async (req, res) => {
+  const { lat, lng, distance = 5000 } = req.query;
+  const cacheKey = `nearby_${lat}_${lng}_${distance}`;
+
+  const cached = nearbyCache.get(cacheKey);
+  if (cached) return res.json({ success: true, escorts: cached });
+
+  try {
+    const escorts = await Escort.find({
+      location: {
+        $near: {
+          $geometry: {
+            type: 'Point',
+            coordinates: [parseFloat(lng), parseFloat(lat)]
+          },
+          $maxDistance: parseInt(distance)
+        }
+      }
+    }).lean();
+
+    nearbyCache.set(cacheKey, escorts);
+    res.json({ success: true, escorts });
+  } catch (err) {
+    console.error('Nearby search error:', err);
+    res.status(500).json({ success: false, message: 'Failed to fetch nearby escorts.' });
+  }
+});
 
 app.get('/city/:name', async (req, res) => {
   const gender = req.query.gender;

@@ -11,7 +11,10 @@ const escortSchema = new mongoose.Schema({
     city: { type: String, required: true },
     dob: { type: Date, required: true },
     orientation: { type: String, required: true},
-    location: { type: String, default: '' },
+    location: {
+     type: String, default: '' 
+    // coordinates: { type: [Number], required: true } // [longitude, latitude]
+    },
     gallery: [{ type: String}],
     phone: { type: String, default: '' },
     allowedtopost: {
@@ -48,5 +51,5 @@ const escortSchema = new mongoose.Schema({
         expiresAt: Date,
     }
 });
-
+escortSchema.index({ location: '2dsphere' });
 module.exports = mongoose.model('profiles', escortSchema);
