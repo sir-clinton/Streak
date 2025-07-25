@@ -1287,7 +1287,7 @@ Sitemap: ${baseUrl}/sitemap.xml`);
  
 app.get('/sitemap.xml', async (req, res) => {
   try {
-    const profiles = await Escort(); // Replace with your actual DB call
+    const profiles = await Escort.find(); // Replace with your actual DB call
     const baseUrl = `${req.protocol}://${req.get('host')}`;
 
     // Generate homepage entry
@@ -1302,17 +1302,17 @@ app.get('/sitemap.xml', async (req, res) => {
     // Generate profile entries
     const profileEntries = profiles.map(profile => `
       <url>
-        <loc>${baseUrl}/author/${profile.name}</loc>
+        <loc>${baseUrl}/author/${encodeURIComponent(profile.name)}</loc>
         <lastmod>${new Date(profile.updatedAt).toISOString()}</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
       </url>`).join('');
 
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
-      <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-        ${homepageEntry}
-        ${profileEntries}
-      </urlset>`;
+    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+      ${homepageEntry.trim()}
+      ${profileEntries.trim()}
+    </urlset>`;
 
     res.type('application/xml');
     res.send(xml);
