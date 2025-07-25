@@ -161,13 +161,13 @@
               </a>
                 <div class="info">
                     <p class="escort-name"><%= escort.name.split(' ')[0]%></p>
-                    <span aria-label="Bookmark profile"><i title="Bookmark this profile" class="fa-solid fa-bookmark bookmark-btn" data-id="<%= escort._id %>" data-name="<%= escort.name %>" data-img="<%= escort.userImg %>" style="color: #444" aria-hidden="true"></i></span>
+                    <span aria-label="Bookmark profile"><i title="Bookmark this profile" class="fa-solid fa-bookmark bookmark-btn" data-id="<%= escort._id %>" data-name="<%= escort.name %>" data-img="<%= escort.userImg %>" data-phone="<%= escort.phone %>" style="color: #444" aria-hidden="true"></i></span>
 
                     <!-- <p><i class="fa-solid fa-location-dot" style="color: #6c757d;"></i> Kware.</p> -->
                 </div><hr>
                 <p style="padding: 4px;color: #6c757d;">Meet <%= escort.name.split(' ')[0]%> a <%= escort.age %> years old <%= escort.gender%> Escort from <%= escort.city%>, <%= escort.location %> area.</p>
                 <div class="call">
-                  <a href="tel: 0713452235" style="color: #25D366">
+                  <a href="tel: <%= escort.phone %>" style="color: #25D366">
                 CALL <%= escort.name.split(' ')[0].toUpperCase() %>
                 &nbsp;<i class="fa fa-phone"></i></a>
                 </div>
@@ -228,12 +228,13 @@
     const id = icon.dataset.id;
     const name = icon.dataset.name;
     const img = icon.dataset.img;
+    const phone = icon.dataset.phone
 
     const bookmarks = JSON.parse(localStorage.getItem('bookmarkedEscorts')) || []; // ✅ Fresh copy per click
     const isAlreadyBookmarked = bookmarks.some(item => item.id === id);
 
     if (!isAlreadyBookmarked) {
-      bookmarks.push({ id, name, img });
+      bookmarks.push({ id, name, img, phone}); // or escort.phone if dynamic
       localStorage.setItem('bookmarkedEscorts', JSON.stringify(bookmarks));
       icon.style.color = '#25D366'; // Green
     } else {
@@ -255,7 +256,9 @@ document.getElementById('openBookmarkModal').addEventListener('click', () => {
   bookmarks.map(item => `
     <div style="margin-bottom: 12px; display: flex; align-items: center">
       <img src="${item.img}" alt="${item.name}" width="60" style="border-radius:5px;">
-      <span style="margin-left:8px; flex: 1; text-decoration: underline">Copy ${item.name} Number</span>
+      <span class="copy-number-btn" data-phone="${item.phone}" style="margin-left:8px; flex: 1; text-decoration: underline; cursor: pointer;">
+        📋 Copy ${item.name}'s Number
+      </span>
       <button class="remove-bookmark" data-id="${item.id}" style="background: none; border: none; color: #c0392b; cursor: pointer;">✕</button>
     </div>
   `).join('');
@@ -271,6 +274,27 @@ document.getElementById('openBookmarkModal').addEventListener('click', () => {
       document.getElementById('bookmarkModal').style.display = 'none';
     }
   });
+  document.querySelectorAll('.copy-number-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const number = btn.dataset.phone;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(number)
+          .then(() => {
+            btn.textContent = `✅ Copied ${number}`;
+            setTimeout(() => {
+              btn.textContent = `📋 Copy ${btn.dataset.name}'s Number`;
+            }, 2000);
+          })
+          .catch(err => {
+            console.error('Clipboard failed:', err);
+            alert('Could not copy the number. Try manually.');
+          });
+      } else {
+        alert('Clipboard not supported. Please copy manually.');
+      }
+      });
+    });
+
 });
 
   modal.style.display = "flex";
