@@ -114,7 +114,7 @@ let prefferedOption = localStorage.getItem('prefferedOption')
     : {city: 'Nairobi', gender: 'Female'};
     // Load cached area count data
   let cached = localStorage.getItem('cachedAreaCounts') ? JSON.parse(localStorage.getItem('cachedAreaCounts')) : []
-  const cacheExpiry = 10 * 60 * 1000; // 25 mins
+  const cacheExpiry = 25 * 60 * 1000; // 25 mins
 
   let areaData;
 
@@ -124,7 +124,7 @@ let prefferedOption = localStorage.getItem('prefferedOption')
   } else {
     // Fetch fresh data and cache it
     if (prefferedOption && location[prefferedOption.city]) {
-      submenu.innerHTML = '<p>Loading areas...</p>';
+      submenu.innerHTML = '<p style="white-space: nowrap">Loading areas...</p>';
       try {
         const res = await fetch('/areas-with-counts');
         const fresh = await res.json();
@@ -132,7 +132,7 @@ let prefferedOption = localStorage.getItem('prefferedOption')
         localStorage.setItem('cachedAreaCounts', JSON.stringify({ data: fresh, timestamp: Date.now() }));
       } catch (err) {
         console.error('Fetch failed:', err);
-        submenu.innerHTML = '<p>Error loading areas.</p>';
+        submenu.innerHTML = '<p style="white-space: nowrap">Error loading areas.</p>';
         return;
       }
     }
@@ -141,7 +141,7 @@ let prefferedOption = localStorage.getItem('prefferedOption')
   // Only proceed if we have valid data and a preferred city
   if (!areaData || !prefferedOption || !location[prefferedOption.city]) return;
 
-  submenu.innerHTML = '<span>Loading areas...</span>';
+  submenu.innerHTML = '<span style="white-space: nowrap; display: block">Loading areas...</span>';
 
     const areas = areaData[prefferedOption.city];
 

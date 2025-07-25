@@ -253,9 +253,9 @@ document.getElementById('openBookmarkModal').addEventListener('click', () => {
  list.innerHTML = bookmarks.length === 0 ? 
   "<p>No bookmarks yet.</p>" : 
   bookmarks.map(item => `
-    <div style="margin-bottom: 12px; display: flex; align-items: center;">
+    <div style="margin-bottom: 12px; display: flex; align-items: center">
       <img src="${item.img}" alt="${item.name}" width="60" style="border-radius:5px;">
-      <span style="margin-left:8px; flex: 1;">${item.name}</span>
+      <span style="margin-left:8px; flex: 1; text-decoration: underline">Copy ${item.name} Number</span>
       <button class="remove-bookmark" data-id="${item.id}" style="background: none; border: none; color: #c0392b; cursor: pointer;">✕</button>
     </div>
   `).join('');

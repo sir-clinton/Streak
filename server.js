@@ -346,6 +346,10 @@ const getPureTier = (boostType = '') => {
   return parts[0]; // 'gold', 'silver', or 'bronze'
 };
 
+app.get('/health', (req, res) => {
+  console.log('server is awake now (*_*)')
+  res.status(200).json({ status: 'awake' });
+});
 
 app.get('/boost-request', (req, res) => {
   res.status(200).sendFile(path.join(__dirname, 'boostform.html'));
@@ -528,9 +532,10 @@ app.get('/escorts-from-:area', async (req, res) => {
 });
 
 app.get('/areas-with-counts', async (req, res) => {
+  console.log(`[${new Date().toISOString()}] Home route hit by ${req.ip}`);
   const location = {
     Nairobi: [
-      "Kilimani", "Westlands", "Karen", "CBD", "Roysambu", "Ngara", "Donholm", "Nairobi West","Donholm", "Dandora", "Ojijo", "Yaya", "Sarit",
+      "Kilimani", "Westlands", "Karen", "CBD", "Roysambu", "Ngara", "Donholm", "Nairobi West", "Dandora", "Ojijo", "Yaya", "Sarit",
       "Ruaka", "Syokimau", "Kitengela", "Embakasi", "South B", "South C", "Lavington", "Parklands"
     ],
     Kiambu: [
@@ -574,20 +579,23 @@ app.get('/areas-with-counts', async (req, res) => {
   //   ]
   // };
 
-  const result = {};
+    const resultEntries = await Promise.all(
+    Object.entries(location).map(async ([city, areas]) => {
+      const areaCounts = await Promise.all(
+        areas.map(async (area) => {
+          const count = await Escort.countDocuments({
+            location: new RegExp(area, 'i'),
+            allowedtopost: true
+          });
+          return { name: area, count };
+        })
+      );
+      return [city, areaCounts];
+    })
+  );
 
-  for (const city in location) {
-    result[city] = [];
+  const result = Object.fromEntries(resultEntries);
 
-    for (const area of location[city]) {
-      const count = await Escort.countDocuments({
-        location: { $regex: new RegExp(area, 'i') },
-        allowedtopost: true
-      });
-      result[city].push({ name: area, count });
-    }
-  }
-  console.log(JSON.stringify(result, null, 2));
   res.json(result);
 });
 
