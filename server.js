@@ -1267,12 +1267,60 @@ app.get('/swipe-feed/:city', async (req, res) => {
 
 function metData(req){
 return {
-      title: 'Raha.com – Find Your Vibe',
+      title: 'Streak.com – Find Your Vibe',
       description: 'Discover local companions for chill days and hype nights.',
       image: 'https://raha.com/default-preview.jpg',
       url: req.protocol + '://' + req.get('host') + req.originalUrl
     }
 }
+
+app.get('/robots.txt', (req, res) => {
+  const baseUrl = `${req.protocol}://${req.get('host')}`;
+  res.type('text/plain');
+  res.send(`User-agent: *
+Disallow: /admin/
+Disallow: /profile/
+Allow: /
+
+Sitemap: ${baseUrl}/sitemap.xml`);
+});
+ 
+app.get('/sitemap.xml', async (req, res) => {
+  try {
+    const profiles = await Escort(); // Replace with your actual DB call
+    const baseUrl = `${req.protocol}://${req.get('host')}`;
+
+    // Generate homepage entry
+    const homepageEntry = `
+      <url>
+        <loc>${baseUrl}/</loc>
+        <lastmod>${new Date().toISOString()}</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+      </url>`;
+
+    // Generate profile entries
+    const profileEntries = profiles.map(profile => `
+      <url>
+        <loc>${baseUrl}/author/${profile.name}</loc>
+        <lastmod>${new Date(profile.updatedAt).toISOString()}</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+      </url>`).join('');
+
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+      <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+        ${homepageEntry}
+        ${profileEntries}
+      </urlset>`;
+
+    res.type('application/xml');
+    res.send(xml);
+  } catch (err) {
+    console.error('Sitemap generation error:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 app.use((req, res) => {
   res.status(404).render('404');

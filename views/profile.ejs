@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Escorts in <%= escort.city %> – Meet <%= escort.name %> in <%= escort.location %>">
+    <meta name="description" content="<%= escort.city %> Escorts in <%= escort.location %> – Meet <%= escort.name %> in <%= escort.location %>">
+    <meta name="keywords" content="Nairobi escorts, companions in <%= escort.location %>, female escorts <%= escort.location %>, private meetups near me, discreet companionship Nairobi">
     <title><%= escort.name %></title>
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
@@ -293,5 +294,32 @@
     <%- include('partials/footer') %>
     <script defer src="/js/script.js"></script>
     <script defer src="/js/gallery.js"></script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "<%= escort.name %>",
+  "image": "<%= escort.image_url %>",
+  "description": "Elite companion from <%= escort.location %>. Discreet meetups and private experiences.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "<%= escort.city %>",
+    "addressCountry": "KE"
+  },
+  "areaServed": {
+    "@type": "Place",
+    "name": "<%= escort.location %>"
+  },
+  "telephone": "<%= escort.phone %>",
+    "url": "<%= escort.profile_url || '' %>",
+  "priceRange": "$$$",
+  "openingHours": "Mo-Su 24:00",
+  "keywords": [
+    "escorts in <%= escort.location %>",
+    "companions near <%= escort.location %>",
+    "private meetups Nairobi"
+  ]
+}
+</script>
 </body>
 </html>
