@@ -15,6 +15,8 @@ const crypto = require('crypto');
 const NodeCache = require('node-cache');
 const compression = require('compression');
 app.use(compression()); //Compress responses to reduce payload size and speed up delivery:
+app.set('trust proxy', true); // Trust upstream proxy to correctly identify protocol (e.g., http vs https)
+
 
 const escortCache = new NodeCache({ stdTTL: 1500 }); // 25 minutes = 1500 seconds
 const homeCache = new NodeCache({ stdTTL: 40, checkperiod: 5})
