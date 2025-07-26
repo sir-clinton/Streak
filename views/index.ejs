@@ -162,7 +162,7 @@
               </a>
                 <div class="info">
                     <p class="escort-name"><%= escort.name.split(' ')[0]%></p>
-                    <span aria-label="Bookmark profile"><i title="Bookmark this profile" class="fa-solid fa-bookmark bookmark-btn" data-id="<%= escort._id %>" data-name="<%= escort.name %>" data-img="<%= escort.userImg %>" data-phone="<%= escort.phone %>" style="color: #444" aria-hidden="true"></i></span>
+                    <span aria-label="Bookmark profile"><i title="Bookmark this profile" class="fa-solid fa-bookmark bookmark-btn" data-id="<%= escort._id %>" data-name="<%= escort.name.split(' ')[0] %>" data-img="<%= escort.userImg %>" data-phone="<%= escort.phone %>" style="color: #444" aria-hidden="true"></i></span>
 
                     <!-- <p><i class="fa-solid fa-location-dot" style="color: #6c757d;"></i> Kware.</p> -->
                 </div><hr>
@@ -257,7 +257,7 @@ document.getElementById('openBookmarkModal').addEventListener('click', () => {
   bookmarks.map(item => `
     <div style="margin-bottom: 12px; display: flex; align-items: center">
       <img src="${item.img}" alt="${item.name}" width="60" style="border-radius:5px;">
-      <span class="copy-number-btn" data-phone="${item.phone}" style="margin-left:8px; flex: 1; text-decoration: underline; cursor: pointer;">
+      <span class="copy-number-btn" data-name="${escort.name.split(' ')[0]}" data-phone="${item.phone}" style="margin-left:8px; flex: 1; text-decoration: underline; cursor: pointer;">
         📋 Copy ${item.name}'s Number
       </span>
       <button class="remove-bookmark" data-id="${item.id}" style="background: none; border: none; color: #c0392b; cursor: pointer;">✕</button>
@@ -276,14 +276,14 @@ document.getElementById('openBookmarkModal').addEventListener('click', () => {
     }
   });
   document.querySelectorAll('.copy-number-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', (e) => {
         const number = btn.dataset.phone;
         if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(number)
           .then(() => {
             btn.textContent = `✅ Copied ${number}`;
             setTimeout(() => {
-              btn.textContent = `📋 Copy ${btn.dataset.name}'s Number`;
+              btn.textContent = `📋 Copy ${e.target.dataset.name}'s Number`;
             }, 2000);
           })
           .catch(err => {
