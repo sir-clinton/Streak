@@ -326,10 +326,10 @@ window.onclick = function(event) {
   "@type": "LocalBusiness",
   "name": meta?.title,
   "description": meta?.description,
-  "image": meta?.image,
+  "image": meta?.image || " ",
   "address": {
     "@type": "PostalAddress",
-    "addressLocality": city,
+    "addressLocality": "Nairobi",
     "addressCountry": "KE"
   },
   "url": meta?.url
