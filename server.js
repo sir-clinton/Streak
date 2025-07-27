@@ -800,9 +800,10 @@ app.get('/nearby', async (req, res) => {
   }
 
   try {
-    // Find escorts near location who are allowed to post
+    const escortEmail = req.session?.escort?.email;
     const escort = escortEmail ? await Escort.findOne({ email: escortEmail }) : null;
-    const escorts = await Escort.find({
+
+    let escorts = await Escort.find({
       allowedtopost: true,
       location: {
         $near: {
@@ -815,17 +816,61 @@ app.get('/nearby', async (req, res) => {
       }
     }).lean();
 
+    // Get boosts (optional, if you want prioritization)
+    const boosts = await BoostRequest.find({
+      status: 'confirmed',
+      expiresAt: { $gt: new Date() }
+    }).select('escort boostType').lean();
+
+    const boostMap = boosts.reduce((map, b) => {
+      map[b.escort.toString()] = b.boostType;
+      return map;
+    }, {});
+
+    // Final escort processing
+    escorts = escorts
+      .filter(e => e.about && e.userImg && e.name && e.location)
+      .map(e => {
+        // Age calculation
+        let age = null;
+        if (e.dob) {
+          const bd = new Date(e.dob);
+          const today = new Date();
+          age = today.getFullYear() - bd.getFullYear();
+          const m = today.getMonth() - bd.getMonth();
+          if (m < 0 || (m === 0 && today.getDate() < bd.getDate())) age--;
+        }
+        return {
+          ...e,
+          age,
+          isBoosted: Boolean(boostMap[e._id.toString()]),
+          boostType: boostMap[e._id.toString()] || null
+        };
+      });
+
+    // Sort and shuffle escorts
+    const boosted = escorts
+      .filter(e => e.isBoosted)
+      .sort((a, b) => orderRank[getPureTier(b.boostType)] - orderRank[getPureTier(a.boostType)]);
+
+    const normal = escorts.filter(e => !e.isBoosted);
+    for (let i = normal.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [normal[i], normal[j]] = [normal[j], normal[i]];
+    }
+
+    const finalList = [...boosted, ...normal];
+
     // Store in cache
-    nearbyCache.set(cacheKey, escorts);
+    nearbyCache.set(cacheKey, finalList);
 
-    // Respond with results
+    // Respond
     res.json({
-  success: true,
-  escorts,        // all profiles found nearby
-  center: { lat, lng },  // your location
-  radius: distance       // how far we searched
-});
-
+      success: true,
+      escorts: finalList,
+      center: { lat: parseFloat(lat), lng: parseFloat(lng) },
+      radius: parseInt(distance)
+    });
 
   } catch (err) {
     console.error('Nearby search error:', err);

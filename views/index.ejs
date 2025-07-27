@@ -363,7 +363,7 @@ window.onclick = function(event) {
           // 🎁 You can update your UI here with the results
           renderEscortCards(data.escorts);
         } else {
-          alert("No nearby escorts found.");
+          renderEscortCards(data.escorts);
         }
       } catch (err) {
         console.error("Error fetching nearby:", err);
