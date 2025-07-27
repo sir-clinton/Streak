@@ -357,13 +357,11 @@ window.onclick = function(event) {
       try {
         const response = await fetch(`/nearby?lat=${lat}&lng=${lng}`);
         const data = await response.json();
-
-        if (data.success) {
-          console.log("Nearby Escorts:", data.escorts);
-          // 🎁 You can update your UI here with the results
+        if (data.success && Array.isArray(data.escorts)) {
           renderEscortCards(data.escorts);
         } else {
-          renderEscortCards(data.escorts);
+          console.warn("No escort data returned:", data);
+          renderEscortCards([]); // Gracefully show 'no escorts found'
         }
       } catch (err) {
         console.error("Error fetching nearby:", err);
