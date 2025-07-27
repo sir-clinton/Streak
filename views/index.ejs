@@ -319,21 +319,21 @@ window.onclick = function(event) {
 
     
  </script>
- <script defer type="application/ld+json">
-  <%= JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  "name": meta?.title,
-  "description": meta?.description,
-  "image": meta?.image || " ",
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Nairobi",
-    "addressCountry": "KE"
-  },
-  "url": meta?.url
-}) %>
- </script>
+ <script type="application/ld+json">
+  <%- JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": meta.title,
+    "description": meta.description,
+    "image": meta.image || "https://raha.com/default-preview.jpg",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Nairobi",
+      "addressCountry": "KE"
+    },
+    "url": meta.url
+  }) %>
+</script>
 <script defer type='module' src="/js/script.js"></script>
 </body>
 </html>
