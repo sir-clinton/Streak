@@ -102,6 +102,24 @@
     display: none;
   }
 }
+/* nearby button styling */
+.filter button[type="button"] {
+  background-color: #009688;      /* Teal - gives a warm and modern feel */
+  color: white;                   /* Text color for contrast */
+  border: none;                   /* Clean edge */
+  padding: 10px 16px;             /* Spacious touch zone */
+  margin-top: 10px;               /* Space between filter and button */
+  font-size: 16px;                /* Readable size */
+  font-weight: bold;             /* Makes it stand out */
+  border-radius: 6px;             /* Soft edges */
+  cursor: pointer;                /* Pointer cursor on hover */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Slight depth */
+  transition: background-color 0.3s ease;
+}
+
+.filter button[type="button"]:hover {
+  background-color: #00796b;     /* Slightly darker teal on hover */
+}
     </style>
 </head>
 <body>
@@ -138,6 +156,7 @@
                     </select>
                     <button aria-label="filter button" id='submit' type="submit">Filter</button>
                 </form>
+                <button type="button">Nearby</button>
             </div>
          </section>
 

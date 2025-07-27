@@ -780,11 +780,29 @@ app.get('/nearby', async (req, res) => {
   const { lat, lng, distance = 5000 } = req.query;
   const cacheKey = `nearby_${lat}_${lng}_${distance}`;
 
+  // Validate coordinates
+  if (!lat || !lng || isNaN(lat) || isNaN(lng)) {
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid coordinates.'
+    });
+  }
+
+  // Check cache
   const cached = nearbyCache.get(cacheKey);
-  if (cached) return res.json({ success: true, escorts: cached });
+  if (cached) {
+    return res.json({
+      success: true,
+      escorts: cached,
+      center: { lat, lng },
+      radius: distance
+    });
+  }
 
   try {
+    // Find escorts near location who are allowed to post
     const escorts = await Escort.find({
+      allowedtopost: true,
       location: {
         $near: {
           $geometry: {
@@ -796,11 +814,23 @@ app.get('/nearby', async (req, res) => {
       }
     }).lean();
 
+    // Store in cache
     nearbyCache.set(cacheKey, escorts);
-    res.json({ success: true, escorts });
+
+    // Respond with results
+    res.json({
+      success: true,
+      escorts,
+      center: { lat, lng },
+      radius: distance
+    });
+
   } catch (err) {
     console.error('Nearby search error:', err);
-    res.status(500).json({ success: false, message: 'Failed to fetch nearby escorts.' });
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch nearby escorts.'
+    });
   }
 });
 
