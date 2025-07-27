@@ -1270,7 +1270,7 @@ app.get('/swipe-feed/:city', async (req, res) => {
 function metData(req){
 return {
       title: 'Nairobi Escorts And Descreet Call Girls - Streak.com',
-      description: 'Discover local companions and descreet for chill days and hype nights.',
+      description: 'Connect with sexy Nairobi Escorts anytime, they are the hottest sexy local companions. Enjoy our services 24/7.',
       image: 'https://raha.com/default-preview.jpg',
       url: req.protocol + '://' + req.get('host') + req.originalUrl
     }
