@@ -801,6 +801,7 @@ app.get('/nearby', async (req, res) => {
 
   try {
     // Find escorts near location who are allowed to post
+    const escort = escortEmail ? await Escort.findOne({ email: escortEmail }) : null;
     const escorts = await Escort.find({
       allowedtopost: true,
       location: {
@@ -819,11 +820,12 @@ app.get('/nearby', async (req, res) => {
 
     // Respond with results
     res.json({
-      success: true,
-      escorts,
-      center: { lat, lng },
-      radius: distance
-    });
+  success: true,
+  escorts,        // all profiles found nearby
+  center: { lat, lng },  // your location
+  radius: distance       // how far we searched
+});
+
 
   } catch (err) {
     console.error('Nearby search error:', err);

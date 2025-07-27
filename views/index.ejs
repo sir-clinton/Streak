@@ -123,7 +123,7 @@
     </style>
 </head>
 <body>
-    <div class="container">
+         <div class="container">
         <%- include('partials/header')  %>
         <!-- hero section -->
          <section id="hero-section">
@@ -162,6 +162,11 @@
 
          <section id="main" class="main">
             <div class="listings" id="listings" style="position: relative">
+              <div id="loading-spinner" style="display: none; text-align: center; padding: 20px;">
+                <i class="fa fa-spinner fa-spin fa-2x" style="color: #999;"></i>
+                <p>Fetching nearby profiles…</p>
+              </div>
+
                 <% if(escorts.length ===  0){ %>
                     <p style="position: absolute; top:50%; left: 50%; transform: translateX(-50%)">Please check back soon!
                     </p>
@@ -332,11 +337,95 @@ window.onclick = function(event) {
     modal.style.display = "none";
   }
 }
-
-  
 });
 
-    
+    // Nearby escorts
+  function fetchNearbyEscorts() {
+    // Check if browser supports geolocation
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser.");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+      function showLoading() {
+      document.getElementById("loading-spinner").style.display = "block";
+    }
+
+      try {
+        const response = await fetch(`/nearby?lat=${lat}&lng=${lng}`);
+        const data = await response.json();
+
+        if (data.success) {
+          console.log("Nearby Escorts:", data.escorts);
+          // 🎁 You can update your UI here with the results
+          renderEscortCards(data.escorts);
+        } else {
+          alert("No nearby escorts found.");
+        }
+      } catch (err) {
+        console.error("Error fetching nearby:", err);
+        alert("Something went wrong while searching nearby.");
+      }
+    }, (error) => {
+      console.error("Location error:", error);
+      alert("Unable to get your location.");
+    });
+  }
+
+  // Attach click handler to the button
+  document.querySelector('.filter button[type="button"]').addEventListener('click', fetchNearbyEscorts);
+
+    function renderEscortCards(escorts) {
+  const listings = document.getElementById("listings");
+  listings.innerHTML = ""; // Clear old content
+
+  if (escorts.length === 0) {
+    listings.innerHTML = `<p style="position: absolute; top:50%; left: 50%; transform: translateX(-50%)">No nearby escorts found. Try adjusting location or distance.</p>`;
+    return;
+  }
+
+  escorts.forEach(escort => {
+    const name = escort.name.split(' ')[0];
+    const card = `
+      <div class="card" style="display: flex;">
+        <a href="/author/${escort.name}" data-id="${escort._id}">
+          ${escort.isBoosted ? `<div class="badge ${escort.boostType}">${escort.boostType}</div>` : ''}
+          <div class="image-wrapper">
+            <img loading="lazy" width="200" height="200" src="${escort.userImg}" alt="Nairobi call girl offering private companionship">
+          </div>
+        </a>
+        <div class="info">
+          <p class="escort-name">${name}</p>
+          <span aria-label="Bookmark profile">
+            <i title="Bookmark this profile" class="fa-solid fa-bookmark bookmark-btn"
+               data-id="${escort._id}"
+               data-name="${name}"
+               data-img="${escort.userImg}"
+               data-phone="${escort.phone}"
+               style="color: #444" aria-hidden="true"></i>
+          </span>
+        </div>
+        <hr>
+        <p style="padding: 4px;color: #6c757d;">
+          Meet ${name}, a ${escort.age} years old ${escort.gender} Escort from ${escort.city}, ${escort.location} area.
+        </p>
+        <div class="call">
+          <a href="tel:${escort.phone}" style="color: #25D366">
+            CALL ${name.toUpperCase()} &nbsp;<i class="fa fa-phone"></i>
+          </a>
+        </div>
+      </div>
+    `;
+    listings.insertAdjacentHTML("beforeend", card);
+  });
+  function hideLoading() {
+  document.getElementById("loading-spinner").style.display = "none";
+}
+}
+
  </script>
  <script type="application/ld+json">
   <%- JSON.stringify({
