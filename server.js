@@ -1269,8 +1269,8 @@ app.get('/swipe-feed/:city', async (req, res) => {
 
 function metData(req){
 return {
-      title: 'Nairobi Escorts And Descreet Call Girls - Streak.com',
-      description: 'Discover sexy Nairobi Escorts today, For your hype night and chill days. Enjoy our services 24/7.',
+      title: 'Nairobi Escorts & Descreet Call Girls - Streak.com',
+      description: 'Discover sexy and verified 📍 Nairobi Escorts today, For your hype night and chill days. Enjoy our services 24/7.',
       image: 'https://raha.com/default-preview.jpg',
       url: req.protocol + '://' + req.get('host') + req.originalUrl
     }
