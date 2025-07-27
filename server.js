@@ -1269,8 +1269,8 @@ app.get('/swipe-feed/:city', async (req, res) => {
 
 function metData(req){
 return {
-      title: 'Streak.com – Find Your Vibe',
-      description: 'Discover local companions for chill days and hype nights.',
+      title: 'Nairobi Escorts And Descreet Call Girls - Streak.com',
+      description: 'Discover local companions and descreet for chill days and hype nights.',
       image: 'https://raha.com/default-preview.jpg',
       url: req.protocol + '://' + req.get('host') + req.originalUrl
     }
