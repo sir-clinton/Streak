@@ -256,6 +256,31 @@ async function startServer() {
 //     }
 
 //     verifyEmail('muneneclinton797@gmail.com');
+      const cbdCoords = [36.8219, -1.2921];         // CBD (Nairobi) coordinates
+    const rongaiCoords = [36.7494, -1.3961];      // Ongata Rongai coordinates
+    const natashaEmail = 'natasha@example.com';   // update with actual email
+
+    // Update all except Natasha to CBD
+    await Escort.updateMany(
+      { email: { $ne: natashaEmail } },
+      {
+        location: {
+          type: 'Point',
+          coordinates: cbdCoords
+        }
+      }
+    );
+
+    // Update Natasha only
+    await Escort.updateOne(
+      { email: natashaEmail },
+      {
+        location: {
+          type: 'Point',
+          coordinates: rongaiCoords
+        }
+      }
+    );
   } catch (err) {
     console.error('❌ MongoDB connection error:', err.message);
     mongoConnected = false;
@@ -358,7 +383,7 @@ app.get('/boost-request', (req, res) => {
 })
 app.post('/boost-request', async (req, res) => {
   try {
-    const { boostType, location, mpesaRef } = req.body;
+    const { boostType, areaLabel, mpesaRef } = req.body;
     const pricePaid = PRICING[boostType] || 0;
     const escortId  = req.session?.escort?.id || "anonymous";
 
@@ -367,7 +392,7 @@ app.post('/boost-request', async (req, res) => {
       name: req.session?.escort?.name || null,
       boostType,
       pricePaid,         // ← record the actual cost
-      location,
+      areaLabel,
       mpesaRef,
       status:     "pending",
       timestamp:  new Date()
@@ -459,15 +484,59 @@ app.get('/admin/boosts', async (req, res) => {
     res.json([]);
   }
 });
- 
-app.get('/escorts-from-:area', async (req, res) => {
+ const areas = {
+    Nairobi: [
+      "Kilimani", "Westlands", "Karen", "CBD", "Roysambu", "Ngara", "Donholm", "Nairobi West", "Dandora", "Ojijo", "Yaya", "Sarit",
+      "Ruaka", "Syokimau", "Kitengela", "Embakasi", "South B", "South C", "Lavington", "Parklands"
+    ],
+    Kiambu: [
+      "Juja", "Kikuyu", "Ruiru", "Githurai",
+      "Thika", "Limuru", "Kabete", "Tigoni"
+    ]}
+    // : [
+    //   "Diani", "Nyali", "Likoni",
+    //   "Mtwapa", "Bamburi", "Shanzu", "Kisauni"]}
+  //   ]}
+  //   Nakuru: [
+  //     "Naivasha", "Nakuru Town", "Gilgil",
+  //     "Lanet", "Njoro", "Pipeline", "Kabarak"
+  //   ],
+  //   Kisumu: [
+  //     "Kisumu Town", "Milimani", "Riat Hills", "Mamboleo", "Manyatta"
+  //   ],
+  //   Eldoret: [
+  //     "Eldoret Town", "Langas", "Kapsoya", "Elgon View", "Annex", "Pioneer"
+  //   ],
+  //   Machakos: [
+  //     "Athi River", "Kangundo", "Joska", "Mwala", "Syokimau"
+  //   ],
+  //   Laikipia: [
+  //     "Nanyuki", "Rumuruti", "Timau"
+  //   ],
+  //   Kajiado: [
+  //     "Ongata Rongai", "Kitengela", "Ngong", "Kiserian"
+  //   ],
+  //   Kilifi: [
+  //     "Kilifi Town", "Malindi", "Watamu", "Mtwapa"
+  //   ],
+  //   UasinGishu: [
+  //     "Eldoret", "Turbo", "Moiben"
+  //   ],
+  //   Kisii: [
+  //     "Kisii Town", "Nyanchwa", "Suneka"
+  //   ],
+  //   Kakamega: [
+  //     "Kakamega Town", "Shinyalu", "Lurambi"
+  //   ]
+  // };
+app.get('/escorts-from/:area', async (req, res) => {
   const area = req.params.area;
-
+  const city = Object.entries(areas).find(([_, arr]) => arr.includes(area))?.[0] || 'Nairobi';
   try {
     const escortEmail = req.session?.escort?.email;
     const escort = escortEmail ? await Escort.findOne({ email: escortEmail }) : null;
     const escorts = await Escort.find({
-      location: { $regex: new RegExp(area, 'i') },
+      areaLabel: { $regex: new RegExp(area, 'i') },
       allowedtopost: true
     }).lean();
 
@@ -515,7 +584,7 @@ app.get('/escorts-from-:area', async (req, res) => {
         loggedInEscort: escort,
         message: `No profiles in ${area} yet.`,
         meta: metData(req),
-        city: 'Nairobi'
+        city
       });
     }
 
@@ -524,7 +593,7 @@ app.get('/escorts-from-:area', async (req, res) => {
       loggedInEscort: escort,
       message: null,
       meta: metData(req),
-      city: 'Nairobi'
+      city
     });
 
   } catch (err) {
@@ -535,58 +604,14 @@ app.get('/escorts-from-:area', async (req, res) => {
 
 app.get('/areas-with-counts', async (req, res) => {
   console.log(`[${new Date().toISOString()}] Home route hit by ${req.ip}`);
-  const location = {
-    Nairobi: [
-      "Kilimani", "Westlands", "Karen", "CBD", "Roysambu", "Ngara", "Donholm", "Nairobi West", "Dandora", "Ojijo", "Yaya", "Sarit",
-      "Ruaka", "Syokimau", "Kitengela", "Embakasi", "South B", "South C", "Lavington", "Parklands"
-    ],
-    Kiambu: [
-      "Juja", "Kikuyu", "Ruiru", "Githurai",
-      "Thika", "Limuru", "Kabete", "Tigoni"
-    ]}
-    // : [
-    //   "Diani", "Nyali", "Likoni",
-    //   "Mtwapa", "Bamburi", "Shanzu", "Kisauni"]}
-  //   ]}
-  //   Nakuru: [
-  //     "Naivasha", "Nakuru Town", "Gilgil",
-  //     "Lanet", "Njoro", "Pipeline", "Kabarak"
-  //   ],
-  //   Kisumu: [
-  //     "Kisumu Town", "Milimani", "Riat Hills", "Mamboleo", "Manyatta"
-  //   ],
-  //   Eldoret: [
-  //     "Eldoret Town", "Langas", "Kapsoya", "Elgon View", "Annex", "Pioneer"
-  //   ],
-  //   Machakos: [
-  //     "Athi River", "Kangundo", "Joska", "Mwala", "Syokimau"
-  //   ],
-  //   Laikipia: [
-  //     "Nanyuki", "Rumuruti", "Timau"
-  //   ],
-  //   Kajiado: [
-  //     "Ongata Rongai", "Kitengela", "Ngong", "Kiserian"
-  //   ],
-  //   Kilifi: [
-  //     "Kilifi Town", "Malindi", "Watamu", "Mtwapa"
-  //   ],
-  //   UasinGishu: [
-  //     "Eldoret", "Turbo", "Moiben"
-  //   ],
-  //   Kisii: [
-  //     "Kisii Town", "Nyanchwa", "Suneka"
-  //   ],
-  //   Kakamega: [
-  //     "Kakamega Town", "Shinyalu", "Lurambi"
-  //   ]
-  // };
+  
 
     const resultEntries = await Promise.all(
-    Object.entries(location).map(async ([city, areas]) => {
+    Object.entries(areas).map(async ([city, areas]) => {
       const areaCounts = await Promise.all(
         areas.map(async (area) => {
           const count = await Escort.countDocuments({
-            location: new RegExp(area, 'i'),
+            areaLabel: new RegExp(area, 'i'),
             allowedtopost: true
           });
           return { name: area, count };
@@ -644,14 +669,14 @@ app.get('/author/:name', async (req, res) => {
       escort = doc;
 
       const cityRegex = new RegExp(escort.city, 'i');
-      const locationRegex = new RegExp(escort.location, 'i');
+      const locationRegex = new RegExp(escort.areaLabel, 'i');
 
       const candidates = await Escort.find({
         allowedtopost: true,
         _id: { $ne: escort._id },
         city: cityRegex,
-        location: locationRegex
-      }).select('name userImg city location gender dob weight backgroundImg services').lean();
+        areaLabel: locationRegex
+      }).select('name userImg city areaLabel gender dob weight backgroundImg services').lean();
 
       const candidateIds = candidates.map(c => c._id);
       const boosts = await BoostRequest.find({
@@ -923,7 +948,7 @@ app.get('/city/:name', async (req, res) => {
     }, {});
 
     escorts = escorts
-      .filter(e => e.about && e.userImg && e.name && e.location)
+      .filter(e => e.about && e.userImg && e.name && e.areaLabel)
       .map(e => {
         let age = null;
         if (e.dob) {
@@ -1260,7 +1285,7 @@ app.get('/', async (req, res) => {
     if (!verified) {
       // Fetch verified escorts
       const escorts = await Escort.find({ allowedtopost: true })
-        .select('name location userImg phone city gender dob about')
+        .select('name areaLabel userImg phone city gender dob about')
         .lean();
 
       // Active boosts
@@ -1277,7 +1302,7 @@ app.get('/', async (req, res) => {
 
       // Annotate escorts
       verified = escorts
-        .filter(e => e.name && e.about && e.userImg && e.location)
+        .filter(e => e.name && e.about && e.userImg && e.areaLabel)
         .map(e => {
           let age = null;
           if (e.dob) {
@@ -1363,7 +1388,6 @@ Allow: /
 
 Sitemap: ${baseUrl}/sitemap.xml`);
 });
- 
 app.get('/sitemap.xml', async (req, res) => {
   try {
     const profiles = await Escort.find({}); // Replace with your actual DB call

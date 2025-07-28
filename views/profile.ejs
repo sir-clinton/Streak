@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="<%= escort.city %> Escorts in <%= escort.location %> – Meet <%= escort.name %> in <%= escort.location %>">
-    <meta name="keywords" content="Nairobi escorts, companions in <%= escort.location %>, female escorts <%= escort.location %>, private meetups near me, discreet companionship Nairobi">
+    <meta name="description" content="<%= escort.city %> Escorts in <%= escort.areaLabel %> – Meet <%= escort.name %> in <%= escort.areaLabel %>">
+    <meta name="keywords" content="Nairobi escorts, companions in <%= escort.areaLabel %>, female escorts <%= escort.areaLabel %>, private meetups near me, discreet companionship Nairobi">
     <title><%= escort.name %></title>
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
@@ -234,7 +234,7 @@
             <div class="box">
                 <div class="left">
                     <h3 style="padding: 10px 0">About <%= escort.name %></h3>
-                    <p id="about-display" style='background: #f0f0f0; border-radius: 5px'>This is <%= escort.name %>., She is a hot <%= escort.age %> years old escort in <%= escort.location %>. She offers the best <%= escort.services.join(', ') %> in <%= escort.location %> . To communicate with <%= escort.name %>. you can Contact her through her Number <%= escort.phone %> to arrange a meetup with <%= escort.name %>.</p>
+                    <p id="about-display" style='background: #f0f0f0; border-radius: 5px'>This is <%= escort.name %>., She is a hot <%= escort.age %> years old escort in <%= escort.areaLabel %>. She offers the best <%= escort.services.join(', ') %> in <%= escort.areaLabel %> . To communicate with <%= escort.name %>. you can Contact her through her Number <%= escort.phone %> to arrange a meetup with <%= escort.name %>.</p>
                     <h3>Gallery</h3>
                 <% if (escort.gallery && escort.gallery.length > 0) { %>
                     <div class="gallery">
@@ -279,7 +279,7 @@
                     <span aria-label="Bookmark profile"><i style="color: #444" class="fa-solid fa-bookmark" aria-hidden="true"></i></span>
                     <!-- <p class="escort-phone"><span>Phone</span> 0751142915</p> -->
                 </div><hr>
-                    <p style="padding: 4px;color: #6c757d;">Meet <%= escort.name.split(' ')[0]%> a <%= escort.age %> years old <%= escort.gender%> Escort from <%= escort.city%>, <%= escort.location %> area.</p>
+                    <p style="padding: 4px;color: #6c757d;">Meet <%= escort.name.split(' ')[0]%> a <%= escort.age %> years old <%= escort.gender%> Escort from <%= escort.city%>, <%= escort.areaLabel %> area.</p>
                 <div class="call">
                     <a href="tel: 0713452235" style="color: #25D366">
                 CALL <%= escort.name.split(' ')[0].toUpperCase() %>
@@ -300,7 +300,7 @@
   "@type": "LocalBusiness",
   "name": "<%= escort.name %>",
   "image": "<%= escort.image_url %>",
-  "description": "Elite companion from <%= escort.location %>. Discreet meetups and private experiences.",
+  "description": "Elite companion from <%= escort.areaLabel %>. Discreet meetups and private experiences.",
   "address": {
     "@type": "PostalAddress",
     "addressLocality": "<%= escort.city %>",
@@ -308,15 +308,15 @@
   },
   "areaServed": {
     "@type": "Place",
-    "name": "<%= escort.location %>"
+    "name": "<%= escort.areaLabel%>"
   },
   "telephone": "<%= escort.phone %>",
     "url": "<%= escort.profile_url || '' %>",
   "priceRange": "$$$",
   "openingHours": "Mo-Su 24:00",
   "keywords": [
-    "escorts in <%= escort.location %>",
-    "companions near <%= escort.location %>",
+    "escorts in <%= escort.areaLabel %>",
+    "companions near <%= escort.areaLabel %>",
     "private meetups Nairobi"
   ]
 }

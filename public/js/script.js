@@ -160,7 +160,7 @@ let prefferedOption = localStorage.getItem('prefferedOption')
         a.href = 'javascript:void(0)';
         a.style.pointerEvents = 'none';
       } else {
-        a.href = `/escorts-from-${el.name}`;
+        a.href = `/escorts-from/${el.name}`;
       }
 
       a.innerText = `${el.name} (${el.count})`;

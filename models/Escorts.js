@@ -12,9 +12,17 @@ const escortSchema = new mongoose.Schema({
     dob: { type: Date, required: true },
     orientation: { type: String, required: true},
     location: {
-     type: String, default: '' 
-    // coordinates: { type: [Number], required: true } // [longitude, latitude]
-    },
+        type: {
+            type: String,
+            enum: ['Point'],
+            required: false,
+            default: 'Point'
+        },
+        coordinates: {
+            type: [Number],
+            required: false
+        }},
+    areaLabel: { type: String },
     gallery: [{ type: String}],
     phone: { type: String, default: '' },
     allowedtopost: {
@@ -48,8 +56,7 @@ const escortSchema = new mongoose.Schema({
     status: {
         message: String,
         createdAt: { type: Date, default: Date.now },
-        expiresAt: Date,
-    }
+        expiresAt: Date    }
 });
 escortSchema.index({ location: '2dsphere' });
 module.exports = mongoose.model('profiles', escortSchema);

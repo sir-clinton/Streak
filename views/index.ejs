@@ -128,8 +128,7 @@
         <!-- hero section -->
          <section id="hero-section">
             <h2>Nairobi Escorts and Discreet Call Girls</h2>
-            <p>Welcome to Streak Companions Nairobi — your trusted source for verified escorts and discreet companionship. Whether you're in need of private meets or spontaneous fun, our Nairobi-based call girls are ready 24/7 to make your moments unforgettable. Discover trusted profiles, fair pricing, and safe connections tailored for you.</p>
-            <div class="filter">
+            <p>Welcome to Streak Companions Nairobi — your trusted source for verified escorts and discreet companionship.</p>
                 <label for="gender">Filter By</label><br><br>
                 <form id="filter-form" onsubmit="submitForm(event)" method="GET">
                     <select id="gender" name="gender" aria-label="Gender filter">
@@ -381,7 +380,7 @@ window.onclick = function(event) {
   listings.innerHTML = ""; // Clear old content
 
   if (escorts.length === 0) {
-    listings.innerHTML = `<p style="position: absolute; top:50%; left: 50%; transform: translateX(-50%)">No nearby escorts found. Try adjusting location or distance.</p>`;
+    listings.innerHTML = `<p style="position: absolute; top:50%; left: 50%; transform: translateX(-50%)">No nearby escorts found. Try again later</p>`;// Try adjusting location or distance.
     return;
   }
 
@@ -408,7 +407,7 @@ window.onclick = function(event) {
         </div>
         <hr>
         <p style="padding: 4px;color: #6c757d;">
-          Meet ${name}, a ${escort.age} years old ${escort.gender} Escort from ${escort.city}, ${escort.location} area.
+          Meet ${name}, a ${escort.age} years old ${escort.gender} Escort from ${escort.city}, ${escort.areaLabel} area.
         </p>
         <div class="call">
           <a href="tel:${escort.phone}" style="color: #25D366">
