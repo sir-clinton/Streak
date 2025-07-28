@@ -628,7 +628,7 @@
                 <input type="text" name="city" id="city-input" value="<%= loggedInEscort.city %>">
 
                 <label class="field-label">Location</label>
-                <input type="text" name="location" id="location-input" value="<%= loggedInEscort.location %>">
+                <input type="text" name="location" id="location-input" value="<%= loggedInEscort.areaLabel%>">
             </div>
 
             <div class="right">
@@ -895,7 +895,7 @@ function updateDisplayFields(data) {
   const fieldMap = {
     name: 'name-display',
     city: 'city-display',
-    location: 'location-display',
+    areaLabel: 'location-display',
     phone: 'phone-display'
   };
 
@@ -976,7 +976,7 @@ const saveBtn = document.querySelector('.save-btn');
 saveBtn.addEventListener('click', async () => {
   const data = {
     name: document.getElementById('name-input').value,
-    location: document.getElementById('location-input').value,
+    areaLabel: document.getElementById('location-input').value,
     city: document.getElementById('city-input').value,
     socialLinks: {
     instagram: document.getElementById('instagram-input').value || '',

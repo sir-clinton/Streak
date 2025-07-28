@@ -7,7 +7,7 @@ function getMissingFields(escort) {
   if (!escort.email?.trim()) missing.push('Email'); // fixed variable name
   if (!escort.city?.trim()) missing.push('City');
   if (!escort.about?.trim()) missing.push('About');
-  if (!escort.location?.trim()) missing.push('Location');
+  if (!escort.areaLabel?.trim()) missing.push('areaLabel');
   if (!escort.userImg?.trim() || escort.userImg === defaultImage) missing.push('Image');
   if (!escort.dob) missing.push('Age');
   if (!escort.weight) missing.push('Weight');
