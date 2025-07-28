@@ -1355,8 +1355,8 @@ app.get('/swipe-feed/:city', async (req, res) => {
 
 function metData(req){
 return {
-      title: 'Nairobi Escorts & Descreet Call Girls - Streak.com',
-      description: 'Discover sexy and verified 📍 Nairobi Escorts today, For your hype night and chill days. Enjoy our services 24/7.',
+      title: 'Nairobi VIP Escorts & Discreet Nairobi Call Girls | Luxury & Privacy Guaranteed" - Streak.com',
+      description: 'Explore Nairobi’s finest companions. Tailored experiences, total discretion, and unforgettable moments await." "Connect with exclusive Nairobi escorts. Premium service, privacy-first, and unmatched elegance. Enjoy our services 24/7.',
       image: 'https://raha.com/default-preview.jpg',
       url: req.protocol + '://' + req.get('host') + req.originalUrl
     }
