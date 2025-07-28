@@ -256,31 +256,14 @@ async function startServer() {
 //     }
 
 //     verifyEmail('muneneclinton797@gmail.com');
-      const cbdCoords = [36.8219, -1.2921];         // CBD (Nairobi) coordinates
-    const rongaiCoords = [36.7494, -1.3961];      // Ongata Rongai coordinates
-    const natashaEmail = 'natasha@example.com';   // update with actual email
-
-    // Update all except Natasha to CBD
-    await Escort.updateMany(
-      { email: { $ne: natashaEmail } },
-      {
-        location: {
-          type: 'Point',
-          coordinates: cbdCoords
-        }
-      }
+      const result = await Escort.updateMany(
+      { name: { $in: ['Sally', 'Zuri'] } },
+      { $set: { areaLabel: 'Nairobi West' } }
     );
 
-    // Update Natasha only
-    await Escort.updateOne(
-      { email: natashaEmail },
-      {
-        location: {
-          type: 'Point',
-          coordinates: rongaiCoords
-        }
-      }
-    );
+    console.log(`${result.modifiedCount} escorts updated to Nairobi West.`);
+
+
   } catch (err) {
     console.error('❌ MongoDB connection error:', err.message);
     mongoConnected = false;
@@ -601,6 +584,7 @@ app.get('/escorts-from/:area', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+Escort.find({ areaLabel: { $regex: /Nairobi West/i } })
 
 app.get('/areas-with-counts', async (req, res) => {
   console.log(`[${new Date().toISOString()}] Home route hit by ${req.ip}`);
@@ -611,7 +595,7 @@ app.get('/areas-with-counts', async (req, res) => {
       const areaCounts = await Promise.all(
         areas.map(async (area) => {
           const count = await Escort.countDocuments({
-            areaLabel: new RegExp(area, 'i'),
+            areaLabel: { $regex: `^${area}$`, $options: 'i' },
             allowedtopost: true
           });
           return { name: area, count };
@@ -1285,7 +1269,7 @@ app.get('/', async (req, res) => {
     if (!verified) {
       // Fetch verified escorts
       const escorts = await Escort.find({ allowedtopost: true })
-        .select('name areaLabel userImg phone city gender dob about')
+        .select('name userImg phone city areaLabel gender dob about')
         .lean();
 
       // Active boosts

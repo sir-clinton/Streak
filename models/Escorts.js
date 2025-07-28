@@ -15,14 +15,13 @@ const escortSchema = new mongoose.Schema({
         type: {
             type: String,
             enum: ['Point'],
-            required: false,
             default: 'Point'
         },
         coordinates: {
-            type: [Number],
-            required: false
-        }},
-    areaLabel: { type: String },
+            type: [Number]
+        }
+    },
+    areaLabel: { type: String, required: true },
     gallery: [{ type: String}],
     phone: { type: String, default: '' },
     allowedtopost: {

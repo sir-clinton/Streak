@@ -103,7 +103,7 @@
   }
 }
 /* nearby button styling */
-.filter button[type="button"] {
+button[type="button"] {
   background-color: #009688;      /* Teal - gives a warm and modern feel */
   color: white;                   /* Text color for contrast */
   border: none;                   /* Clean edge */
@@ -117,7 +117,7 @@
   transition: background-color 0.3s ease;
 }
 
-.filter button[type="button"]:hover {
+button[type="button"]:hover {
   background-color: #00796b;     /* Slightly darker teal on hover */
 }
     </style>
@@ -156,7 +156,6 @@
                     <button aria-label="filter button" id='submit' type="submit">Filter</button>
                 </form>
                 <button type="button">Nearby</button>
-            </div>
          </section>
 
          <section id="main" class="main">
@@ -188,7 +187,7 @@
 
                     <!-- <p><i class="fa-solid fa-location-dot" style="color: #6c757d;"></i> Kware.</p> -->
                 </div><hr>
-                <p style="padding: 4px;color: #6c757d;">Meet <%= escort.name.split(' ')[0]%> a <%= escort.age %> years old <%= escort.gender%> Escort from <%= escort.city%>, <%= escort.location %> area.</p>
+                <p style="padding: 4px;color: #6c757d;">Meet <%= escort.name.split(' ')[0]%> a <%= escort.age %> years old <%= escort.gender%> Escort from <%= escort.city%>, <%= escort.areaLabel %> area.</p>
                 <div class="call">
                   <a href="tel: <%= escort.phone %>" style="color: #25D366">
                 CALL <%= escort.name.split(' ')[0].toUpperCase() %>
@@ -279,7 +278,7 @@ document.getElementById('openBookmarkModal').addEventListener('click', () => {
   bookmarks.map(item => `
     <div style="margin-bottom: 12px; display: flex; align-items: center">
       <img src="${item.img}" alt="${item.name}" width="60" style="border-radius:5px;">
-      <span class="copy-number-btn" data-name="${escort.name.split(' ')[0]}" data-phone="${item.phone}" style="margin-left:8px; flex: 1; text-decoration: underline; cursor: pointer;">
+      <span class="copy-number-btn" data-name="${item.name.split(' ')[0]}" data-phone="${item.phone}" style="margin-left:8px; flex: 1; text-decoration: underline; cursor: pointer;">
         📋 Copy ${item.name}'s Number
       </span>
       <button class="remove-bookmark" data-id="${item.id}" style="background: none; border: none; color: #c0392b; cursor: pointer;">✕</button>
@@ -373,7 +372,7 @@ window.onclick = function(event) {
   }
 
   // Attach click handler to the button
-  document.querySelector('.filter button[type="button"]').addEventListener('click', fetchNearbyEscorts);
+  document.querySelector('button[type="button"]').addEventListener('click', fetchNearbyEscorts);
 
     function renderEscortCards(escorts) {
   const listings = document.getElementById("listings");
@@ -408,6 +407,7 @@ window.onclick = function(event) {
         <hr>
         <p style="padding: 4px;color: #6c757d;">
           Meet ${name}, a ${escort.age} years old ${escort.gender} Escort from ${escort.city}, ${escort.areaLabel} area.
+        </p>
         </p>
         <div class="call">
           <a href="tel:${escort.phone}" style="color: #25D366">
