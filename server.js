@@ -1348,7 +1348,7 @@ app.get('/swipe-feed/:city', async (req, res) => {
 
 function metData(req){
 return {
-      title: 'Nairobi Escorts & Discreet Nairobi Elite Companions | Luxury & Privacy Guaranteed',
+      title: 'Nairobi Escorts & Discreet Companions | Luxury & Privacy Guaranteed',
       description: 'Discreet Nairobi escort services offering luxury companionship and privacy for elite clients. Book your experience today.',
       image: 'https://raha.com/default-preview.jpg',
       url: req.protocol + '://' + req.get('host') + req.originalUrl
