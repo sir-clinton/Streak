@@ -256,13 +256,6 @@ async function startServer() {
 //     }
 
 //     verifyEmail('muneneclinton797@gmail.com');
-      const result = await Escort.updateMany(
-      { name: { $in: ['Sally', 'Zuri'] } },
-      { $set: { areaLabel: 'Nairobi West' } }
-    );
-
-    console.log(`${result.modifiedCount} escorts updated to Nairobi West.`);
-
 
   } catch (err) {
     console.error('❌ MongoDB connection error:', err.message);
@@ -1355,8 +1348,8 @@ app.get('/swipe-feed/:city', async (req, res) => {
 
 function metData(req){
 return {
-      title: 'Nairobi VIP Escorts & Discreet Nairobi Call Girls | Luxury & Privacy Guaranteed" - Streak.com',
-      description: 'Explore Nairobi’s finest companions. Tailored experiences, total discretion, and unforgettable moments await." "Connect with exclusive Nairobi escorts. Premium service, privacy-first, and unmatched elegance. Enjoy our services 24/7.',
+      title: 'Nairobi Escorts & Discreet Nairobi Elite Companions | Luxury & Privacy Guaranteed',
+      description: 'Discreet Nairobi escort services offering luxury companionship and privacy for elite clients. Book your experience today.',
       image: 'https://raha.com/default-preview.jpg',
       url: req.protocol + '://' + req.get('host') + req.originalUrl
     }
