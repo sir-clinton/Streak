@@ -256,6 +256,22 @@ async function startServer() {
 //     }
 
 //     verifyEmail('muneneclinton797@gmail.com');
+        // const result = await Escort.findOneAndUpdate(
+        //     { name: 'Natasha' },
+        //     {
+        //         location: {
+        //             type: 'Point',
+        //             coordinates: [36.7606, -1.3969]
+        //         }
+        //     },
+        //     { new: true }
+        // );
+
+        // if (result) {
+        //     console.log(`Updated location for Natasha:`, result);
+        // } else {
+        //     console.log(`Escort named Natasha not found.`);
+        // }
 
   } catch (err) {
     console.error('❌ MongoDB connection error:', err.message);

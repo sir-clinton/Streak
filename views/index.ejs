@@ -119,7 +119,13 @@ button[type="button"] {
 
 button[type="button"]:hover {
   background-color: #00796b;     /* Slightly darker teal on hover */
+}#hero-section h1 {
+  font-size: clamp(1.5rem, 5vw, 2.5rem); /* Responsive size */
+  line-height: 1.2;
+  font-weight: bold;
+  margin: 0.5em 0;
 }
+
     </style>
 </head>
 <body>
@@ -127,9 +133,9 @@ button[type="button"]:hover {
         <%- include('partials/header')  %>
         <!-- hero section -->
          <section id="hero-section">
-            <h1>Nairobi Escorts and Discreet Call Girls near me.</h1><br>
-            <p>Welcome to Streak Companions Nairobi — your trusted source for verified escorts and discreet companionship.</p>
-                <label for="gender">Filter By</label><br><br>
+            <h1>Nairobi Escorts and Discreet Call Girls near me.</h1>
+            <p>Welcome to Streak Companions Nairobi — your trusted source for verified escorts and discreet companionship.</p><br>
+                <label for="gender">Filter By</label><br>
                 <form id="filter-form" onsubmit="submitForm(event)" method="GET">
                     <select id="gender" name="gender" aria-label="Gender filter">
                         <option value="Select Gender" disabled selected hidden>Select Gender</option>
