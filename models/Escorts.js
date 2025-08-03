@@ -5,6 +5,8 @@ const escortSchema = new mongoose.Schema({
     weight: {type: String, required: true},
     email: { type: String, required: true, unique: true, index: true},
     password: { type: String, required: true },
+    resetToken: String,
+    resetTokenExpiry: Date,
     backgroundImg: {type: String, default: 'https://storge.pic2.me/c/1360x800/717/55661ae60b86a.jpg'},
     userImg: { type: String, default: 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png' },
     about: { type: String, default: '' },

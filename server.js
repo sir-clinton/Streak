@@ -61,122 +61,259 @@ app.use(session({
 const PORT = 3000;
 
     // Now it's safe to use your model
-
 const escorts = [
 {
-"name": "Sally",
+"name": "SALMA",
 "weight": "76",
   "gender": "Female",
   "allowedtopost": "true",
   "publishedAt": "2025-04-09",
-  "email": "wanjiku@escort.com",
-  "location": "Nairobi CBD",
+  "email": "SALMA@escort.com",
+  "areaLabel": "Nairobi West",
+  "location": {
+      "type": "Point",
+      "coordinates": [36.8223, -1.3078]
+    },
   "city": "Nairobi",
   "password": "clinton123@()",
-  "userImg": "https://www.nairobiraha.co.ke/wp-content/uploads/2025/06/image-477474-420x420-200x200.jpeg",
+  "userImg": "/images/salma.png",
   "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
-  "phone": "0742389828",
-  "dob": "1998-03-01",
+  "phone": "0794858343",
+  "dob": "2000-03-01",
   "gallery": [],
   "orientation": "straight",
   "socialLinka": "",
-  "services": []
+  "services": ['Dinner Date', 'Travel Companion', 'Massage']
 },
 {
-"name": "Samira",
+"name": "YUSRA",
   "gender": "Female",
   "allowedtopost": "true",
-  "publishedAt": "2025-04-09",
+  "publishedAt": "2023-04-09",
   "weight": "80",
-  "email": "Fifi@escort.com",
-  "location": "Nairobi West",
+  "email": "YUSRA@escort.com",
+  "areaLabel": "Nairobi West",
+  "location": {
+      "type": "Point",
+      "coordinates": [36.8223, -1.3078]
+    },
   "city": "Nairobi",
   "password": "clinton123@()",
-  "userImg": "https://www.nairobiraha.co.ke/wp-content/uploads/2025/07/image-478330-420x420-200x200.jpeg",
+  "userImg": "/images/yusra.jpg",
   "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
-  "phone": "0719396761",
+  "phone": "0741611714",
   "dob": "2001-03-01",
   "gallery": [],
   "orientation": "straight",
   "socialLinka": "",
-  "services": []
+  "services": ['Dinner Date', 'Travel Companion', 'Massage']
 },
 {
-"name": "Zuri",
+"name": "Tasha",
 "gender": "Female",
 "allowedtopost": "true",
   "publishedAt": "2025-04-09",
   "weight": "86",
-  "email": "leilah@escort.com",
-  "location": "Nairobi West",
+  "email": "Tasha@escort.com",
+  "areaLabel": "Nairobi West",
+  "location": {
+      "type": "Point",
+      "coordinates": [36.8223, -1.3078]
+    },
   "city": "Nairobi",
   "password": "clinton123@()",
-  "userImg": "https://www.nairobiraha.co.ke/wp-content/uploads/2025/04/image-476182-420x420-200x200.jpeg",
+  "userImg": "/images/shanny.jpg",
   "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
-  "phone": "0713172293",
+  "phone": "0754968269",
   "dob": "2004-03-01",
   "gallery": [],
   "orientation": "straight",
   "socialLinka": "",
-  "services": []
+  "services": ['Dinner Date', 'Travel Companion', 'Massage']
 },
 {
-"name": "Belly",
+"name": "Shanny",
 "gender": "Female",
 "allowedtopost": "true",
   "publishedAt": "2025-04-09",
-  "email": "wahukelly@escort.com",
-  "location": "CBD",
+  "email": "Shanny@escort.com",
+  "areaLabel": "Roysambu",
+  "location": {
+      "type": "Point",
+      "coordinates": [36.8867, -1.2218]
+    },
   "city": "Nairobi",
   "password": "clinton123@()",
-  "userImg": "https://www.nairobiraha.co.ke/wp-content/uploads/2025/07/image-478413-420x420-200x200.jpg",
+  "userImg": "/images/tasha.jpg",
   "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
-  "phone": "0729677559",
-  "dob": "1985-03-01",
+  "phone": "0785487128",
+  "dob": "2003-03-01",
   "gallery": [],
   "orientation": "straight",
   "weight": "93",
   "socialLinka": "",
-  "services": []
+  "services": ['Dinner Date', 'Travel Companion', 'Massage']
 },
 {
-"name": "RINA",
+"name": "britney",
 "gender": "Female",
 "allowedtopost": "true",
   "publishedAt": "2025-04-09",
   "weight": "99",
-  "email": "jessica@escort.com",
-  "location": "CBD",
+  "email": "britney@escort.com",
+  "areaLabel": "CBD",
+   "location": {
+      "type": "Point",
+      "coordinates": [36.8219, -1.2833]
+    },
   "city": "Nairobi",
   "password": "clinton123@()",
-  "userImg": "https://www.nairobiraha.co.ke/wp-content/uploads/2025/07/image-478491-200x200.jpg",
+  "userImg": "/images/britney.jpeg",
   "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
-  "phone": "0720493795",
-  "dob": "1982-03-01",
+  "phone": "0719284918",
+  "dob": "2002-03-01",
   "gallery": [],
   "orientation": "straight",
   "socialLinka": "",
-  "services": []
-},
-{
-"name": "Natasha",
+  "services": ['Dinner Date', 'Travel Companion', 'Massage']
+}
+,{
+"name": "Nyaboke",
 "gender": "Female",
 "allowedtopost": "true",
   "publishedAt": "2025-04-09",
   "weight": "83",
-  "email": "joo@escort.com",
-  "location": "CBD",
+  "email": "Nyaboke@escort.com",
+  "areaLabel": "Ngara",
+  "location": {
+      "type": "Point",
+      "coordinates": [36.8262, -1.2686]
+    },
   "city": "Nairobi",
   "password": "clinton123@()",
-  "userImg": "https://www.nairobiraha.co.ke/wp-content/uploads/2024/12/image-474054-200x200.jpg",
+  "userImg": "/images/nyaboke.jpeg",
   "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
-  "phone": "0756982493",
-  "dob": "1990-03-01",
+  "phone": "07116102997",
+  "dob": "2006-03-01",
   "gallery": [],
   "orientation": "straight",
   "socialLinka": "",
-  "services": []
-}]
+  "services": ['Dinner Date', 'Travel Companion', 'Massage']
+}
+  ,{
+"name": "FARIDA",
+"gender": "Female",
+"allowedtopost": "true",
+  "publishedAt": "2025-04-09",
+  "weight": "83",
+  "email": "FARIDA@escort.com",
+  "areaLabel": "CBD",
+   "location": {
+      "type": "Point",
+      "coordinates": [36.8219, -1.2833]
+    },
+  "city": "Nairobi",
+  "password": "clinton123@()",
+  "userImg": "/images/faridah.jpg",
+  "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
+  "phone": "0710146210",
+  "dob": "2001-03-01",
+  "gallery": [],
+  "orientation": "straight",
+  "socialLinka": "",
+  "services": ['Dinner Date', 'Travel Companion', 'Massage']
+} ,{
+"name": "ZUENA",
+"gender": "Female",
+"allowedtopost": "true",
+  "publishedAt": "2025-04-09",
+  "weight": "83",
+  "email": "ZUENA@escort.com",
+  "areaLabel": "CBD",
+  "location": {
+      "type": "Point",
+      "coordinates": [36.8219, -1.2833]
+    },
+  "city": "Nairobi",
+  "password": "clinton123@()",
+  "userImg": "/images/zuena.jpeg",
+  "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
+  "phone": "0710146210",
+  "dob": "2005-03-01",
+  "gallery": [],
+  "orientation": "straight",
+  "socialLinka": "",
+  "services": ['Dinner Date', 'Travel Companion', 'Massage']
+},
+{
+"name": "NITS",
+"gender": "Female",
+"allowedtopost": "true",
+  "publishedAt": "2025-04-09",
+  "email": "NITS@escort.com",
+  "areaLabel": "Roysambu",
+  "location": {
+      "type": "Point",
+      "coordinates": [36.8867, -1.2218]
+    },
+  "city": "Nairobi",
+  "password": "clinton123@()",
+  "userImg": "/images/nits.jpg",
+  "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
+  "phone": "0728686783",
+  "dob": "2003-03-01",
+  "gallery": [],
+  "orientation": "straight",
+  "weight": "93",
+  "socialLinka": "",
+  "services": ['Dinner Date', 'Travel Companion', 'Massage']
+} ,{
+"name": "Zoey",
+"gender": "Female",
+"allowedtopost": "true",
+  "publishedAt": "2025-04-09",
+  "weight": "80",
+  "email": "Zoey@escort.com",
+  "areaLabel": "CBD",
+   "location": {
+      "type": "Point",
+      "coordinates": [36.8219, -1.2833]
+    },
+  "city": "Nairobi",
+  "password": "clinton123@()",
+  "userImg": "/images/zoe.png",
+  "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
+  "phone": "0112808445",
+  "dob": "2003-03-01",
+  "gallery": [],
+  "orientation": "straight",
+  "socialLinka": "",
+  "services": ['Dinner Date', 'Travel Companion', 'Massage']
+} ,
+{
+"name": "BigClit",
+"gender": "Female",
+"allowedtopost": "true",
+  "publishedAt": "2025-04-09",
+  "weight": "86",
+  "email": "BigClit@escort.com",
+  "areaLabel": "Nairobi West",
+  "location": {
+      "type": "Point",
+      "coordinates": [36.8223, -1.3078]
+    },
+  "city": "Nairobi",
+  "password": "clinton123@()",
+  "userImg": "/images/bigclit.jpg",
+  "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
+  "phone": "0707252821",
+  "dob": "2004-03-01",
+  "gallery": [],
+  "orientation": "straight",
+  "socialLinka": "",
+  "services": ['Dinner Date', 'Travel Companion', 'Massage']
+}
+]
 // {
 // "name": "amryn",
 // "gender": "Female",
@@ -235,15 +372,46 @@ const escorts = [
 //   "services": []
 // }]
 
-
+const escort = 
+{
+"name": "Linsy",
+"gender": "Female",
+"allowedtopost": "true",
+  "publishedAt": "2025-04-09",
+  "weight": "84",
+  "email": "Linsi@escort.com",
+  "areaLabel": "Kilimani",
+  "location": {
+      "type": "Point",
+      "coordinates": [36.8223, -1.3078]
+    },
+  "city": "Nairobi",
+  "password": "clinton123@()",
+  "userImg": "/images/linsly.jpg",
+  "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
+  "phone": "0745043444",
+  "dob": "2001-03-01",
+  "gallery": [],
+  "orientation": "straight",
+  "socialLinka": "",
+  "services": ['Dinner Date', 'Travel Companion', 'Massage']
+}
 let mongoConnected = false;
 
 async function startServer() {
   try {
     await mongoose.connect(process.env.MONGO_URI);
     console.log('✅ Connected to MongoDB');
-    mongoConnected = true;
-//     async function verifyEmail(email) {
+    // mongoConnected = true;
+    const escortsToDelete = ['Linsy','SALMA', 'YUSRA', 'Tasha', 'Shanny', 'britney', 'Nyaboke', 'FARIDA', 'ZUENA', 'NITS', 'Zoey', 'BigClit']
+    
+    // const result = await Escort.deleteMany({ name: { $in: escortsToDelete }});
+    // console.log('deleted escorts', result.length)
+    // const result = await Escort.insertOne(escort);
+    // console.log('Escort inserted:', result);
+    // const result = await Escort.insertMany(escorts, {ordered: false});
+    // console.log('Escrts inserted:', result.length);
+    // async function verifyEmail(email) {
 //       try {
 //         const result = await Escort.updateOne(
 //           { email: email.trim().toLowerCase() },
@@ -364,6 +532,36 @@ const getPureTier = (boostType = '') => {
   const parts = boostType.split('-');
   return parts[0]; // 'gold', 'silver', or 'bronze'
 };
+
+app.post('/save-location', async (req, res) => {
+  try {
+    const email = req.session?.escort?.email;
+    const { latitude, longitude } = req.body;
+
+    if (!email || !latitude || !longitude) {
+      return res.status(400).json({ error: 'Missing required data' });
+    }
+
+    const escort = await Escort.findOneAndUpdate(
+      { email },
+      {
+        location: {
+          type: 'Point',
+          coordinates: [longitude, latitude]
+        }
+      },
+      { new: true }
+    );
+
+    if (!escort) {
+      return res.status(404).json({ error: 'Escort not found' });
+    }
+
+    res.status(200).json({ message: 'Location saved', location: escort.location });
+  } catch (err) {
+    console.error('Error saving location:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }});
 
 app.get('/health', (req, res) => {
   console.log('server is awake now (*_*)')
@@ -575,7 +773,12 @@ app.get('/escorts-from/:area', async (req, res) => {
         escorts: [],
         loggedInEscort: escort,
         message: `No profiles in ${area} yet.`,
-        meta: metData(req),
+        meta:  {
+        title: `Escorts in ${area} area in ${city} | Streak.com`,
+        description: `Explore verified  escorts profiles available in ${city}.`,
+        image: finalList[0]?.userImg || '/default-preview.jpg',
+        url: req.protocol + '://' + req.get('host') + req.originalUrl
+      },
         city
       });
     }
@@ -584,7 +787,12 @@ app.get('/escorts-from/:area', async (req, res) => {
       escorts: finalList,
       loggedInEscort: escort,
       message: null,
-      meta: metData(req),
+      meta: {
+        title: `Escorts in ${area} area in ${city} | Streak.com`,
+        description: `Explore verified  escorts profiles available in ${city}.`,
+        image: finalList[0]?.userImg || '/default-preview.jpg',
+        url: req.protocol + '://' + req.get('host') + req.originalUrl
+      },
       city
     });
 
@@ -593,7 +801,6 @@ app.get('/escorts-from/:area', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
-Escort.find({ areaLabel: { $regex: /Nairobi West/i } })
 
 app.get('/areas-with-counts', async (req, res) => {
   console.log(`[${new Date().toISOString()}] Home route hit by ${req.ip}`);
@@ -813,7 +1020,13 @@ app.get('/nearby', async (req, res) => {
       success: true,
       escorts: cached,
       center: { lat, lng },
-      radius: distance
+      radius: distance,
+      meta: {
+        title: `Nearby Verified Escorts | Streak.com`,
+        description: `Explore Nearby verified Escorts available in your area.`,
+        image: finalList[0]?.userImg || '/default-preview.jpg',
+        url: req.protocol + '://' + req.get('host') + req.originalUrl
+      }
     });
   }
 
@@ -887,7 +1100,13 @@ app.get('/nearby', async (req, res) => {
       success: true,
       escorts: finalList,
       center: { lat: parseFloat(lat), lng: parseFloat(lng) },
-      radius: parseInt(distance)
+      radius: parseInt(distance),
+       meta: {
+        title: `Nearby Verified Escorts | Streak.com`,
+        description: `Explore Nearby verified Escorts available in your area.`,
+        image: finalList[0]?.userImg || '/default-preview.jpg',
+        url: req.protocol + '://' + req.get('host') + req.originalUrl
+      }
     });
 
   } catch (err) {
@@ -903,14 +1122,10 @@ app.get('/city/:name', async (req, res) => {
   const gender = req.query.gender;
   const city = req.params.name;
 
-  if (!mongoConnected) {
-    return res.status(503).render('index', {
-      escorts: [],
-      message: 'Service temporarily unavailable.',
-      city,
-      meta: metData(req)
-    });
-  }
+ 
+  console.log('Params:', req.params.name);
+  console.log('Query:', req.query.gender);
+
 
   if (!city || !gender) {
     return res.status(400).render('index', {
@@ -926,8 +1141,8 @@ app.get('/city/:name', async (req, res) => {
       const escort = escortEmail ? await Escort.findOne({ email: escortEmail }) : null;
       let escorts = await Escort.find({
       allowedtopost: true,
-      city: { $regex: new RegExp(`^${city}$`, 'i') },
-      gender: { $regex: new RegExp(`^${gender}$`, 'i') }
+      city: { $regex: new RegExp(city, 'i') }, // Removes ^ and $
+      gender: { $regex: new RegExp(gender, 'i') }
     }).lean();
 
     const boosts = await BoostRequest.find({
@@ -977,7 +1192,12 @@ app.get('/city/:name', async (req, res) => {
         loggedInEscort: escort || null,
         message: 'No verified profiles match that filter.',
         city,
-        meta: metData(req)
+        meta: {
+        title: `${gender} Escorts in ${city} | Streak.com`,
+        description: `Explore verified ${gender.toLowerCase()} escorts profiles available in ${city}.`,
+        image: finalList[0]?.userImg || '/default-preview.jpg',
+        url: req.protocol + '://' + req.get('host') + req.originalUrl
+      }
       });
     }
 
@@ -988,8 +1208,8 @@ app.get('/city/:name', async (req, res) => {
       gender,
       message: null,
       meta: {
-        title: `Profiles in ${city} for ${gender} | YourSite.com`,
-        description: `Explore verified ${gender.toLowerCase()} profiles available in ${city}.`,
+        title: `${gender} Escorts in ${city} | Streak.com`,
+        description: `Explore verified ${gender.toLowerCase()} escorts profiles available in ${city}.`,
         image: finalList[0]?.userImg || '/default-preview.jpg',
         url: req.protocol + '://' + req.get('host') + req.originalUrl
       }
@@ -1027,12 +1247,10 @@ app.post('/register', async (req, res) => {
       // Send verification email
     const transporter = nodemailer.createTransport({
       service: 'gmail',
-      auth: {
-        // user: 'muneneclinton159@gmail.com'
-        user: 'shale.online@gmail.com',
-        pass: 'imsm xexg jfzr swzk'
-        // pass: 'jzok hslc ycch hxnq'
-      }
+     auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
+    }
     });
 
     const expiryDate = new Date(verificationExpires).toLocaleString('en-KE', {
@@ -1132,7 +1350,66 @@ try {
 }
 
 });
+app.get('/forgot-password', (req, res)=>{
+  res.sendFile(path.join(__dirname, 'forgotPassword.html'));
+})
 
+app.post('/forgot-password', async (req, res) => {
+  const { email } = req.body;
+  const user = await Escort.findOne({ email });
+  if (!user) return res.status(404).send('User not found');
+  const token = crypto.randomBytes(32).toString('hex');
+  user.resetToken = token;
+  user.resetTokenExpiry = Date.now() + 3600000; // 1 hour
+  await user.save();
+
+
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
+    }
+  });
+  console.log(process.auth.user, process.auth.pass)
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: 'Your Password Reset',
+    html: `
+      <p>Hi,</p>
+      <p>Click the link below to reset your password:</p>
+      <a href="https://streak-1.onrender.com/reset-password?token=${token}">Reset Password</a>
+      <p>If you didn't request this, please ignore.</p>
+`
+  };
+
+  transporter.sendMail(mailOptions, (err, info) => {
+    if (err) return res.status(500).json({ message:'Email error', success: false});
+    res.json({success: true, message: 'Password resent successfully'});
+  });
+});
+app.get('/reset-password', (req, res)=>{
+  res.sendFile(path.join(__dirname, 'resetPassword.html'));
+})
+
+app.post('/reset-password', async (req, res) => {
+  const { email, token, newPassword } = req.body;
+  const user = await Escort.findOne({ email });
+
+  if (!user || user.resetToken !== token || user.resetTokenExpiry < Date.now()) {
+    return res.status(400).send('Invalid or expired token');
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  user.password = hashedPassword;
+  user.resetToken = undefined;
+  user.resetTokenExpiry = undefined;
+  await user.save();
+
+  res.json({success: true, message: 'Password resent successfully'});
+});
 
 app.get("/logout", (req, res) => {
   if (!req.session.isLoggedIn) return res.redirect("/login");
@@ -1364,8 +1641,8 @@ app.get('/swipe-feed/:city', async (req, res) => {
 
 function metData(req){
 return {
-      title: 'Nairobi Escorts & Discreet Companions | Luxury & Privacy Guaranteed',
-      description: 'Discreet Nairobi escort services offering luxury companionship and privacy for elite clients. Book your experience today.',
+      title: 'Nairobi Escorts & Discreet Nairaobi Girls | Luxury & Privacy Guaranteed',
+      description: 'Discreet Nairobi escort companions offering luxury companionship and privacy for elite clients. Book your experience today.',
       image: 'https://raha.com/default-preview.jpg',
       url: req.protocol + '://' + req.get('host') + req.originalUrl
     }
@@ -1381,12 +1658,15 @@ Allow: /
 
 Sitemap: ${baseUrl}/sitemap.xml`);
 });
+
 app.get('/sitemap.xml', async (req, res) => {
   try {
-    const profiles = await Escort.find({}); // Replace with your actual DB call
     const baseUrl = `${req.protocol}://${req.get('host')}`;
+    const profiles = await Escort.find({}); // All profiles
+    const cities = await Escort.distinct('city'); // Unique cities
+    const genders = await Escort.distinct('gender'); // Unique genders
 
-    // Generate homepage entry
+    // Homepage entry
     const homepageEntry = `
       <url>
         <loc>${baseUrl}/</loc>
@@ -1395,20 +1675,60 @@ app.get('/sitemap.xml', async (req, res) => {
         <priority>1.0</priority>
       </url>`;
 
-    // Generate profile entries
-    const profileEntries = profiles.map(author => `
-      <url>
-        <loc>${baseUrl}/author/${encodeURIComponent(author.name)}</loc>
-        <lastmod>${new Date(author.updatedAt).toISOString()}</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-      </url>`).join('');
+    // Profile pages
+   const profileEntries = profiles.map(author => {
+  return `
+    <url>
+      <loc>${baseUrl}/author/${encodeURIComponent(author.name)}</loc>
+      <lastmod>${new Date(author.updatedAt).toISOString()}</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>0.8</priority>
+    </url>
+  `.trim();
+}).join('');
 
-    const xml = `<?xml version="1.0" encoding="UTF-8"?>
-    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-      ${homepageEntry.trim()}
-      ${profileEntries.trim()}
-    </urlset>`;
+
+    const cityEntries = cities.flatMap(city => {
+      return genders.map(gender => `
+        <url>
+          <loc>${baseUrl}/city/${encodeURIComponent(city)}?gender=${encodeURIComponent(gender)}</loc>
+          <lastmod>${new Date().toISOString()}</lastmod>
+          <changefreq>weekly</changefreq>
+          <priority>0.7</priority>
+        </url>`);
+    }).join('');
+
+  const areas = {
+    Nairobi: [
+      "Kilimani", "Westlands", "Karen", "CBD", "Roysambu", "Ngara", "Donholm", "Nairobi West", "Dandora", "Ojijo", "Yaya", "Sarit",
+      "Ruaka", "Syokimau", "Kitengela", "Embakasi", "South B", "South C", "Lavington", "Parklands"
+    ],
+    Kiambu: [
+      "Juja", "Kikuyu", "Ruiru", "Githurai",
+      "Thika", "Limuru", "Kabete", "Tigoni"
+    ]}
+  
+
+    const areasList = Object.values(areas).flat(); // Flatten all area arrays
+
+const areaEntries = areasList.map(area => `
+  <url>
+    <loc>${baseUrl}/escorts-from/${encodeURIComponent(area)}</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+`).join('');
+
+
+   const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  ${homepageEntry.trim()}
+  ${profileEntries.trim()}
+  ${cityEntries.trim()}
+  ${areaEntries.trim()}
+</urlset>`;
+
 
     res.type('application/xml');
     res.send(xml);

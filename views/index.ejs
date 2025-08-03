@@ -20,6 +20,7 @@
     <meta name="google-site-verification" content="ch0aH0uYLDPxLUkoX2zyL6jyd7wCHLp-H9awMc6gwIc" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/public/images/favicon.png" type="image/png">
     <link href="https://fonts.cdnfonts.com/css/satoshi?display=swap" rel="preload" as="style">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous"> -->
@@ -118,12 +119,17 @@ button[type="button"] {
 }
 
 button[type="button"]:hover {
-  background-color: #00796b;     /* Slightly darker teal on hover */
+  background-color: #00796b;
+  color: #fff;     /* Slightly darker teal on hover */
 }#hero-section h1 {
   font-size: clamp(1.5rem, 5vw, 2.5rem); /* Responsive size */
   line-height: 1.2;
   font-weight: bold;
   margin: 0.5em 0;
+}.call:hover a{
+  color: #fff;
+}.call a {
+  color: #25D366
 }
 
     </style>
@@ -195,7 +201,7 @@ button[type="button"]:hover {
                 </div><hr>
                 <p style="padding: 4px;color: #6c757d;">Meet <%= escort.name.split(' ')[0]%> a <%= escort.age %> years old <%= escort.gender%> Escort from <%= escort.city%>, <%= escort.areaLabel %> area.</p>
                 <div class="call">
-                  <a href="tel: <%= escort.phone %>" style="color: #25D366">
+                  <a href="tel: <%= escort.phone %>">
                 CALL <%= escort.name.split(' ')[0].toUpperCase() %>
                 &nbsp;<i class="fa fa-phone"></i></a>
                 </div>

@@ -6,6 +6,7 @@
     <meta name="description" content="<%= escort.city %> Escorts in <%= escort.areaLabel %> – Meet <%= escort.name %> in <%= escort.areaLabel %>">
     <meta name="keywords" content="Nairobi escorts, companions in <%= escort.areaLabel %>, female escorts <%= escort.areaLabel %>, private meetups near me, discreet companionship Nairobi">
     <title><%= escort.name %></title>
+    <link rel="icon" href="/public/images/favicon.png" type="image/png">
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -135,13 +136,13 @@
                 padding: 10px;
             }.info p {
                 margin-bottom: 4px;
-            }.call {
+            }.call a{
                 background-color: transparent;
-                color: white;
+                color: "#25D366";
                 padding: 10px;
+                color: #333;
                 text-align: center
-            }.call:hover{
-                background-color: #128C7E;
+            }.call a:hover{
                 color: #f8f8f8
             }
             .escort-name,
@@ -281,7 +282,7 @@
                 </div><hr>
                     <p style="padding: 4px;color: #6c757d;">Meet <%= escort.name.split(' ')[0]%> a <%= escort.age %> years old <%= escort.gender%> Escort from <%= escort.city%>, <%= escort.areaLabel %> area.</p>
                 <div class="call">
-                    <a href="tel: 0713452235" style="color: #25D366">
+                    <a href="tel: 0713452235" title="call <%= escort.name.split(' ')[0].toUpperCase() %>">
                 CALL <%= escort.name.split(' ')[0].toUpperCase() %>
                 &nbsp;<i class="fa fa-phone"></i></a>
                 </div>

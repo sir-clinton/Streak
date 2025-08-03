@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="icon" href="/public/images/favicon.png" type="image/png">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <link rel="icon" href="/favicon.ico">
     <script src="https://kit.fontawesome.com/yourkit.js" crossorigin="anonymous"></script>
@@ -87,6 +88,52 @@
 .progress-day:hover .progress-fill {
   background: linear-gradient(to right, #00cec9, #81ecec);
 }
+/* Toggle Switch Styles */
+.switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 8px;
+}
+
+.switch input {
+  display: none;
+}
+
+.slider {
+  width: 50px;
+  height: 26px;
+  background: #ccc;
+  border-radius: 50px;
+  position: relative;
+  transition: background 0.3s;
+}
+
+.slider::before {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 3px;
+  left: 3px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
+
+input:checked + .slider {
+  background: #00b894;
+}
+
+input:checked + .slider::before {
+  transform: translateX(24px);
+}
+
+.switch-label {
+  font-size: 0.95rem;
+  color: #333;
+}
 
 @media (max-width: 600px) {
   .dashboard-box {
@@ -117,12 +164,57 @@
   <canvas id="profileViewsChart" style="max-height: 300px;"></canvas>
   <div id="noDataMessage" style="text-align:center; margin-top:0.5rem; font-size:0.9rem; color:#999;"></div>
   <h3 style="margin: 16px 0; color: #333;">Profile Engagement (Top 3 days)</h3>
-  <div id="topDaysProgress" style="margin-top:1rem;"></div>
+  <div id="topDaysProgress" style="margin-top:1rem;"></div><br>
+  <label class="switch">
+  <input type="checkbox" id="locationToggle">
+  <span class="slider"></span>
+  <span class="switch-label">Share my location</span>
+</label>
+
+
 
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('locationToggle').addEventListener('change', function(e) {
+  const enabled = e.target.checked;
+  localStorage.setItem('locationSharingEnabled', JSON.stringify(enabled));
+
+  if (enabled && navigator.geolocation) {
+    try {
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          const { latitude, longitude } = position.coords;
+          console.log("User location:", latitude, longitude);
+
+          fetch('/save-location', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ latitude, longitude })
+          }).catch(fetchError => {
+            console.error("Failed to send location:", fetchError);
+          });
+        },
+        geoError => {
+          console.error("Geolocation error:", geoError.message);
+        }
+      );
+    } catch (err) {
+      console.error("Unexpected error while getting location:", err);
+    }
+  }
+});
+
+const savedState = JSON.parse(localStorage.getItem('locationSharingEnabled'));
+if (savedState === true) {
+  const locationToggle = document.getElementById('locationToggle');
+  locationToggle.checked = true;
+
+  // Optional: Automatically re-fetch location if desired
+  locationToggle.dispatchEvent(new Event('change'));
+}
+
   const end = new Date(); // today
   const start = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000); // 30 days ago
   fetchAnalytics(start, end);
