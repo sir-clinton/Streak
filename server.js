@@ -24,11 +24,11 @@ const profileCache = new NodeCache({ stdTTL: 40, checkperiod: 5 });
 
 // Limit: 5 attempts per 15 minutes per IP
 const loginLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
+  windowMs: 10 * 60 * 1000, // 10 minutes
   max: 5,
   message: {
     success: false,
-    message: 'Too many login attempts. Try again later.'
+    message: 'Too many login attempts. Please try after a few minutes later.'
   },
   standardHeaders: true, // Send rate limit info via headers
   legacyHeaders: false,  // Disable deprecated headers
@@ -1313,7 +1313,7 @@ app.get('/login', (req, res)=> {
     res.sendFile(path.join(__dirname, 'login.html'));   
 });
 
-app.post('/login', async (req, res) => {
+app.post('/login', loginLimiter, async (req, res) => {
   const { input, password } = req.body;
 try {
   const escort = await Escort.findOne({  $or: [
@@ -1392,7 +1392,7 @@ app.get('/reset-password', (req, res)=>{
   res.sendFile(path.join(__dirname, 'resetPassword.html'));
 })
 
-app.post('/reset-password', async (req, res) => {
+app.post('/reset-password', loginLimiter, async (req, res) => {
   const { email, token, newPassword } = req.body;
   try {
     const user = await Escort.findOne({ email }).lean();

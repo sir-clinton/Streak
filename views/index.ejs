@@ -135,6 +135,10 @@ button[type="button"]:hover {
   text-align: center
   }.call a:hover{
   color: #f8f8f8
+  }#nearby:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    pointer-events: none;
   }
     </style>
 </head>
@@ -171,7 +175,7 @@ button[type="button"]:hover {
                     </select>
                     <button aria-label="filter button" id='submit' type="submit">Filter</button>
                 </form>
-                <button type="button">Nearby</button>
+                <button type="button" id="nearby">Nearby</button>
          </section>
 
          <section id="main" class="main">
@@ -184,7 +188,7 @@ button[type="button"]:hover {
                 <% if(escorts.length ===  0){ %>
                     <p style="position: absolute; top:50%; left: 50%; transform: translateX(-50%)">Please check back soon!
                     </p>
-                    <% } %>
+                    <% } else{ %>
                  <% escorts.forEach(escort => {  %>
                     <div class="card" style="display: flex;">
                       <a href="/author/<%= escort.name%>" data-id="<%= escort.id%>">
@@ -211,7 +215,7 @@ button[type="button"]:hover {
                 </div>
 
               </div>
-                <% });%>
+                <% });%><% } %>
         </div>     
         </section>
     </div>
@@ -369,12 +373,12 @@ function showLoading() {
       alert("Geolocation is not supported by your browser.");
       return;
     }
-     document.querySelector('button[type="button"]').disabled = true; // Disable button to prevent multiple clicks
-     document.querySelector('button[type="button"]').textContent = "Searching nearby..."; // Change button text
-
+     
     navigator.geolocation.getCurrentPosition(async (position) => {
       const lat = position.coords.latitude;
       const lng = position.coords.longitude;
+      document.querySelector('button[type="button"]').disabled = true; // Disable button to prevent multiple clicks
+     document.querySelector('button[type="button"]').textContent = "Searching nearby..."; // Change button text
      showLoading() // show loading spinner
 
       try {
