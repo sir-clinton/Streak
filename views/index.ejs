@@ -353,6 +353,15 @@ window.onclick = function(event) {
 }
 });
 
+function showLoading() {
+  if (document.getElementById("loadig-spinner").style.display === "block") {
+    document.getElementById("loading-spinner").style.display = "none";
+  } else {
+      document.getElementById("loading-spinner").style.display = "block";
+  }
+
+}
+
     // Nearby escorts
   function fetchNearbyEscorts() {
     // Check if browser supports geolocation
@@ -360,22 +369,28 @@ window.onclick = function(event) {
       alert("Geolocation is not supported by your browser.");
       return;
     }
+     document.querySelector('button[type="button"]').disabled = true; // Disable button to prevent multiple clicks
+     document.querySelector('button[type="button"]').textContent = "Searching nearby..."; // Change button text
 
     navigator.geolocation.getCurrentPosition(async (position) => {
       const lat = position.coords.latitude;
       const lng = position.coords.longitude;
-      function showLoading() {
-      document.getElementById("loading-spinner").style.display = "block";
-    }
+     showLoading() // show loading spinner
 
       try {
         const response = await fetch(`/nearby?lat=${lat}&lng=${lng}`);
         const data = await response.json();
         if (data.success && Array.isArray(data.escorts)) {
           renderEscortCards(data.escorts);
+          document.querySelector('button[type="button"]').disabled = false; // Re-enable button
+          document.querySelector('button[type="button"]').textContent = "Nearby"; // Reset button text
+          hideLoading(); // Hide loading spinner)
         } else {
           console.warn("No escort data returned:", data);
           renderEscortCards([]); // Gracefully show 'no escorts found'
+          document.querySelector('button[type="button"]').disabled = false; // Re-enable button
+          document.querySelector('button[type="button"]').textContent = "Nearby"; // Reset button text
+          hideLoading(); // Hide loading spinner
         }
       } catch (err) {
         console.error("Error fetching nearby:", err);
