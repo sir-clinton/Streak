@@ -1264,12 +1264,11 @@ app.post('/register', async (req, res) => {
 });
 
 const mailOptions = {
-  from: 'shale.online@gmail.com',
+  from: process.env.EMAIL_USER,
   to: escort.email,
   subject: 'Email Verification',
   html: `
-    <p>Hi ${escort.name},</p>
-    <p>Please verify your email by clicking the link below:</p>
+    <p>Hi ${escort.name}, Please verify your email by clicking the link below.</p>
     <a href="https://streak-1.onrender.com/verify/${verificationToken}">Verify Email</a>
     <p>This link will expire on <strong>${expiryDate}</strong>.</p>
     <p>If it expires, you can request a new one from the login page.</p>
@@ -1356,7 +1355,7 @@ app.get('/forgot-password', (req, res)=>{
 
 app.post('/forgot-password', async (req, res) => {
   const { email } = req.body;
-  const user = await Escort.findOne({ email });
+  const user = await Escort.findOne({ email }).lean();
   if (!user) return res.status(404).send('User not found');
   const token = crypto.randomBytes(32).toString('hex');
   user.resetToken = token;
@@ -1378,8 +1377,7 @@ app.post('/forgot-password', async (req, res) => {
     to: email,
     subject: 'Your Password Reset',
     html: `
-      <p>Hi,</p>
-      <p>Click the link below to reset your password:</p>
+      <p>Hi, Click the link below to reset your password.</p>
       <a href="https://streak-1.onrender.com/reset-password?token=${token}">Reset Password</a>
       <p>If you didn't request this, please ignore.</p>
 `
@@ -1396,7 +1394,8 @@ app.get('/reset-password', (req, res)=>{
 
 app.post('/reset-password', async (req, res) => {
   const { email, token, newPassword } = req.body;
-  const user = await Escort.findOne({ email });
+  try {
+    const user = await Escort.findOne({ email }).lean();
 
   if (!user || user.resetToken !== token || user.resetTokenExpiry < Date.now()) {
     return res.status(400).send('Invalid or expired token');
@@ -1408,7 +1407,11 @@ app.post('/reset-password', async (req, res) => {
   user.resetTokenExpiry = undefined;
   await user.save();
 
-  res.json({success: true, message: 'Password resent successfully'});
+  res.json({success: true, message: 'Password reset successfully'});
+  } catch (err) {
+    console.error('Reset password error:', err);
+    res.status(500).json({ success: false, message: 'Password reset error try again later.'})
+  }
 });
 
 app.get("/logout", (req, res) => {
