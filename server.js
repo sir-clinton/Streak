@@ -608,6 +608,27 @@ app.get('/admin', isAdmin, (req, res) => {
   res.sendFile(path.join(__dirname, 'adminDashboard.html'));
 });
 
+app.post('/api/escorts', async (req, res) => {
+  try {
+    const escort = {
+      ...req.body,
+      publishedAt: new Date(),
+      password: 'default123@()',
+      backgroundImg: req.body.userImg, // optional: same image for now
+    };
+
+    const result = await Escort.create(escort);
+    res.json({ success: true, escort: result });
+  } catch (err) {
+    console.error('Escort insert error:', err);
+    res.status(500).json({ error: 'Failed to insert escort' });
+  }
+});
+
+app.get('/dummy', (req, res)=> {
+  res.sendFile(path.join(__dirname, 'dummyData.html'));
+})
+
 app.get('/admin/users', async (req, res) => {
   try {
   const users = await Escort.find({}).select('name email role isVerified');
