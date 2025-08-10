@@ -930,7 +930,14 @@ app.get('/author/:name', async (req, res) => {
       profileCache.set(cacheKey, { escort, similarEscorts });
     }
 
-    const viewerIp = req.headers['x-forwarded-for']?.split(',')[0] || req.socket.remoteAddress;
+    function normalizeIp(ip) {
+      if (!ip) return '';
+      return ip.replace(/^::ffff:/, '').replace(/^::1$/, '127.0.0.1');
+    }
+
+    const viewerIp = normalizeIp(
+      req.headers['x-forwarded-for']?.split(',')[0] || req.socket?.remoteAddress
+    );
 
     await ProfileView.findOneAndUpdate(
       { profile: escort._id, ipAddress: viewerIp },
