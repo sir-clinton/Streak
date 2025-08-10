@@ -940,6 +940,7 @@ app.get('/author/:name', async (req, res) => {
 
     const totalViews = await ProfileView.countDocuments({ profile: escort._id });
     escort.totalViews = totalViews;
+    console.log(`User checked on ${escort} profile`);
 
     res.render('profile', { escort, similarEscorts, loggedInEscort: author });
 
