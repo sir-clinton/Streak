@@ -12,10 +12,57 @@ require('dotenv').config();
 const rateLimit = require('express-rate-limit');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
+const requestIp = require('request-ip');
+const fetch = require('node-fetch');
+const fs = require('fs');
 const NodeCache = require('node-cache');
 const compression = require('compression');
 app.use(compression()); //Compress responses to reduce payload size and speed up delivery:
-app.set('trust proxy', true); // Trust upstream proxy to correctly identify protocol (e.g., http vs https)
+app.set('trust proxy', true);
+ // Trust upstream proxy to correctly identify protocol (e.g., http vs https)
+
+const logFilePath = path.join(__dirname, 'access.log');
+const ipCache = new Map();
+
+async function getLocation(ip) {
+  if (ipCache.has(ip)) return ipCache.get(ip);
+
+  try {
+    const res = await fetch(`https://ipinfo.io/${ip}/json?token=97459bbaad3b97`);
+    const data = await res.json();
+    const location = `${data.city}, ${data.region}`;
+    ipCache.set(ip, location);
+    return location;
+  } catch {
+    return 'Unknown';
+  }
+}
+
+app.use(async (req, res, next) => {
+  const ip = requestIp.getClientIp(req);
+  const ua = req.headers['user-agent'] || 'Unknown';
+  const ref = req.headers['referer'] || 'Direct';
+  const time = new Date().toISOString();
+
+  let location = 'Unknown';
+
+  try {
+    location = await getLocation(ip);
+  } catch (err) {
+    console.error('GeoIP lookup failed:', err.message);
+  }
+
+  const logEntry = `[${time}] ${req.method} ${req.originalUrl} hit by ${ip} from ${location}\n` +
+                   `↪ UA: ${ua}\n` +
+                   `↪ Referrer: ${ref}\n\n`;
+
+  fs.appendFile(logFilePath, logEntry, (err) => {
+    if (err) console.error('Failed to write log:', err.message);
+  });
+
+  console.log(logEntry);
+  next();
+});
 
 
 const escortCache = new NodeCache({ stdTTL: 1500 }); // 25 minutes = 1500 seconds
