@@ -98,16 +98,16 @@
     const users = await usersRes.json();
 
     const usersTableBody = document.querySelector('#users-table tbody');
-    usersTableBody.innerHTML = users.map(user => {`
-      <tr>
+    usersTableBody.innerHTML = users.map(user => {
+      return `<tr>
         <td>${user.name}</td>
         <td>${user.email}</td>
         <td>${user.role}</td>
-        <td>${user.isVerified ? '✅' : '❌'}</td>
-      </tr>
-    `}).join('');
+        <td>${user.isVerified ? "✅" : "❌"}</td>
+      </tr>`;
+    }).join('');
   }
-
+  
   function renderBoosts(filtered = boostsData) {
   const pendingBoosts = filtered.filter(b => b.status === 'pending');
   const pendingTableBody = document.querySelector('#pending-boosts-table tbody');

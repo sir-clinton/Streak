@@ -678,7 +678,7 @@ app.get('/dummy', (req, res)=> {
 
 app.get('/admin/users', async (req, res) => {
   try {
-  const users = await Escort.find({}).select('name email role isVerified');
+  const users = await Escort.find({}).select('name email role isVerified').lean();
   res.status(200).json(users)
   } catch (err) {
     console.log(err);
