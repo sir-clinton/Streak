@@ -363,95 +363,120 @@ function showLoading() {
 }
 
     // Nearby escorts
-  function fetchNearbyEscorts() {
-    // Check if browser supports geolocation
-    if (!navigator.geolocation) {
-      alert("Geolocation is not supported by your browser.");
-      return;
-    }
-     
-    navigator.geolocation.getCurrentPosition(async (position) => {
-      const lat = position.coords.latitude;
-      const lng = position.coords.longitude;
-      document.querySelector('button[type="button"]').disabled = true; // Disable button to prevent multiple clicks
-     document.querySelector('button[type="button"]').textContent = "Searching nearby..."; // Change button text
-     showLoading() // show loading spinner
+function fetchNearbyEscorts() {
+  const nearbyBtn = document.querySelector('button[type="button"]');
 
-      try {
-        const response = await fetch(`/nearby?lat=${lat}&lng=${lng}`);
-        const data = await response.json();
-        if (data.success && Array.isArray(data.escorts)) {
-          renderEscortCards(data.escorts);
-          document.querySelector('button[type="button"]').disabled = false; // Re-enable button
-          document.querySelector('button[type="button"]').textContent = "Nearby"; // Reset button text
-          hideLoading(); // Hide loading spinner)
-        } else {
-          console.warn("No escort data returned:", data);
-          renderEscortCards([]); // Gracefully show 'no escorts found'
-          document.querySelector('button[type="button"]').disabled = false; // Re-enable button
-          document.querySelector('button[type="button"]').textContent = "Nearby"; // Reset button text
-          hideLoading(); // Hide loading spinner
-        }
-      } catch (err) {
-        console.error("Error fetching nearby:", err);
-        alert("Something went wrong while searching nearby.");
+  if (!navigator.geolocation) {
+    alert("Geolocation is not supported by your browser.");
+    return;
+  }
+
+  nearbyBtn.disabled = true;
+  nearbyBtn.textContent = "Searching nearby...";
+  showLoading();
+
+  navigator.geolocation.getCurrentPosition(async (position) => {
+    const lat = position.coords.latitude;
+    const lng = position.coords.longitude;
+
+    try {
+      const response = await fetchWithTimeout(`/nearby?lat=${lat}&lng=${lng}`);
+
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
       }
-    }, (error) => {
-      console.error("Location error:", error);
-      alert("Unable to get your location.");
-    });
+
+      let data;
+      try {
+        data = await response.json();
+      } catch (jsonErr) {
+        throw new Error("Invalid JSON response");
+      }
+
+      if (data.success && Array.isArray(data.escorts)) {
+        renderEscortCards(data.escorts);
+      } else {
+        console.warn("No escort data returned:", data);
+        renderEscortCards([]);
+      }
+    } catch (err) {
+      console.error("Error fetching nearby:", err);
+      alert(err.message === "Request timed out"
+        ? "The request took too long. Please try again."
+        : "Something went wrong while searching nearby.");
+    } finally {
+      nearbyBtn.disabled = false;
+      nearbyBtn.textContent = "Nearby";
+      hideLoading();
+    }
+  }, (error) => {
+    console.error("Location error:", error);
+    alert("Unable to get your location.");
+    nearbyBtn.disabled = false;
+    nearbyBtn.textContent = "Nearby";
+    hideLoading();
+  });
+}
+
+  function fetchWithTimeout(url, options, timeout = 10000) {
+      return Promise.race([
+        fetch(url, options),
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("Request timed out")), timeout)
+        )
+      ]);
   }
 
   // Attach click handler to the button
   document.querySelector('button[type="button"]').addEventListener('click', fetchNearbyEscorts);
 
-    function renderEscortCards(escorts) {
-  const listings = document.getElementById("listings");
-  listings.innerHTML = ""; // Clear old content
+  function renderEscortCards(escorts) {
+      const listings = document.getElementById("listings");
+      listings.innerHTML = ""; // Clear old content
 
-  if (escorts.length === 0) {
-    listings.innerHTML = `<p style="position: absolute; top:50%; left: 50%; transform: translateX(-50%)">No nearby escorts found. Try again later</p>`;// Try adjusting location or distance.
-    return;
-  }
+      if (escorts.length === 0) {
+        listings.innerHTML = `<p style="position: absolute; top:50%; left: 50%; transform: translateX(-50%)">No nearby escorts found. Try again later</p>`;// Try adjusting location or distance.
+        return;
+      }
 
-  escorts.forEach(escort => {
-    const name = escort.name.split(' ')[0];
-    const card = `
-      <div class="card" style="display: flex;">
-        <a href="/author/${escort.name}" data-id="${escort._id}">
-          ${escort.isBoosted ? `<div class="badge ${escort.boostType}">${escort.boostType}</div>` : ''}
-          <div class="image-wrapper">
-            <img loading="lazy" width="200" height="200" src="${escort.userImg}" alt="Nairobi call girl offering private companionship">
+      escorts.forEach(escort => {
+        const name = escort.name.split(' ')[0];
+        const card = `
+          <div class="card" style="display: flex;">
+            <a href="/author/${escort.name}" data-id="${escort._id}">
+              ${escort.isBoosted ? `<div class="badge ${escort.boostType}">${escort.boostType}</div>` : ''}
+              <div class="image-wrapper">
+                <img loading="lazy" width="200" height="200" src="${escort.userImg}" alt="Nairobi call girl offering private companionship">
+              </div>
+            </a>
+            <div class="info">
+              <p class="escort-name">${name}</p>
+              <span aria-label="Bookmark profile">
+                <i title="Bookmark this profile" class="fa-solid fa-bookmark bookmark-btn"
+                  data-id="${escort._id}"
+                  data-name="${name}"
+                  data-img="${escort.userImg}"
+                  data-phone="${escort.phone}"
+                  style="color: #444" aria-hidden="true"></i>
+              </span>
+            </div>
+            <hr>
+            <p style="padding: 4px;color: #6c757d;">
+              Meet ${name}, a ${escort.age} years old ${escort.gender} Escort from ${escort.city}, ${escort.areaLabel} area.
+            </p>
+            </p>
+            <div class="call">
+              <a href="tel:${escort.phone}" style="color: #25D366">
+                CALL ${name.toUpperCase()} &nbsp;<i class="fa fa-phone"></i>
+              </a>
+            </div>
           </div>
-        </a>
-        <div class="info">
-          <p class="escort-name">${name}</p>
-          <span aria-label="Bookmark profile">
-            <i title="Bookmark this profile" class="fa-solid fa-bookmark bookmark-btn"
-               data-id="${escort._id}"
-               data-name="${name}"
-               data-img="${escort.userImg}"
-               data-phone="${escort.phone}"
-               style="color: #444" aria-hidden="true"></i>
-          </span>
-        </div>
-        <hr>
-        <p style="padding: 4px;color: #6c757d;">
-          Meet ${name}, a ${escort.age} years old ${escort.gender} Escort from ${escort.city}, ${escort.areaLabel} area.
-        </p>
-        </p>
-        <div class="call">
-          <a href="tel:${escort.phone}" style="color: #25D366">
-            CALL ${name.toUpperCase()} &nbsp;<i class="fa fa-phone"></i>
-          </a>
-        </div>
-      </div>
-    `;
-    listings.insertAdjacentHTML("beforeend", card);
-  });
-  function hideLoading() {
-  document.getElementById("loading-spinner").style.display = "none";
-}
+        `;
+        listings.insertAdjacentHTML("beforeend", card);
+      });
+      function hideLoading() {
+      document.getElementById("loading-spinner").style.display = "none";
+    }
 }
 
  </script>

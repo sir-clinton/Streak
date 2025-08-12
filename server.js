@@ -1079,6 +1079,8 @@ const nearbyCache = new NodeCache({ stdTTL: 1800 }); // 30 mins
 
 app.get('/nearby', async (req, res) => {
   const { lat, lng, distance = 5000 } = req.query;
+  console.log('Received coords:', req.query);
+
   const cacheKey = `nearby_${lat}_${lng}_${distance}`;
 
   // Validate coordinates
@@ -1100,7 +1102,7 @@ app.get('/nearby', async (req, res) => {
       meta: {
         title: `Nearby Verified Escorts | Streak.com`,
         description: `Explore Nearby verified Escorts available in your area.`,
-        image: finalList[0]?.userImg || '/default-preview.jpg',
+        image: cached[0]?.userImg || '/default-preview.jpg',
         url: req.protocol + '://' + req.get('host') + req.originalUrl
       }
     });
@@ -1170,6 +1172,7 @@ app.get('/nearby', async (req, res) => {
 
     // Store in cache
     nearbyCache.set(cacheKey, finalList);
+    console.log(`Found ${escorts.length} escorts near (${lat}, ${lng})`);
 
     // Respond
     res.json({
