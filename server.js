@@ -13,12 +13,13 @@ const rateLimit = require('express-rate-limit');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const requestIp = require('request-ip');
-const fetch = require('node-fetch');
+// const fetch = require('node-fetch');
 const fs = require('fs');
 const NodeCache = require('node-cache');
 const compression = require('compression');
 app.use(compression()); //Compress responses to reduce payload size and speed up delivery:
 app.set('trust proxy', true);
+console.log(process.env.EMAIL_USER);
  // Trust upstream proxy to correctly identify protocol (e.g., http vs https)
 
 const logFilePath = path.join(__dirname, 'access.log');
@@ -108,341 +109,7 @@ app.use(session({
 const PORT = 3000;
 
     // Now it's safe to use your model
-const escorts = [
-{
-"name": "SALMA",
-"weight": "76",
-  "gender": "Female",
-  "allowedtopost": "true",
-  "publishedAt": "2025-04-09",
-  "email": "SALMA@escort.com",
-  "areaLabel": "Nairobi West",
-  "location": {
-      "type": "Point",
-      "coordinates": [36.8223, -1.3078]
-    },
-  "city": "Nairobi",
-  "password": "clinton123@()",
-  "userImg": "/images/salma.png",
-  "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
-  "phone": "0794858343",
-  "dob": "2000-03-01",
-  "gallery": [],
-  "orientation": "straight",
-  "socialLinka": "",
-  "services": ['Dinner Date', 'Travel Companion', 'Massage']
-},
-{
-"name": "YUSRA",
-  "gender": "Female",
-  "allowedtopost": "true",
-  "publishedAt": "2023-04-09",
-  "weight": "80",
-  "email": "YUSRA@escort.com",
-  "areaLabel": "Nairobi West",
-  "location": {
-      "type": "Point",
-      "coordinates": [36.8223, -1.3078]
-    },
-  "city": "Nairobi",
-  "password": "clinton123@()",
-  "userImg": "/images/yusra.jpg",
-  "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
-  "phone": "0741611714",
-  "dob": "2001-03-01",
-  "gallery": [],
-  "orientation": "straight",
-  "socialLinka": "",
-  "services": ['Dinner Date', 'Travel Companion', 'Massage']
-},
-{
-"name": "Tasha",
-"gender": "Female",
-"allowedtopost": "true",
-  "publishedAt": "2025-04-09",
-  "weight": "86",
-  "email": "Tasha@escort.com",
-  "areaLabel": "Nairobi West",
-  "location": {
-      "type": "Point",
-      "coordinates": [36.8223, -1.3078]
-    },
-  "city": "Nairobi",
-  "password": "clinton123@()",
-  "userImg": "/images/shanny.jpg",
-  "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
-  "phone": "0754968269",
-  "dob": "2004-03-01",
-  "gallery": [],
-  "orientation": "straight",
-  "socialLinka": "",
-  "services": ['Dinner Date', 'Travel Companion', 'Massage']
-},
-{
-"name": "Shanny",
-"gender": "Female",
-"allowedtopost": "true",
-  "publishedAt": "2025-04-09",
-  "email": "Shanny@escort.com",
-  "areaLabel": "Roysambu",
-  "location": {
-      "type": "Point",
-      "coordinates": [36.8867, -1.2218]
-    },
-  "city": "Nairobi",
-  "password": "clinton123@()",
-  "userImg": "/images/tasha.jpg",
-  "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
-  "phone": "0785487128",
-  "dob": "2003-03-01",
-  "gallery": [],
-  "orientation": "straight",
-  "weight": "93",
-  "socialLinka": "",
-  "services": ['Dinner Date', 'Travel Companion', 'Massage']
-},
-{
-"name": "britney",
-"gender": "Female",
-"allowedtopost": "true",
-  "publishedAt": "2025-04-09",
-  "weight": "99",
-  "email": "britney@escort.com",
-  "areaLabel": "CBD",
-   "location": {
-      "type": "Point",
-      "coordinates": [36.8219, -1.2833]
-    },
-  "city": "Nairobi",
-  "password": "clinton123@()",
-  "userImg": "/images/britney.jpeg",
-  "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
-  "phone": "0719284918",
-  "dob": "2002-03-01",
-  "gallery": [],
-  "orientation": "straight",
-  "socialLinka": "",
-  "services": ['Dinner Date', 'Travel Companion', 'Massage']
-}
-,{
-"name": "Nyaboke",
-"gender": "Female",
-"allowedtopost": "true",
-  "publishedAt": "2025-04-09",
-  "weight": "83",
-  "email": "Nyaboke@escort.com",
-  "areaLabel": "Ngara",
-  "location": {
-      "type": "Point",
-      "coordinates": [36.8262, -1.2686]
-    },
-  "city": "Nairobi",
-  "password": "clinton123@()",
-  "userImg": "/images/nyaboke.jpeg",
-  "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
-  "phone": "07116102997",
-  "dob": "2006-03-01",
-  "gallery": [],
-  "orientation": "straight",
-  "socialLinka": "",
-  "services": ['Dinner Date', 'Travel Companion', 'Massage']
-}
-  ,{
-"name": "FARIDA",
-"gender": "Female",
-"allowedtopost": "true",
-  "publishedAt": "2025-04-09",
-  "weight": "83",
-  "email": "FARIDA@escort.com",
-  "areaLabel": "CBD",
-   "location": {
-      "type": "Point",
-      "coordinates": [36.8219, -1.2833]
-    },
-  "city": "Nairobi",
-  "password": "clinton123@()",
-  "userImg": "/images/faridah.jpg",
-  "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
-  "phone": "0710146210",
-  "dob": "2001-03-01",
-  "gallery": [],
-  "orientation": "straight",
-  "socialLinka": "",
-  "services": ['Dinner Date', 'Travel Companion', 'Massage']
-} ,{
-"name": "ZUENA",
-"gender": "Female",
-"allowedtopost": "true",
-  "publishedAt": "2025-04-09",
-  "weight": "83",
-  "email": "ZUENA@escort.com",
-  "areaLabel": "CBD",
-  "location": {
-      "type": "Point",
-      "coordinates": [36.8219, -1.2833]
-    },
-  "city": "Nairobi",
-  "password": "clinton123@()",
-  "userImg": "/images/zuena.jpeg",
-  "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
-  "phone": "0710146210",
-  "dob": "2005-03-01",
-  "gallery": [],
-  "orientation": "straight",
-  "socialLinka": "",
-  "services": ['Dinner Date', 'Travel Companion', 'Massage']
-},
-{
-"name": "NITS",
-"gender": "Female",
-"allowedtopost": "true",
-  "publishedAt": "2025-04-09",
-  "email": "NITS@escort.com",
-  "areaLabel": "Roysambu",
-  "location": {
-      "type": "Point",
-      "coordinates": [36.8867, -1.2218]
-    },
-  "city": "Nairobi",
-  "password": "clinton123@()",
-  "userImg": "/images/nits.jpg",
-  "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
-  "phone": "0728686783",
-  "dob": "2003-03-01",
-  "gallery": [],
-  "orientation": "straight",
-  "weight": "93",
-  "socialLinka": "",
-  "services": ['Dinner Date', 'Travel Companion', 'Massage']
-} ,{
-"name": "Zoey",
-"gender": "Female",
-"allowedtopost": "true",
-  "publishedAt": "2025-04-09",
-  "weight": "80",
-  "email": "Zoey@escort.com",
-  "areaLabel": "CBD",
-   "location": {
-      "type": "Point",
-      "coordinates": [36.8219, -1.2833]
-    },
-  "city": "Nairobi",
-  "password": "clinton123@()",
-  "userImg": "/images/zoe.png",
-  "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
-  "phone": "0112808445",
-  "dob": "2003-03-01",
-  "gallery": [],
-  "orientation": "straight",
-  "socialLinka": "",
-  "services": ['Dinner Date', 'Travel Companion', 'Massage']
-} ,
-{
-"name": "BigClit",
-"gender": "Female",
-"allowedtopost": "true",
-  "publishedAt": "2025-04-09",
-  "weight": "86",
-  "email": "BigClit@escort.com",
-  "areaLabel": "Nairobi West",
-  "location": {
-      "type": "Point",
-      "coordinates": [36.8223, -1.3078]
-    },
-  "city": "Nairobi",
-  "password": "clinton123@()",
-  "userImg": "/images/bigclit.jpg",
-  "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
-  "phone": "0707252821",
-  "dob": "2004-03-01",
-  "gallery": [],
-  "orientation": "straight",
-  "socialLinka": "",
-  "services": ['Dinner Date', 'Travel Companion', 'Massage']
-}
-]
-// {
-// "name": "amryn",
-// "gender": "Female",
-//   "weight": "97",
-//   "allowedtopost": "true",
-//   "publishedAt": "2025-04-09",
-//   "email": "amryn@escort.com",
-//   "location": "Nakuru Town",
-//   "city": "Nakuru",
-//   "password": "clinton123@()",
-//   "userImg": "https://www.nairobiraha.co.ke/wp-content/uploads/2025/06/image-477384-420x420-200x200.jpeg",
-//   "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
-//   "phone": "0756982493",
-//   "dob": "1987-03-01",
-//   "gallery": [],
-//   "orientation": "straight",
-//   "socialLinka": "",
-//   "services": []
-// },
-// {
-// "name": "natasha",
-// "gender": "Female",
-//   "weight": "82",
-//   "allowedtopost": "true",
-//   "publishedAt": "2025-04-09",
-//   "email": "natasha@escort.com",
-//   "location": "Kisumu Town",
-//   "city": "Kisumu",
-//   "password": "clinton123@()",
-//   "userImg": "https://www.nairobiraha.co.ke/wp-content/uploads/2024/12/image-474054-200x200.jpg",
-//   "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
-//   "phone": "0756982493",
-//   "dob": "1992-03-01",
-//   "gallery": [],
-//   "orientation": "straight",
-//   "socialLinka": "",
-//   "services": []
-// },
-// {
-// "name": "Bianca",
-// "gender": "Female",
-//   "weight": "75",
-//   "allowedtopost": "true",
-//   "publishedAt": "2025-04-09",
-//   "email": "bianca@escort.com",
-//   "location": "Eldoret Town",
-//   "city": "Eldoret",
-//   "password": "clinton123@()",
-//   "userImg": "https://www.exotickenya.com/wp-content/uploads/1747143049745/17514433414733.jpg",
-//   "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
-//   "phone": "0756982493",
-//   "dob": "2001-03-01",
-//   "gallery": [],
-//   "orientation": "straight",
-//   "socialLinka": "",
-//   "services": []
-// }]
 
-const escort = 
-{
-"name": "Linsy",
-"gender": "Female",
-"allowedtopost": "true",
-  "publishedAt": "2025-04-09",
-  "weight": "84",
-  "email": "Linsi@escort.com",
-  "areaLabel": "Kilimani",
-  "location": {
-      "type": "Point",
-      "coordinates": [36.8223, -1.3078]
-    },
-  "city": "Nairobi",
-  "password": "clinton123@()",
-  "userImg": "/images/linsly.jpg",
-  "about": "This is Fifi., She is a hot 25 years old Burundian escort in Yaya Centre. She offers the best Dinner Date, Travel Companion, Lesbian Show, Rimming, Raw BJ, BJ, GFE – Girlfriend Experience, COB – Cum On Body, CIM – Cum In Mouth, 3 Some, Anal, Massage in Kilimani . To communicate with Fifi. you can Contact her through her Number 0723044007 to arrange a meetup. So if you are looking for a nice 3 Some or Just Lesbian Show service then Fifi. is your ideal escort.",
-  "phone": "0745043444",
-  "dob": "2001-03-01",
-  "gallery": [],
-  "orientation": "straight",
-  "socialLinka": "",
-  "services": ['Dinner Date', 'Travel Companion', 'Massage']
-}
 let mongoConnected = false;
 
 async function startServer() {
@@ -1434,13 +1101,13 @@ app.get('/forgot-password', (req, res)=>{
 
 app.post('/forgot-password', async (req, res) => {
   const { email } = req.body;
-  const user = await Escort.findOne({ email }).lean();
-  if (!user) return res.status(404).send('User not found');
+  const user = await Escort.findOne({ email });
+  if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+
   const token = crypto.randomBytes(32).toString('hex');
   user.resetToken = token;
-  user.resetTokenExpiry = Date.now() + 3600000; // 1 hour
+  user.resetTokenExpiry = Date.now() + 3600000;
   await user.save();
-
 
   const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -1449,7 +1116,6 @@ app.post('/forgot-password', async (req, res) => {
       pass: process.env.EMAIL_PASS
     }
   });
-  console.log(process.auth.user, process.auth.pass)
 
   const mailOptions = {
     from: process.env.EMAIL_USER,
@@ -1459,14 +1125,18 @@ app.post('/forgot-password', async (req, res) => {
       <p>Hi, Click the link below to reset your password.</p>
       <a href="https://streak-1.onrender.com/reset-password?token=${token}">Reset Password</a>
       <p>If you didn't request this, please ignore.</p>
-`
+    `
   };
 
   transporter.sendMail(mailOptions, (err, info) => {
-    if (err) return res.status(500).json({ message:'Email error', success: false});
-    res.json({success: true, message: 'Password resent successfully'});
+    if (err) {
+      console.error('Email error:', err);
+      return res.status(500).json({ success: false, message: 'Email error' });
+    }
+    res.json({ success: true, message: 'Password reset link sent successfully' });
   });
 });
+
 app.get('/reset-password', (req, res)=>{
   res.sendFile(path.join(__dirname, 'resetPassword.html'));
 })
@@ -1474,7 +1144,7 @@ app.get('/reset-password', (req, res)=>{
 app.post('/reset-password', loginLimiter, async (req, res) => {
   const { email, token, newPassword } = req.body;
   try {
-    const user = await Escort.findOne({ email }).lean();
+    const user = await Escort.findOne({ email });
 
   if (!user || user.resetToken !== token || user.resetTokenExpiry < Date.now()) {
     return res.status(400).send('Invalid or expired token');
