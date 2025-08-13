@@ -125,19 +125,33 @@ async function startServer() {
     // console.log('Escort inserted:', result);
     // const result = await Escort.insertMany(escorts, {ordered: false});
     // console.log('Escrts inserted:', result.length);
-    // async function verifyEmail(email) {
-//       try {
-//         const result = await Escort.updateOne(
-//           {email: email.trim().toLowerCase() },
-//           { $set: { isVerified: true } }
-//         );
-//         console.log('Update result:', result);
-//       } catch (err) {
-//         console.error('Update failed:', err);
-//       }
-//     }
+    async function verifyEmail(email) {
+      try {
+        if (!email || !email.includes('@')) {
+          throw new Error('Invalid email format');
+        }
 
-//     verifyEmail('muneneclinton159@gmail.com');
+        const normalizedEmail = email.trim().toLowerCase();
+        const result = await Escort.updateOne(
+          { email: normalizedEmail },
+          { $set: { isVerified: true } }
+        );
+
+        if (result.modifiedCount === 0) {
+          console.warn('No document was updated. Email may not exist.');
+          return false;
+        }
+
+        console.log('Email verified successfully.');
+        return true;
+
+      } catch (err) {
+        console.error('Update failed:', err);
+        return false;
+      }
+}
+
+    verifyEmail('muneneclinton159@gmail.com');
         // const result = await Escort.findOneAndUpdate(
         //     { name: 'Natasha' },
         //     {
