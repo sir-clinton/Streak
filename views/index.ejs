@@ -371,15 +371,15 @@ function fetchNearbyEscorts() {
     return;
   }
 
-  nearbyBtn.disabled = true;
-  nearbyBtn.textContent = "Searching nearby...";
-  // showLoading();
 
   navigator.geolocation.getCurrentPosition(async (position) => {
     const lat = position.coords.latitude;
     const lng = position.coords.longitude;
 
     try {
+      nearbyBtn.disabled = true;
+      nearbyBtn.textContent = "Searching nearby...";
+      // showLoading();
       const response = await fetchWithTimeout(`/nearby?lat=${lat}&lng=${lng}`);
 
       if (!response.ok) {
