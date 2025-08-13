@@ -51,7 +51,9 @@ const escortSchema = new mongoose.Schema({
     isActive: { type: Boolean, default: true },
     isPremium: { type: Boolean, default: false },
     isSuspended: { type: Boolean, default: false },
-    role: { type: String, default: 'user' },
+    role: { type: String, enum: ['user', 'admin', 'agency'],default: 'user' },
+    agencyName: { type: String, default: null },
+    agencyEmail: { type: String, default: null },
     verificationToken: { type: String, default: '' },
     verificationExpires: { type: Date, default: Date.now },
     status: {

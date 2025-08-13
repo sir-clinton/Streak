@@ -1044,6 +1044,86 @@ const mailOptions = {
   }
 });
 
+app.post('/register-agency', async (req, res) => {
+  let agency = req.body;
+
+  try {
+    const email = agency.agencyEmail.trim().toLowerCase();
+
+    // Check if email already exists
+    const existingEscort = await Escort.findOne({ email });
+    if (existingEscort) {
+      return res.status(400).json({ success: false, message: 'This email already exists' });
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(agency.password, 10);
+
+    // Generate verification token
+    const verificationToken = crypto.randomBytes(32).toString('hex');
+    const verificationExpires = Date.now() + 3600000; // 1 hour
+
+    // Create escort document with role: 'agency'
+    const escort = {
+      name: agency.agencyName,
+      email,
+      password: hashedPassword,
+      role: 'agency',
+      agencyName: agency.agencyName,
+      agencyEmail: email,
+      phone: agency.phone,
+      city: agency.city,
+      areaLabel: agency.areaLabel,
+      description: agency.description,
+      isVerified: false,
+      verificationToken,
+      verificationExpires
+    };
+
+    await new Escort(escort).save();
+    console.log('Agency registered:', escort);
+
+    // Send verification email
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+      }
+    });
+
+    const expiryDate = new Date(verificationExpires).toLocaleString('en-KE', {
+      weekday: 'short',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZone: 'Africa/Nairobi'
+    });
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Email Verification',
+      html: `
+        <p>Hi ${agency.agencyName}, Please verify your agency email by clicking the link below.</p>
+        <a href="https://streak-1.onrender.com/verify/${verificationToken}">Verify Email</a>
+        <p>This link will expire on <strong>${expiryDate}</strong>.</p>
+        <p>If it expires, you can request a new one from the login page.</p>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    res.status(201).json({ success: true, message: 'Check your email for verification link' });
+
+  } catch (err) {
+    console.error('Error registering agency:', err);
+    res.status(500).json({ success: false, message: 'Error registering agency' });
+  }
+});
+
 app.get('/verify/:token', async (req, res) => {
   const { token } = req.params;
 
@@ -1059,6 +1139,7 @@ app.get('/verify/:token', async (req, res) => {
   escort.isVerified = true;
   escort.verificationToken = undefined;
   escort.verificationExpires = undefined;
+  console.log(`Verified account: ${escort.email} (${escort.role})`);
 
   await escort.save();
 
@@ -1298,6 +1379,14 @@ app.get('/profile', async (req, res) => {
   });
 });
 
+
+app.get('/agency-dashboard', (req, res) => {
+  if(!req.session.isLoggedIn || req.session.escort.role !== 'agency') {
+    return res.redirect('/login');
+  }
+  const agency = req.session.escort;
+  res.render('agencyDashboard', { agency, meta: metData(req)})
+})
 app.post('/profile/edit', async (req, res) => {
   if (!req.session.isLoggedIn || !req.session.escort?.email) {
     return res.redirect('/login');

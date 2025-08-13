@@ -384,7 +384,7 @@ form.addEventListener('submit', async (e) => {
     return error.innerText = 'Password is too short!';
   }
   if (pass !== confirmPass) {
-   return error.innerText = `Passwords do not match'`
+   return error.innerText = "Passwords do not match"
 }
   if(!validateEmail(email.value)) {
     return error.innerText = 'Email not valid!'
@@ -442,7 +442,7 @@ form.addEventListener('submit', async (e) => {
 });
 
 function validateEmail(emailInput) {
-  const regex = /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,6}$/;
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
   return regex.test(emailInput.trim());
 }
 
