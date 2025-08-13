@@ -1381,10 +1381,10 @@ app.get('/profile', async (req, res) => {
 
 
 app.get('/agency-dashboard', (req, res) => {
-  if(!req.session.isLoggedIn || req.session.escort.role !== 'agency') {
-    return res.redirect('/login');
-  }
-  const agency = req.session.escort;
+  // if(!req.session.isLoggedIn || req.session.escort.role !== 'agency') {
+  //   return res.redirect('/login');
+  // }
+  // const agency = req.session.escort;
   res.render('agencyDashboard', { agency, meta: metData(req)})
 })
 app.post('/profile/edit', async (req, res) => {
