@@ -373,7 +373,7 @@ function fetchNearbyEscorts() {
 
   nearbyBtn.disabled = true;
   nearbyBtn.textContent = "Searching nearby...";
-  showLoading();
+  // showLoading();
 
   navigator.geolocation.getCurrentPosition(async (position) => {
     const lat = position.coords.latitude;
@@ -407,14 +407,14 @@ function fetchNearbyEscorts() {
     } finally {
       nearbyBtn.disabled = false;
       nearbyBtn.textContent = "Nearby";
-      hideLoading();
+      // hideLoading();
     }
   }, (error) => {
     console.error("Location error:", error);
     alert("Unable to get your location.");
     nearbyBtn.disabled = false;
     nearbyBtn.textContent = "Nearby";
-    hideLoading();
+    // hideLoading();
   });
 }
 
