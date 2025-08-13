@@ -128,7 +128,7 @@ async function startServer() {
     // async function verifyEmail(email) {
 //       try {
 //         const result = await Escort.updateOne(
-//           { email: email.trim().toLowerCase() },
+//           {email: email.trim().toLowerCase() },
 //           { $set: { isVerified: true } }
 //         );
 //         console.log('Update result:', result);
@@ -137,7 +137,7 @@ async function startServer() {
 //       }
 //     }
 
-//     verifyEmail('muneneclinton797@gmail.com');
+//     verifyEmail('muneneclinton159@gmail.com');
         // const result = await Escort.findOneAndUpdate(
         //     { name: 'Natasha' },
         //     {
