@@ -1133,7 +1133,7 @@ app.post('/forgot-password', async (req, res) => {
       console.error('Email error:', err);
       return res.status(500).json({ success: false, message: 'Email error' });
     }
-    res.json({ success: true, message: 'Password reset link sent successfully' });
+    res.json({ success: true, message: 'Password reset link sent successfully. Check email' });
   });
 });
 
@@ -1160,6 +1160,58 @@ app.post('/reset-password', loginLimiter, async (req, res) => {
   } catch (err) {
     console.error('Reset password error:', err);
     res.status(500).json({ success: false, message: 'Password reset error try again later.'})
+  }
+});
+
+app.post('/resend-reset-link', async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await Escort.findOne({ email });
+    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+    if (user.resetTokenExpiry && user.resetTokenExpiry > Date.now()) {
+      const minutesLeft = Math.ceil((user.resetTokenExpiry - Date.now()) / 60000);
+      return res.status(429).json({
+        success: false,
+        message: `Reset link already sent. Please wait ${minutesLeft} minute(s) before requesting again.`
+      });
+    }
+
+    // Generate new token
+    const token = crypto.randomBytes(32).toString('hex');
+    user.resetToken = token;
+    user.resetTokenExpiry = Date.now() + 1000 * 60 * 15; // 15 minutes
+    await user.save();
+
+    
+    // TODO: Replace with actual email/SMS sending logic
+    const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
+    }
+  });
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: 'Your Password Reset',
+    html: `
+      <p>Hi, Click the link below to reset your password.</p>
+      <a href="https://streak-1.onrender.com/reset-password?token=${token}">Reset Password</a>
+      <p>If you didn't request this, please ignore.</p>
+    `
+  };
+
+  const info = await transporter.sendMail(mailOptions);
+  console.log('Email sent:', info.response);
+  res.json({ success: true, message: 'Reset link sent successfully. Check your email.' });
+
+
+  } catch (err) {
+    console.error('Resend link error:', err);
+    res.status(500).json({ success: false, message: 'Error sending reset link' });
   }
 });
 
