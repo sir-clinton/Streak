@@ -18,7 +18,7 @@ const fs = require('fs');
 const NodeCache = require('node-cache');
 const compression = require('compression');
 app.use(compression()); //Compress responses to reduce payload size and speed up delivery:
-app.set('trust proxy', true);
+app.set('trust proxy', 1); // Trust first proxy
 console.log(process.env.EMAIL_USER);
  // Trust upstream proxy to correctly identify protocol (e.g., http vs https)
 
