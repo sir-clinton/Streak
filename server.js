@@ -1382,7 +1382,7 @@ app.get('/profile', async (req, res) => {
 
 app.get('/agency-dashboard', (req, res) => {
   
-  res.render('agency', { agency, meta: metData(req)})
+  res.render('agencyDashboard', { agency, meta: metData(req)})
 })
 app.post('/profile/edit', async (req, res) => {
   if (!req.session.isLoggedIn || !req.session.escort?.email) {
