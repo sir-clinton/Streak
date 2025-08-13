@@ -1384,6 +1384,57 @@ app.get('/agency-dashboard', (req, res) => {
   
   res.render('agencyDashboard', { meta: metData(req)})
 })
+
+app.get('/api/agency/escorts', async (req, res) => {
+  try {
+    const agencyEmail = req.user.email; // Assuming user is authenticated
+    const escorts = await Escort.find({ role: 'escort', agencyEmail: agencyEmail });
+    res.json(escorts);
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Failed to fetch escorts' });
+  }
+});
+
+app.delete('/api/agency/escort/:id', async (req, res) => {
+  try {
+    const escort = await Escort.findById(req.params.id);
+    if (!escort || escort.role !== 'escort') {
+      return res.status(404).json({ success: false, message: 'Escort not found' });
+    }
+
+    await Escort.deleteOne({ _id: req.params.id });
+    res.json({ success: true, message: 'Escort deleted' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Error deleting escort' });
+  }
+});
+
+app.post('/api/agency/add-escort', async (req, res) => {
+  try {
+    const agencyEmail = req.user.email; // Authenticated agency
+    const escortExists = await Escort.findOne({ email: req.body.email.trim().toLowerCase() });
+
+    if (escortExists) {
+      return res.status(400).json({ success: false, message: 'Escort email already exists' });
+    }
+
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    const escort = {
+      ...req.body,
+      email: req.body.email.trim().toLowerCase(),
+      password: hashedPassword,
+      role: 'escort',
+      agencyEmail: agencyEmail,
+      isVerified: false
+    };
+
+    await new Escort(escort).save();
+    res.status(201).json({ success: true, message: 'Escort added successfully' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Error adding escort' });
+  }
+});
+
 app.post('/profile/edit', async (req, res) => {
   if (!req.session.isLoggedIn || !req.session.escort?.email) {
     return res.redirect('/login');
