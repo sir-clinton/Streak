@@ -161,7 +161,17 @@
   box-shadow: 1px 1px 6px rgba(0,0,0,0.1);
   margin-top: -5px;
 }
+.error-message {
+    color: red;
+    font-size: 0.85em;
+    margin-top: 4px;
+    display: block;
+  }
 
+  button[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
   </style>
 </head>
 <body>
@@ -190,29 +200,56 @@
 <div id="escortModal" class="modal-overlay">
   <div class="modal-content">
     <span class="close-btn" onclick="closeModal()">&times;</span>
-    <form id="addEscortForm">
-      <h3>Add New Escort</h3>
-      <input type="text" name="name" placeholder="Escort Name" required />
-      <input type="email" name="email" placeholder="Escort Email" required />
-      <input type="password" name="password" placeholder="Password" required />
-      <select name="city" id="city" required>
-        <option value="" disabled selected hidden>Select City</option>
-        <option value="Nairobi">Nairobi</option>
-        <option value="Kiambu">Kiambu</option>
-        <!-- Add more cities -->
-      </select>
-      <select name="areaLabel" id="location" required>
-        <option value="" disabled selected hidden>Select Area</option>
-      </select>
-      <label for="photoInput">Escort Photo</label>
-      <input type="file" name="userImg" id="photoInput" accept="image/*" required />
-      <img id="previewImage" style="max-width: 100%; border-radius: 6px; display: none;" />
+   <form id="addEscortForm">
+  <h3>Add New Escort</h3>
 
-      <button type="submit">Add Escort</button>
-    </form>
+  <input type="text" name="name" placeholder="Escort Name" required />
+  <input type="email" name="email" placeholder="Escort Email" required />
+
+  <select name="gender" required>
+    <option value="" disabled selected hidden>Select Gender</option>
+    <option value="Female">Female</option>
+    <option value="Male">Male</option>
+    <option value="Transgender">Transgender</option>
+  </select>
+
+  <input type="text" name="weight" placeholder="Weight (e.g. 60kg)" required />
+<small class="error-message" id="weightError"></small>
+
+<input type="date" name="dob" required />
+<small class="error-message" id="dobError"></small>
+
+<input type="text" name="phone" placeholder="Phone Number" required />
+<small class="error-message" id="phoneError"></small>
+
+  <select name="orientation" required>
+    <option value="" disabled selected hidden>Select Orientation</option>
+    <option value="Straight">Straight</option>
+    <option value="Gay">Gay</option>
+    <option value="Bisexual">Bisexual</option>
+    <option value="Other">Other</option>
+  </select>
+
+  <select name="city" id="city" required>
+    <option value="" disabled selected hidden>Select City</option>
+    <option value="Nairobi">Nairobi</option>
+    <option value="Kiambu">Kiambu</option>
+    <!-- Add more cities -->
+  </select>
+
+  <select name="areaLabel" id="location" required>
+    <option value="" disabled selected hidden>Select Area</option>
+  </select>
+
+  <label for="photoInput">Escort Photo</label>
+  <input type="file" name="userImg" id="photoInput" accept="image/*" required />
+  <img id="previewImage" style="max-width: 100%; border-radius: 6px; display: none;" />
+
+  <button type="submit">Add Escort</button>
+</form>
+
   </div>
 </div>
-
 
 <script>
   let base64Image = '';
@@ -313,16 +350,26 @@ citySelect.addEventListener("change", () => {
   });
 });
 
+function clearMessages() {
+  const oldMessages = form.querySelectorAll('.form-feedback');
+  oldMessages.forEach(msg => msg.remove());
+}
+
+const form = document.getElementById('addEscortForm');
+const submitBtn = form.querySelector('button[type="submit"]');
 document.getElementById('addEscortForm').addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  const submitBtn = document.querySelector('#addEscortForm button[type="submit"]');
+  const form = e.target;
+  const submitBtn = form.querySelector('button[type="submit"]');
+
   submitBtn.disabled = true;
   submitBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Adding...';
 
-  const formData = new FormData(e.target);
+  const formData = new FormData(form);
   const escort = Object.fromEntries(formData.entries());
   escort.userImg = base64Image;
+
   try {
     const res = await fetch('/api/agency/add-escort', {
       method: 'POST',
@@ -336,8 +383,17 @@ document.getElementById('addEscortForm').addEventListener('submit', async (e) =>
       throw new Error(data.message || 'Failed to add escort');
     }
 
-    alert('Escort added successfully!');
-    e.target.reset();
+    // ✅ Success feedback
+   clearMessages();
+    const successMsg = document.createElement('div');
+    successMsg.textContent = 'Escort added successfully!';
+    successMsg.className = 'form-feedback';
+    successMsg.style.color = 'green';
+    form.appendChild(successMsg);
+
+    setTimeout(() => successMsg.remove(), 3000);
+
+    form.reset();
     document.getElementById('photoInput').value = '';
     document.getElementById('previewImage').style.display = 'none';
     base64Image = '';
@@ -346,13 +402,63 @@ document.getElementById('addEscortForm').addEventListener('submit', async (e) =>
 
   } catch (err) {
     console.error('Escort submission error:', err);
-    alert(err.message || 'Something went wrong. Please try again.');
+
+    // ❌ Inline error feedback
+    const errorMsg = document.createElement('div');
+    errorMsg.textContent = err.message || 'Something went wrong. Please try again.';
+    errorMsg.style.color = 'red';
+    form.appendChild(errorMsg);
+    setTimeout(() => errorMsg.remove(), 4000);
   } finally {
     submitBtn.disabled = false;
     submitBtn.innerHTML = 'Add Escort';
   }
 });
 
+
+function validateForm() {
+  let isValid = true;
+
+  // Age check
+  const dobInput = form.dob;
+  const dobError = document.getElementById('dobError');
+  const dob = new Date(dobInput.value);
+  const today = new Date();
+  const age = today.getFullYear() - dob.getFullYear();
+  if (isNaN(dob.getTime()) || age < 18 || (age === 18 && today < new Date(dob.setFullYear(today.getFullYear())))) {
+    dobError.textContent = 'Escort must be at least 18 years old.';
+    isValid = false;
+  } else {
+    dobError.textContent = '';
+  }
+
+  // Weight check
+  const weightInput = form.weight;
+  const weightError = document.getElementById('weightError');
+  const weight = parseFloat(weightInput.value);
+  if (isNaN(weight) || weight < 55 || weight > 100) {
+    weightError.textContent = 'Weight must be between 55kg and 100kg.';
+    isValid = false;
+  } else {
+    weightError.textContent = '';
+  }
+
+  // Phone check
+  const phoneInput = form.phone;
+  const phoneError = document.getElementById('phoneError');
+  const phone = phoneInput.value.trim();
+  const kenyaPhoneRegex = /^(?:\+254|254|0)?(7\d{8})$/;
+  if (!kenyaPhoneRegex.test(phone)) {
+    phoneError.textContent = 'Enter a valid Kenyan phone number.';
+    isValid = false;
+  } else {
+    phoneError.textContent = '';
+  }
+
+  submitBtn.disabled = !isValid;
+}
+
+form.addEventListener('input', validateForm);
 
 const escortContainer = document.getElementById('escortContainer');
 
