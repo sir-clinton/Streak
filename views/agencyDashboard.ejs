@@ -252,7 +252,53 @@ function closeModal() {
   document.body.style.overflow = '';
 }
 
-const locationMap = { /* same as before */ };
+const locationMap = {
+    Nairobi: [
+      "Kilimani", "Westlands", "Karen", "CBD", "Roysambu", "Ngara", "Donholm", "Nairobi West","Donholm", "Dandora", "Ojijo", "Yaya", "Sarit",
+      "Ruaka", "Syokimau", "Kitengela", "Embakasi", "South B", "South C", "Lavington", "Parklands"
+    ],
+    Kiambu: [
+      "Juja", "Kikuyu", "Ruiru", "Githurai",
+      "Thika", "Limuru", "Kabete", "Tigoni"
+    ],
+    Mombasa: [
+      "Diani", "Nyali", "Likoni",
+      "Mtwapa", "Bamburi", "Shanzu", "Kisauni"
+    ],
+    Nakuru: [
+      "Naivasha", "Nakuru Town", "Gilgil",
+      "Lanet", "Njoro", "Pipeline", "Kabarak"
+    ],
+    Kisumu: [
+      "Kisumu Town",
+      "Milimani", "Riat Hills", "Mamboleo", "Manyatta"
+    ],
+    Eldoret: [
+      "Eldoret Town", "Langas",
+      "Kapsoya", "Elgon View", "Annex", "Pioneer"
+    ],
+    Machakos: [
+      "Athi River", "Kangundo", "Joska", "Mwala", "Syokimau"
+    ],
+    Laikipia: [
+      "Nanyuki", "Rumuruti", "Timau"
+    ],
+    Kajiado: [
+      "Ongata Rongai", "Kitengela", "Ngong", "Kiserian"
+    ],
+    Kilifi: [
+      "Kilifi Town", "Malindi", "Watamu", "Mtwapa"
+    ],
+    UasinGishu: [
+      "Eldoret", "Turbo", "Moiben"
+    ],
+    Kisii: [
+      "Kisii Town", "Nyanchwa", "Suneka"
+    ],
+    Kakamega: [
+      "Kakamega Town", "Shinyalu", "Lurambi"
+    ]
+};
 const citySelect = document.getElementById("city");
 const areaSelect = document.getElementById("location");
 
