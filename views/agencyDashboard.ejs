@@ -489,6 +489,7 @@ async function fetchEscorts() {
   const escorts = await res.json();
 
   escortContainer.innerHTML = '';
+  if(!escorts || escorts.length === 0) return;
   escorts.forEach(escort => {
     const div = document.createElement('div');
     div.className = 'escort-item';
