@@ -17,6 +17,7 @@ const requestIp = require('request-ip');
 const fs = require('fs');
 const NodeCache = require('node-cache');
 const compression = require('compression');
+const slugify = require('slugify');
 app.use(compression()); //Compress responses to reduce payload size and speed up delivery:
 app.set('trust proxy', 1); // Trust first proxy
 console.log(process.env.EMAIL_USER);
@@ -423,54 +424,37 @@ app.get('/admin/boosts', async (req, res) => {
     res.json([]);
   }
 });
- const areas = {
-    Nairobi: [
-      "Kilimani", "Westlands", "Karen", "CBD", "Roysambu", "Ngara", "Donholm", "Nairobi West", "Dandora", "Ojijo", "Yaya", "Sarit",
-      "Ruaka", "Syokimau", "Kitengela", "Embakasi", "South B", "South C", "Lavington", "Parklands"
-    ],
-    Kiambu: [
-      "Juja", "Kikuyu", "Ruiru", "Githurai",
-      "Thika", "Limuru", "Kabete", "Tigoni"
-    ]}
-    // : [
-    //   "Diani", "Nyali", "Likoni",
-    //   "Mtwapa", "Bamburi", "Shanzu", "Kisauni"]}
-  //   ]}
-  //   Nakuru: [
-  //     "Naivasha", "Nakuru Town", "Gilgil",
-  //     "Lanet", "Njoro", "Pipeline", "Kabarak"
-  //   ],
-  //   Kisumu: [
-  //     "Kisumu Town", "Milimani", "Riat Hills", "Mamboleo", "Manyatta"
-  //   ],
-  //   Eldoret: [
-  //     "Eldoret Town", "Langas", "Kapsoya", "Elgon View", "Annex", "Pioneer"
-  //   ],
-  //   Machakos: [
-  //     "Athi River", "Kangundo", "Joska", "Mwala", "Syokimau"
-  //   ],
-  //   Laikipia: [
-  //     "Nanyuki", "Rumuruti", "Timau"
-  //   ],
-  //   Kajiado: [
-  //     "Ongata Rongai", "Kitengela", "Ngong", "Kiserian"
-  //   ],
-  //   Kilifi: [
-  //     "Kilifi Town", "Malindi", "Watamu", "Mtwapa"
-  //   ],
-  //   UasinGishu: [
-  //     "Eldoret", "Turbo", "Moiben"
-  //   ],
-  //   Kisii: [
-  //     "Kisii Town", "Nyanchwa", "Suneka"
-  //   ],
-  //   Kakamega: [
-  //     "Kakamega Town", "Shinyalu", "Lurambi"
-  //   ]
-  // };
-app.get('/escorts-from/:area', async (req, res) => {
-  const area = req.params.area;
+
+const areas = {
+  Nairobi: [
+    "Kilimani", "Westlands", "Karen", "CBD", "Roysambu", "Ngara", "Donholm", "Nairobi West", "Dandora", "Ojijo", "Yaya", "Sarit",
+    "Ruaka", "Syokimau", "Kitengela", "Embakasi", "South B", "South C", "Lavington", "Parklands"
+  ],
+  Kiambu: [
+    "Juja", "Kikuyu", "Ruiru", "Githurai",
+    "Thika", "Limuru", "Kabete", "Tigoni"
+  ]
+  // Additional counties and areas can be uncommented and added here
+};
+
+// Create slug-to-area mapping
+const slugToAreaMap = {};
+Object.entries(areas).forEach(([city, areaList]) => {
+  areaList.forEach(area => {
+    const slug = slugify(area, { lower: true });
+    slugToAreaMap[slug] = area;
+  });
+});
+
+app.get('/escorts-from-:slug', async (req, res) => {
+  const slug = req.params.slug;
+  const area = slugToAreaMap[slug];
   const city = Object.entries(areas).find(([_, arr]) => arr.includes(area))?.[0] || 'Nairobi';
+
+  if (!area) {
+    return res.status(404).send('Area not found');
+  }
+
   try {
     const escortEmail = req.session?.escort?.email;
     const escort = escortEmail ? await Escort.findOne({ email: escortEmail }) : null;
@@ -522,12 +506,12 @@ app.get('/escorts-from/:area', async (req, res) => {
         escorts: [],
         loggedInEscort: escort,
         message: `No profiles in ${area} yet.`,
-        meta:  {
-        title: `Escorts in ${area} area in ${city} | Streak.com`,
-        description: `Explore verified  escorts profiles available in ${city}.`,
-        image: finalList[0]?.userImg || '/default-preview.jpg',
-        url: req.protocol + '://' + req.get('host') + req.originalUrl
-      },
+        meta: {
+          title: `Escorts in ${area} area in ${city} | Streak.com`,
+          description: `Explore verified  escorts profiles available in ${city}.`,
+          image: finalList[0]?.userImg || '/default-preview.jpg',
+          url: req.protocol + '://' + req.get('host') + req.originalUrl
+        },
         city
       });
     }
@@ -1699,14 +1683,17 @@ app.get('/sitemap.xml', async (req, res) => {
 
     const areasList = Object.values(areas).flat(); // Flatten all area arrays
 
-const areaEntries = areasList.map(area => `
-  <url>
-    <loc>${baseUrl}/escorts-from/${encodeURIComponent(area)}</loc>
-    <lastmod>${new Date().toISOString()}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-`).join('');
+const areaEntries = areasList.map(area => {
+  const slug = slugify(area, { lower: true });
+  return `
+    <url>
+      <loc>${baseUrl}/escorts-from-${slug}</loc>
+      <lastmod>${new Date().toISOString()}</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>0.7</priority>
+    </url>
+  `;
+}).join('');
 
 
    const xml = `<?xml version="1.0" encoding="UTF-8"?>
