@@ -180,8 +180,26 @@
   <h2>Welcome, Raha Agency</h2>
 
   <div class="stats-grid">
-    <!-- Cards as before -->
+  <div class="card">
+    <h4>Total Escorts</h4>
+    <p id="totalEscorts">0</p>
   </div>
+
+  <div class="card">
+    <h4>Verified Escorts</h4>
+    <p id="verifiedEscorts">0</p>
+  </div>
+
+  <div class="card">
+    <h4>Pending Verifications</h4>
+    <p id="pendingEscorts">0</p>
+  </div>
+
+  <div class="card">
+    <h4>Bookings This Week</h4>
+    <p id="weeklyBookings">0</p>
+  </div>
+</div>
 
   <div class="escort-list">
     <h3>Managed Escorts</h3>
@@ -476,6 +494,20 @@ async function fetchEscorts() {
     `;
     escortContainer.appendChild(div);
   });
+
+  updateStats(escorts);
+}
+
+function updateStats(escorts) {
+  const total = escorts.length;
+  const verified = escorts.filter(e => e.isVerified).length;
+  const pending = total - verified;
+
+  document.getElementById('totalEscorts').textContent = total;
+  document.getElementById('verifiedEscorts').textContent = verified;
+  document.getElementById('pendingEscorts').textContent = pending;
+
+  // You can add logic for bookings if you have that data
 }
 
 async function deleteEscort(id) {

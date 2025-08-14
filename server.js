@@ -1190,6 +1190,7 @@ try {
 }
 
 });
+
 app.get('/forgot-password', (req, res)=>{
   res.sendFile(path.join(__dirname, 'forgotPassword.html'));
 })
@@ -1381,15 +1382,26 @@ app.get('/profile', async (req, res) => {
 
 
 app.get('/agency-dashboard', (req, res) => {
+  // if (!req.user || req.user.role !== 'agency') {
+  //   return res.status(403).json({ success: false, message: 'Unauthorized' });
+  // }
   
   res.render('agencyDashboard', { meta: metData(req)})
 })
 
 app.get('/api/agency/escorts', async (req, res) => {
   try {
-    const agencyEmail = req.user.email; // Assuming user is authenticated
+    const agencyEmail = req.session.user.email; // Assuming user is authenticated
     const escorts = await Escort.find({ role: 'escort', agencyEmail: agencyEmail });
-    res.json(escorts);
+    if (!escorts || escorts.length === 0) {
+      return res.status(404).json({ success: false, message: 'No escorts found for this agency' });
+    }
+    res.json({
+      success: true,
+      count: escorts.length,
+      escorts
+    });
+
   } catch (err) {
     res.status(500).json({ success: false, message: 'Failed to fetch escorts' });
   }
@@ -1402,38 +1414,59 @@ app.delete('/api/agency/escort/:id', async (req, res) => {
       return res.status(404).json({ success: false, message: 'Escort not found' });
     }
 
-    await Escort.deleteOne({ _id: req.params.id });
+    if (escort.agencyEmail !== req.session.user.email) {
+      return res.status(403).json({ success: false, message: 'You are not authorized to delete this escort' });
+    }
+
+    await Escort.findByIdAndDelete(req.params.id);
     res.json({ success: true, message: 'Escort deleted' });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Error deleting escort' });
   }
 });
 
-app.post('/api/agency/add-escort', async (req, res) => {
+app.post('/api/agency/add-escort', requireAgency, async (req, res) => {
+  if (!req.session.isLoggedIn){
+    return res.status(401).json( { success: false, message: 'Unauthorized' });
+  }
+  const { name, gender, weight, dob, orientation, email } = req.body;
+
+  if (!name || !gender || !weight || !dob || !orientation || !email) {
+    return res.status(400).json({ success: false, message: 'Missing required fields' });
+  }
+
   try {
-    const agencyEmail = req.user.email; // Authenticated agency
-    const escortExists = await Escort.findOne({ email: req.body.email.trim().toLowerCase() });
+    const password = req.body.password || crypto.randomBytes(8).toString('hex');
+    const normalizedEmail = req.body.email.trim().toLowerCase(); // Escort's email
+    const agencyEmail = req.session.user.email.trim().toLowerCase(); // Agency's email
+    const escortExists = await Escort.findOne({ email: normalizedEmail });
 
     if (escortExists) {
       return res.status(400).json({ success: false, message: 'Escort email already exists' });
     }
 
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    const escort = {
-      ...req.body,
-      email: req.body.email.trim().toLowerCase(),
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const escort = new Escort({
+      name,
+      gender,
+      weight,
+      dob,
+      orientation,
+      email: normalizedEmail,
+      agencyEmail: agencyEmail,
       password: hashedPassword,
       role: 'escort',
-      agencyEmail: agencyEmail,
+      allowedtopost: true,
       isVerified: false
-    };
+    });
 
-    await new Escort(escort).save();
+    await escort.save();
     res.status(201).json({ success: true, message: 'Escort added successfully' });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Error adding escort' });
   }
 });
+
 
 app.post('/profile/edit', async (req, res) => {
   if (!req.session.isLoggedIn || !req.session.escort?.email) {
