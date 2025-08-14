@@ -1629,8 +1629,8 @@ app.get('/swipe-feed/:city', async (req, res) => {
 
 function metData(req){
 return {
-      title: 'Nairobi Escorts & Discreet Nairaobi Girls | Luxury & Privacy Guaranteed',
-      description: 'Explore Discreet Nairobi escort companions offering luxury companionship and privacy for elite clients. Book your experience today.',
+      title: 'Nairobi Escorts and Discreet Call Girls near me| Luxury & Privacy Guaranteed | Streak-1.onrender.com',
+      description: 'Explore Nairobi Escorts and Discreet Call Girls near me offering luxury companionship and privacy for elite clients. Book your experience today.',
       image: 'https://raha.com/default-preview.jpg',
       url: req.protocol + '://' + req.get('host') + req.originalUrl
     }
