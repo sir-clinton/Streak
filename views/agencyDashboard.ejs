@@ -227,54 +227,39 @@
 <div id="escortModal" class="modal-overlay">
   <div class="modal-content">
     <span class="close-btn" onclick="closeModal()">&times;</span>
-   <form id="addEscortForm">
-  <h3>Add New Escort</h3>
+    <form id="addEscortForm">
+      <div class="form-step" id="stepOne">
+        <h3>Add New Escort – Step 1</h3>
+        <input type="text" name="name" placeholder="Escort Name" required />
+        <input type="email" name="email" placeholder="Escort Email" required />
+        <select name="gender" required>
+          <option value="" disabled selected hidden>Select Gender</option>
+          <option value="Female">Female</option>
+          <option value="Male">Male</option>
+          <option value="Transgender">Transgender</option>
+        </select>
+        <input type="text" name="weight" placeholder="Weight (e.g. 60kg)" required />
+        <input type="date" name="dob" required />
+        <input type="text" name="phone" placeholder="Phone Number" required />
+        <select name="orientation" required>
+          <option value="" disabled selected hidden>Select Orientation</option>
+          <option value="Straight">Straight</option>
+          <option value="Gay">Gay</option>
+          <option value="Bisexual">Bisexual</option>
+          <option value="Other">Other</option>
+        </select>
+        <button type="button" onclick="goToStepTwo()">Next</button>
+      </div>
 
-  <input type="text" name="name" placeholder="Escort Name" required />
-  <input type="email" name="email" placeholder="Escort Email" required />
-
-  <select name="gender" required>
-    <option value="" disabled selected hidden>Select Gender</option>
-    <option value="Female">Female</option>
-    <option value="Male">Male</option>
-    <option value="Transgender">Transgender</option>
-  </select>
-
-  <input type="text" name="weight" placeholder="Weight (e.g. 60kg)" required />
-<small class="error-message" id="weightError"></small>
-
-<input type="date" name="dob" required />
-<small class="error-message" id="dobError"></small>
-
-<input type="text" name="phone" placeholder="Phone Number" required />
-<small class="error-message" id="phoneError"></small>
-
-  <select name="orientation" required>
-    <option value="" disabled selected hidden>Select Orientation</option>
-    <option value="Straight">Straight</option>
-    <option value="Gay">Gay</option>
-    <option value="Bisexual">Bisexual</option>
-    <option value="Other">Other</option>
-  </select>
-
-  <select name="city" id="city" required>
-    <option value="" disabled selected hidden>Select City</option>
-    <option value="Nairobi">Nairobi</option>
-    <option value="Kiambu">Kiambu</option>
-    <!-- Add more cities -->
-  </select>
-
-  <select name="areaLabel" id="location" required>
-    <option value="" disabled selected hidden>Select Area</option>
-  </select>
-
-  <label for="photoInput">Escort Photo</label>
-  <input type="file" name="userImg" id="photoInput" accept="image/*" required />
-  <img id="previewImage" style="max-width: 100%; border-radius: 6px; display: none;" />
-
-  <button type="submit">Add Escort</button>
-</form>
-
+      <div class="form-step" id="stepTwo" style="display:none;">
+        <h3>Upload Escort Photo – Step 2</h3>
+        <label for="photoInput">Escort Photo</label>
+        <input type="file" name="userImg" id="photoInput" accept="image/*" required />
+        <img id="previewImage" />
+        <button type="button" onclick="goToStepOne()">Back</button>
+        <button type="submit">Add Escort</button>
+      </div>
+    </form>
   </div>
 </div>
 
