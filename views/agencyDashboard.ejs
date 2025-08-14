@@ -77,16 +77,16 @@
       background-color: #0e6f63;
     }
    .modal-overlay {
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-  display: none;
-  width: 100%;
-  min-height: 100vh;
-  justify-content: center; 
-  align-items: center;
-  position: fixed;
-  inset: 0;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      display: none;
+      width: 100%;
+      min-height: 100vh;
+      justify-content: center; 
+      align-items: center;
+      position: fixed;
+      inset: 0;
 }
 
 .modal-overlay.active {
@@ -109,7 +109,7 @@
   flex-direction: column;
   gap: 15px;
 }
-.form-step {
+.modal-content #addEscortForm .form-step {
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -178,8 +178,6 @@
   button[disabled] {
     opacity: 0.6;
     cursor: not-allowed;
-  }.modal-content #addEscortForm #stepTwo {
-    display: none !important;
   }
   </style>
 </head>
@@ -251,7 +249,7 @@
         <button type="button" onclick="goToStepTwo()">Next</button>
       </div>
 
-      <div class="form-step" id="stepTwo" style="display:none;">
+      <div class="form-step" id="stepTwo" style="display:none">
         <h3>Upload Escort Photo – Step 2</h3>
         <label for="photoInput">Escort Photo</label>
         <input type="file" name="userImg" id="photoInput" accept="image/*" required />
