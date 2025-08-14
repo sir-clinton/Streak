@@ -99,10 +99,17 @@
   padding: 30px;
   border-radius: 8px;
   width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;;
   max-width: 500px;
   box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
   position: relative;
 }.modal-content form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.form-step {
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -271,6 +278,16 @@
 
 <script>
   let base64Image = '';
+
+function goToStepTwo() {
+  document.getElementById('stepOne').style.display = 'none';
+  document.getElementById('stepTwo').style.display = 'block';
+}
+
+function goToStepOne() {
+  document.getElementById('stepTwo').style.display = 'none';
+  document.getElementById('stepOne').style.display = 'block';
+}
 
 document.getElementById('photoInput').addEventListener('change', function () {
   const file = this.files[0];
