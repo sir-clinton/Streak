@@ -273,7 +273,7 @@
 </div>
 <script>
   let base64Image = '';
-document.getElementById('one').disabled = true;
+  document.getElementById('one').disabled = true;
 function goToStepTwo() {
   document.getElementById('stepOne').style.display = 'none';
   document.getElementById('stepTwo').style.display = 'flex';
@@ -447,6 +447,11 @@ document.getElementById('addEscortForm').addEventListener('submit', async (e) =>
 
 
 function validateForm() {
+   if(document.querySelector('#name').value && document.querySelector('#email').value && document.querySelector('#gender').value && document.querySelector('#weight').value && document.querySelector('#dob').value && document.querySelector('#phone').value && document.querySelector('#orientation').value && document.querySelector('#city').value && document.querySelector('#location').value) {
+    document.getElementById('one').disabled = false;
+  } else {
+    document.getElementById('one').disabled = true;
+  }
   let isValid = true;
 
   // Age check
@@ -489,11 +494,7 @@ function validateForm() {
 }
 
 form.addEventListener('input', validateForm);
-  if(document.querySelector('#name') && document.querySelector('#email') && document.querySelector('#gender') && document.querySelector('#weight') && document.querySelector('#dob') && document.querySelector('#phone') && document.querySelector('#orientation') && document.querySelector('#city') && document.querySelector('#location')) {
-    document.getElementById('one').disabled = false;
-  } else {
-    document.getElementById('one').disabled = true;
-  }
+ 
 
 const escortContainer = document.getElementById('escortContainer');
 
