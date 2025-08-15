@@ -499,7 +499,8 @@ const escortContainer = document.getElementById('escortContainer');
 
 async function fetchEscorts() {
   const res = await fetch('/api/agency/escorts');
-  const escorts = await res.json();
+  const result = await res.json();
+  const escorts = result.escorts || []
 
   escortContainer.innerHTML = '';
   if(!escorts || escorts.length === 0) return;

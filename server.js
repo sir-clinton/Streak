@@ -1378,7 +1378,7 @@ app.get('/api/agency/escorts', async (req, res) => {
     const agencyEmail = req.session.user.email; // Assuming user is authenticated
     const escorts = await Escort.find({ role: 'escort', agencyEmail: agencyEmail });
     if (!escorts || escorts.length === 0) {
-      return res.status(404).json({ success: false, message: 'No escorts found for this agency' });
+      return res.status(404).json({ success: false, message: 'No escorts found for this agency', data: [] });
     }
     res.json({
       success: true,
