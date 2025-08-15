@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <link rel="icon" href="/favicon.ico">
     <script src="https://kit.fontawesome.com/yourkit.js" crossorigin="anonymous"></script>
-    <title>Document</title>
+    <title>Escort's Analytics.</title>
     <style>
       *{
         padding: 0;
@@ -159,14 +159,13 @@ input:checked + .slider::before {
 <div class="dashboard-box">
   <h2>Profile Insights</h2>
   <input type="text" id="dateRange" placeholder="Select date range"><br><br>
-  <div><i class="fas fa-eye"></i> Total Views: <strong id="totalViewsCount"><%= escort.totalViews || 0 %></strong></div>
+  <div><i class="fas fa-eye"></i> Total Views: <strong id="totalViewsCount">0</strong></div>
       
   <canvas id="profileViewsChart" style="max-height: 300px;"></canvas>
   <div id="noDataMessage" style="text-align:center; margin-top:0.5rem; font-size:0.9rem; color:#999;"></div>
   <h3 style="margin: 16px 0; color: #333;">Profile Engagement (Top 3 days)</h3>
   <div id="topDaysProgress" style="margin-top:1rem;"></div><br>
-  <label class="switch">
-  <input type="checkbox" id="locationToggle">
+<label class="switch" aria-label="Toggle location sharing">
   <span class="slider"></span>
   <span class="switch-label">Share my location</span>
 </label>
@@ -247,14 +246,14 @@ if (cached) {
 
 
   try {
-    const escortId = '<%= escort.id %>';
+    const escortId = window.location.pathname.split('/').pop();
     if (!startDate || !endDate || isNaN(startDate) || isNaN(endDate)) return;
 
     const res = await fetch(`/analytics/${escortId}?start=${startDate.toISOString()}&end=${endDate.toISOString()}`);
     const data = await res.json();
 
-    if (!data || !Array.isArray(data.views)) {
-      document.getElementById('noDataMessage').textContent = '❌ Could not load analytics. Please try again.';
+    if (!data.views || data.views.length === 0 || !Array.isArray(data.views)) {
+      document.getElementById('noDataMessage').textContent = '📭 No views recorded.';
       return;
     }
 

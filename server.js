@@ -702,7 +702,8 @@ app.get('/analytics/:escortId', async (req, res) => {
   const { escortId } = req.params;
   const { start, end } = req.query;
 
-  if (req.session.escort.id !== escortId) {
+// ✅ Escort must be logged in
+  if (!req.session.escort) {
     return res.status(403).json({ error: 'Unauthorized' });
   }
 // In your ProfileView schema:
@@ -863,9 +864,8 @@ app.get('/nearby', async (req, res) => {
 });
 
 app.get('/city/:name', async (req, res) => {
-  const gender = req.query.gender;
-  const city = req.params.name;
-
+  const city = req.params.name?.trim().toLowerCase();
+  const gender = req.query.gender?.trim().toLowerCase();
  
   console.log('Params:', req.params.name);
   console.log('Query:', req.query.gender);
@@ -884,10 +884,10 @@ app.get('/city/:name', async (req, res) => {
       const escortEmail = req.session?.escort?.email;
       const escort = escortEmail ? await Escort.findOne({ email: escortEmail }) : null;
       let escorts = await Escort.find({
-      allowedtopost: true,
-      city: { $regex: new RegExp(city, 'i') }, // Removes ^ and $
-      gender: { $regex: new RegExp(gender, 'i') }
-    }).lean();
+          allowedtopost: true,
+          city: { $regex: new RegExp(city, 'i') }, // Removes ^ and $
+          gender: { $regex: new RegExp(gender, 'i') }
+        }).lean();
 
     const boosts = await BoostRequest.find({
       status: 'confirmed',

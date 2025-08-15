@@ -219,7 +219,7 @@
   <div class="actions">
     <button onclick="openModal()">Add New Escort</button>
     <button>View Bookings</button>
-    <button>Edit Profile</button>
+    <button><a href="/logout">Logout</a></button>
     <button>View Analytics</button>
   </div>
 </div>
@@ -511,6 +511,7 @@ async function fetchEscorts() {
     div.innerHTML = `
       ${escort.name} – ${escort.areaLabel} – ${escort.isVerified ? 'Verified' : 'Pending'}
       <button onclick="deleteEscort('${escort._id}')" style="float:right; background:red; color:white; border:none; padding:5px 10px; border-radius:4px;">Delete</button>
+      <button style="float:right; margin-right:10px;"><a href="/analytics/${escort._id}"Analytics</button>
     `;
     escortContainer.appendChild(div);
   });
