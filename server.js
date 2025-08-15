@@ -1151,7 +1151,7 @@ try {
 }
 
   const match = await bcrypt.compare(password, escort.password);
-  if (!match) return res.status(401).json({ success: false, message: 'Invalid password' });
+  if (!match) return res.status(401).json({ success: false, message: 'Invalid Email or Password.' });
 
   req.session.escort = {
     name: escort.name,

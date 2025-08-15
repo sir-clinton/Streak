@@ -138,7 +138,8 @@
   outline: none;
 }
 
-.modal-content button[type="submit"] {
+.modal-content button[type="submit"],
+ .step {
   padding: 12px;
   background-color: #25D366;
   color: white;
@@ -150,7 +151,8 @@
   transition: background-color 0.3s ease;
 }
 
-.modal-content button[type="submit"]:hover {
+.modal-content button[type="submit"]:hover,
+  .step {
   background-color: #1da851;
 }
 .close-btn {
@@ -246,7 +248,7 @@
           <option value="Bisexual">Bisexual</option>
           <option value="Other">Other</option>
         </select>
-        <button type="button" onclick="goToStepTwo()">Next</button>
+        <button type="button" onclick="goToStepTwo()" class="step">Next</button>
       </div>
 
       <div class="form-step" id="stepTwo" style="display:none">
@@ -254,7 +256,7 @@
         <label for="photoInput">Escort Photo</label>
         <input type="file" name="userImg" id="photoInput" accept="image/*" required />
         <img id="previewImage" />
-        <button type="button" onclick="goToStepOne()">Back</button>
+        <button type="button" class="step" onclick="goToStepOne()">Back</button>
         <button type="submit">Add Escort</button>
       </div>
     </form>
