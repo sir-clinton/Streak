@@ -503,7 +503,7 @@ async function fetchEscorts() {
 
   escortContainer.innerHTML = '';
   if(!escorts || escorts.length === 0) return;
-  escorts.forEach(escort => {
+    escorts.forEach(escort => {
     const div = document.createElement('div');
     div.className = 'escort-item';
     div.innerHTML = `
