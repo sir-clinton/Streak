@@ -1409,7 +1409,7 @@ app.delete('/api/agency/escort/:id', async (req, res) => {
   }
 });
 
-app.post('/api/agency/add-escort', requireAgency, async (req, res) => {
+app.post('/api/agency/add-escort', async (req, res) => {
   if (!req.session.isLoggedIn){
     return res.status(401).json( { success: false, message: 'Unauthorized' });
   }
