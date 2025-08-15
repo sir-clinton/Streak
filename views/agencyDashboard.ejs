@@ -230,25 +230,25 @@
     <form id="addEscortForm">
       <div class="form-step" id="stepOne">
         <h3>Add New Escort – Step 1</h3>
-        <input type="text" name="name" placeholder="Escort Name" required />
-        <input type="email" name="email" placeholder="Escort Email" required />
-        <select name="gender" required>
+        <input type="text" id="name" name="name" placeholder="Escort Name" required />
+        <input type="email" id="email" name="email" placeholder="Escort Email" required />
+        <select name="gender" required id="gender">
           <option value="" disabled selected hidden>Select Gender</option>
           <option value="Female">Female</option>
           <option value="Male">Male</option>
           <option value="Transgender">Transgender</option>
         </select>
-        <input type="text" name="weight" placeholder="Weight (e.g. 60kg)" required />
-        <input type="date" name="dob" required />
-        <input type="text" name="phone" placeholder="Phone Number" required />
-        <select name="orientation" required>
+        <input type="text" id="weight" name="weight" placeholder="Weight (e.g. 60kg)" required />
+        <input type="date" id="dob" name="dob" required />
+        <input type="text" id="phone" name="phone" placeholder="Phone Number" required />
+        <select name="orientation" required id="orientation">
           <option value="" disabled selected hidden>Select Orientation</option>
           <option value="Straight">Straight</option>
           <option value="Gay">Gay</option>
           <option value="Bisexual">Bisexual</option>
           <option value="Other">Other</option>
         </select>
-        <button type="button" onclick="goToStepTwo()" class="step">Next</button>
+        <button type="button" onclick="goToStepTwo()" class="step" id="one">Next</button>
       </div>
 
       <div class="form-step" id="stepTwo" style="display:none">
@@ -264,15 +264,15 @@
 </div>
 <script>
   let base64Image = '';
-
+document.getElementById('one').disabled = true;
 function goToStepTwo() {
   document.getElementById('stepOne').style.display = 'none';
-  document.getElementById('stepTwo').style.display = 'block';
+  document.getElementById('stepTwo').style.display = 'flex';
 }
 
 function goToStepOne() {
   document.getElementById('stepTwo').style.display = 'none';
-  document.getElementById('stepOne').style.display = 'block';
+  document.getElementById('stepOne').style.display = 'flex';
 }
 
 document.getElementById('photoInput').addEventListener('change', function () {
@@ -480,6 +480,11 @@ function validateForm() {
 }
 
 form.addEventListener('input', validateForm);
+  if(document.querySelector('#name') && document.querySelector('#email') && document.querySelector('#gender') && document.querySelector('#weight') && document.querySelector('#dob') && document.querySelector('#phone') && document.querySelector('#orientation')) {
+    document.getElementById('one').disabled = false;
+  } else {
+    document.getElementById('one').disabled = true;
+  }
 
 const escortContainer = document.getElementById('escortContainer');
 
