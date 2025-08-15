@@ -257,7 +257,7 @@
         <select name="areaLabel" id="location">
           <option value="" disabled hidden selected>Select location</option>
         </select>
-        <button type="button" onclick="goToStepTwo()" class="step" id="one">Next</button>
+        <button type="button" onclick="goToStepTwo()" class="step" id="one" disabled>Next</button>
       </div>
 
       <div class="form-step" id="stepTwo" style="display:none">
@@ -489,7 +489,7 @@ function validateForm() {
 }
 
 form.addEventListener('input', validateForm);
-  if(document.querySelector('#name') && document.querySelector('#email') && document.querySelector('#gender') && document.querySelector('#weight') && document.querySelector('#dob') && document.querySelector('#phone') && document.querySelector('#orientation')) {
+  if(document.querySelector('#name') && document.querySelector('#email') && document.querySelector('#gender') && document.querySelector('#weight') && document.querySelector('#dob') && document.querySelector('#phone') && document.querySelector('#orientation') && document.querySelector('#city') && document.querySelector('#location')) {
     document.getElementById('one').disabled = false;
   } else {
     document.getElementById('one').disabled = true;
