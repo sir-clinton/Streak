@@ -886,7 +886,7 @@ app.get('/city/:name', async (req, res) => {
       let escorts = await Escort.find({
           allowedtopost: true,
           city: { $regex: new RegExp(city, 'i') }, // Removes ^ and $
-          gender: { $regex: new RegExp(gender, 'i') }
+          gender: { $regex: new RegExp(`^${gender}$`, 'i') }
         }).lean();
 
     const boosts = await BoostRequest.find({
@@ -1634,7 +1634,6 @@ Sitemap: ${baseUrl}/sitemap.xml`);
 app.get('/sitemap.xml', async (req, res) => {
   try {
     const baseUrl = `${req.protocol}://${req.get('host')}`;
-    const profiles = await Escort.find({}); // All profiles
     const cities = await Escort.distinct('city'); // Unique cities
     const genders = await Escort.distinct('gender'); // Unique genders
 
@@ -1646,19 +1645,6 @@ app.get('/sitemap.xml', async (req, res) => {
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
       </url>`;
-
-    // Profile pages
-   const profileEntries = profiles.map(author => {
-  return `
-    <url>
-      <loc>${baseUrl}/author/${encodeURIComponent(author.name)}</loc>
-      <lastmod>${new Date(author.updatedAt).toISOString()}</lastmod>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  `.trim();
-}).join('');
-
 
     const cityEntries = cities.flatMap(city => {
       return genders.map(gender => `
@@ -1699,7 +1685,6 @@ const areaEntries = areasList.map(area => {
    const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   ${homepageEntry.trim()}
-  ${profileEntries.trim()}
   ${cityEntries.trim()}
   ${areaEntries.trim()}
 </urlset>`;
