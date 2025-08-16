@@ -690,34 +690,32 @@ app.get('/author/:name', async (req, res) => {
   }
 });
 
-app.get('/settings', (req, res) => {
-    if (!req.session?.escort) {
-    return res.redirect('/login'); // or show error
-  }
-  const escort = req.session.escort;
-  res.render('escortAnalytics', { escort });
-});
-
 app.get('/analytics/:escortId', async (req, res) => {
   const { escortId } = req.params;
   const { start, end } = req.query;
 
-// ✅ Escort must be logged in
+  // ✅ Escort must be logged in
   if (!req.session.escort) {
     return res.status(403).json({ error: 'Unauthorized' });
   }
-// In your ProfileView schema:
 
-if (!start || !end || isNaN(Date.parse(start)) || isNaN(Date.parse(end))) {
-  return res.status(400).json({ error: 'Valid start and end dates required.' });
-}
+  if (!start && !end) {
+    return res.render('escortAnalytics');
+  }
+  // ✅ Validate date range
+  if (!start || !end || isNaN(Date.parse(start)) || isNaN(Date.parse(end))) {
+    return res.status(400).json({ error: 'Valid start and end dates required.' });
+  }
 
   try {
     const views = await ProfileView.aggregate([
       {
         $match: {
           profile: new mongoose.Types.ObjectId(escortId),
-          viewedAt: { $gte: new Date(start), $lte: new Date(end) }
+          viewedAt: {
+            $gte: new Date(start),
+            $lte: new Date(end)
+          }
         }
       },
       {
@@ -730,9 +728,14 @@ if (!start || !end || isNaN(Date.parse(start)) || isNaN(Date.parse(end))) {
           count: { $sum: 1 }
         }
       },
-      { $sort: { "_id.year": 1, "_id.month": 1, "_id.day": 1 } }
+      {
+        $sort: {
+          "_id.year": 1,
+          "_id.month": 1,
+          "_id.day": 1
+        }
+      }
     ]);
-    console.log(views);
 
     res.json({ views });
   } catch (err) {
@@ -745,7 +748,6 @@ const nearbyCache = new NodeCache({ stdTTL: 1800 }); // 30 mins
 
 app.get('/nearby', async (req, res) => {
   const { lat, lng, distance = 5000 } = req.query;
-  console.log('Received coords:', req.query);
 
   const cacheKey = `nearby_${lat}_${lng}_${distance}`;
 
