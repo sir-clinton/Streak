@@ -19,7 +19,7 @@
                     <div class="right">
                         <% if (loggedInEscort) { 
                             const isAgency = loggedInEscort.role === 'agency';
-                            const profileLink = isAgency ? '/agency-Dashboard' : '/profile';
+                            const profileLink = isAgency ? '/agency-dashboard' : '/profile';
                             const nameParts = loggedInEscort.name.trim().split(' ');
                         %>
                         <li class="nav-item" style="display: flex; justify-content: center; align-items: center;">
