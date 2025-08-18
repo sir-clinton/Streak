@@ -1337,7 +1337,14 @@ app.post('/post/:id', async (req, res) => {
   }
 });
 app.get('/profile', async (req, res) => {
-  if (!req.session.isLoggedIn) {
+  if (!req.session.isLoggedIn && app.get('/agency-dashboard', (req, res) => {
+  if (!req.session.escort || req.session.escort.role !== 'escort') {
+    return res.status(403).json({ success: false, message: 'Unauthorized' });
+  }
+  
+  res.render('agencyDashboard', { meta: metData(req)})
+})
+) {
     return res.redirect('/login');
   }
 
@@ -1368,9 +1375,9 @@ app.get('/profile', async (req, res) => {
 
 
 app.get('/agency-dashboard', (req, res) => {
-  // if (!req.user || req.user.role !== 'agency') {
-  //   return res.status(403).json({ success: false, message: 'Unauthorized' });
-  // }
+  if (!req.session.escort || req.session.escort.role !== 'agency') {
+    return res.status(403).json({ success: false, message: 'Unauthorized' });
+  }
   
   res.render('agencyDashboard', { meta: metData(req)})
 })
@@ -1628,6 +1635,7 @@ app.get('/robots.txt', (req, res) => {
   res.send(`User-agent: *
 Disallow: /admin
 Disallow: /profile
+Disallow: /login
 Allow: /
 
 Sitemap: ${baseUrl}/sitemap.xml`);
