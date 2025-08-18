@@ -1,4 +1,6 @@
 // import { escapeHTML } from './helpers.js';
+<script src="https://cdn.jsdelivr.net/npm/slugify@1.6.6/slugify.min.js"></script>
+
 
 const bars = document.querySelector('#menu-icon');
 const container = document.querySelector('.header');
