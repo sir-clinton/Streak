@@ -10,7 +10,9 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        * {
+        *,
+        *::before,
+        *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -19,6 +21,7 @@
             font-family: Arial, sans-serif;
             min-height: 100vh;
             padding: 36px 12px;
+            background-color: #f8f9fa;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -591,7 +594,7 @@
 
               </ul>
 <br>
-                    <h3>Contact Information</h3>
+                    <h3>Contact Information</h3><br>
                 <p><strong>Phone:</strong><span id="phone-display"> <%= loggedInEscort.phone || 'Not provided'%> </span></p>
                 
                
@@ -615,7 +618,7 @@
                 </div>
             <input id="edit-img" type="file" accept="image/*" hidden>
             <button id='edit-image' class="edit-btn" type='button'>Upload to Gallery</button>                                 
-            <button id="postToggleBtn" class="edit-btn" data-id="<%= loggedInEscort._id %>" data-status="<%= loggedInEscort.allowedtopost %>"> <%= loggedInEscort.allowedtopost ? "Unpost" : "Post As Escort" %></button>
+            <button style="color: white; height: 44px; background: #1877E2; width: 100%; padding: 10px; border-radius: 6px; font-size: 1.2rem" id="postToggleBtn" class="edit-btn" data-id="<%= loggedInEscort._id %>" data-status="<%= loggedInEscort.allowedtopost %>"> <%= loggedInEscort.allowedtopost ? "Unpost" : "Post As Escort" %></button>
 
         </div></div>
         <div id="edit-mode" class="edit-mode" style="display: none;" class="profile-content">
