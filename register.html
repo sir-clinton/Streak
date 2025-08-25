@@ -44,6 +44,9 @@
             padding: 8px 12px;
             margin-bottom: 15px;
         }
+        form input:focus, select:focus {
+          outline: #25D366;
+        }
         /* Base styling for next/submit buttons */
         button,
         input[type="submit"] {
@@ -64,7 +67,7 @@
         /* Hover state */
         button:hover,
         input[type="submit"]:hover {
-        background-color: #128C7E;
+          background-color: #3ba626;
         }
 
         /* Disabled state */
@@ -136,10 +139,10 @@
 <body>
     <div class="container">
         <div class="registration-box">
-          <div class="progress-container">
-          <div class="progress-bar" id="progressBar"></div>
-        </div>
             <h3>Register</h3>
+            <div class="progress-container">
+          <div class="progress-bar" id="progressBar"></div>
+          </div>
             <form id="form" >
                 <div class="name-weight">
                     <h4>Let's start with your basic profile</h4>
