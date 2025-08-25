@@ -541,7 +541,7 @@
         <div class="left">
              <% const nameParts = loggedInEscort.name.trim().split(' '); %>
             <h3 id="name-display" style="padding: 10px 0;">Hi <%= nameParts.length > 1 ? nameParts[0] : loggedInEscort.name%></h3>
-            <p id="city-display"><%= loggedInEscort.city %></p>
+            <p id="city-display">📍 &nbsp;<%= loggedInEscort.city %></p>
            
                     <div id='profile-status'>
                     <%if (missingFields.length === 0) { %>
