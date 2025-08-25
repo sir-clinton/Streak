@@ -90,7 +90,30 @@
             text-align: left;
             margin: 10px 0;
             color: red;
+        }.strength-meter {
+          margin-top: 5px;
+          font-size: 13px;
+          font-weight: bold;
+          color: #555;
         }
+        .strength-meter:empty {
+          display: none;
+        }
+      .progress-container {
+        width: 100%;
+        background-color: #e0e0e0;
+        border-radius: 20px;
+        overflow: hidden;
+        height: 10px;
+        margin-bottom: 20px;
+      }
+
+      .progress-bar {
+        height: 100%;
+        width: 0%;
+        background-color: #25D366;
+        transition: width 0.4s ease;
+      }
         @media (max-width: 600px){
             .registration-box{
                 width: 90%;
@@ -113,6 +136,9 @@
 <body>
     <div class="container">
         <div class="registration-box">
+          <div class="progress-container">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
             <h3>Register</h3>
             <form id="form" >
                 <div class="name-weight">
@@ -193,7 +219,7 @@
                     <input type="submit" value="SUBMIT">
                 </div>
             </form>
-            <p>Arleady have an account <a href='/login'>Login</a></p>
+              <p>Already have an account? <a href='/login'>Login</a></p>
         </div>
     </div>
    
@@ -233,12 +259,38 @@ dobInput.max = today;
     }
   });
 
+  const strengthMeter = document.createElement('div');
+password.parentNode.insertBefore(strengthMeter, password.nextSibling);
+
+password.addEventListener('input', () => {
+  const val = password.value;
+  let strength = 'Weak';
+  if (val.length > 8 && /[A-Z]/.test(val) && /\d/.test(val) && /[^A-Za-z0-9]/.test(val)) {
+    strength = 'Strong';
+  } else if (val.length > 8) {
+    strength = 'Moderate';
+  }
+  strengthMeter.className = 'strength-meter';
+
+  if (strength === 'Weak') {
+    strengthMeter.style.color = 'red';
+  } else if (strength === 'Moderate') {
+    strengthMeter.style.color = 'orange';
+  } else {
+    strengthMeter.style.color = 'green';
+  }
+
+  strengthMeter.textContent = `Password Strength: ${strength}`;
+});
+
+
 nameInput.focus();
 let currentStep = 0;
 const steps = ['.name-weight', '.gender-interested', '.xtras', '.password-box'];
 
 // Show the correct step and adjust button visibility
 function showStep(index) {
+  document.getElementById('progressBar').style.width = ((index + 1) / steps.length * 100) + '%';
   steps.forEach((selector, i) => {
     const section = document.querySelector(selector);
     section.style.display = i === index ? 'block' : 'none';
@@ -336,7 +388,7 @@ showStep(currentStep);
 
   citySelect.addEventListener("change", () => {
     const selectedCity = citySelect.value;
-    const areas = locationMap[selectedCity] || [];
+    const areas = [...new Set(locationMap[selectedCity] || [])]; //this diduplicating as a case where donholm is twice in nairobi
 
     // Reset area dropdown
     areaSelect.innerHTML = '<option value="" disabled selected hidden>Select Area</option>';
