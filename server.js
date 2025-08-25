@@ -868,7 +868,17 @@ app.get('/nearby', async (req, res) => {
 app.get('/city/:name', async (req, res) => {
   const city = req.params.name?.trim().toLowerCase();
   const gender = req.query.gender?.trim().toLowerCase();
- 
+  const ageRange = req.query.age?.trim(); // e.g., "25-30"
+
+  let minAge = null;
+  let maxAge = null;
+
+  if (ageRange && ageRange.includes('-')) {
+    [minAge, maxAge] = ageRange.split('-').map(Number);
+  } else if (ageRange === '51+') {
+    minAge = 51;
+  }
+
   console.log('Params:', req.params.name);
   console.log('Query:', req.query.gender);
 
@@ -920,6 +930,16 @@ app.get('/city/:name', async (req, res) => {
         };
       });
 
+     if (minAge !== null || maxAge !== null) {
+      escorts = escorts.filter(e => {
+        if (e.age === null) return false;
+        if (minAge !== null && e.age < minAge) return false;
+        if (maxAge !== null && e.age > maxAge) return false;
+        return true;
+      });
+    }
+
+
     const boosted = escorts
       .filter(e => e.isBoosted)
       .sort((a, b) => orderRank[getPureTier(b.boostType)] - orderRank[getPureTier(a.boostType)]);
@@ -939,8 +959,8 @@ app.get('/city/:name', async (req, res) => {
         message: 'No verified profiles match that filter.',
         city,
         meta: {
-        title: `${gender} Escorts in ${city} | Streak.com`,
-        description: `Explore verified ${gender.toLowerCase()} escorts profiles available in ${city}.`,
+        title: `${gender} Escorts aged ${minAge || '18'}-${maxAge || '50+'} in ${city} | Streak.com`,
+        description: `Explore verified ${gender.toLowerCase()} escorts aged ${minAge || '18'}-${maxAge || '50+'} in ${city}.`,
         image: finalList[0]?.userImg || '/default-preview.jpg',
         url: req.protocol + '://' + req.get('host') + req.originalUrl
       }
